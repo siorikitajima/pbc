@@ -1,0 +1,8 @@
+{
+  "name": "pbcatalog-sk",
+  "template": "Default",
+  "isConfigured": {
+    "client": true,
+    "server": true
+  }
+}
