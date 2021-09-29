@@ -3,7 +3,7 @@
 const Song = require('../models/song_schema');
 
 const readSongData = (req, res) => {
-  Song.find()
+  Song.find().sort({Rate: -1})
     .then((data) => {
       res.status(200).json(data);
     })

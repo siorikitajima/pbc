@@ -26,6 +26,7 @@ app.use(express.static(__dirname + '/views/'));
 app.use('/api', require('./routes/song_api'));
 app.use('/api', require('./routes/album_api'));
 app.use('/api', require('./routes/artist_api'));
+app.use('/api', require('./routes/search_api'));
 
 // Listening to port
 app.listen(port);
