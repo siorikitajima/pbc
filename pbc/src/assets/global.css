@@ -28,3 +28,19 @@ input {
     background: none;
     cursor: pointer;
 }
+
+button.small {
+    width: fit-content;
+    height: fit-content;
+    background: #666;
+    padding: 7px 10px;
+    color: #fff;
+    border-radius: 5px;
+    border: none;
+    margin: 0 16px 16px 0;
+}
+
+button.small:hover {
+    background: #0092C5;
+    transition-duration: 200ms;
+}

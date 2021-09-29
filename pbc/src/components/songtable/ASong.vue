@@ -5,7 +5,7 @@
         <img :src="'https://pblibrary.s3.us-east-2.amazonaws.com/' + song.CatNum +'/cover-thumb.jpg'" :alt="song.AlbumTitle">
     </div>
     <div class="asname">
-        <p><b>{{ song.Title }}</b></p>
+        <p><a @click="openSingle('song', song)"><b>{{ song.Title }}</b></a></p>
         <p>by {{ song.ArtistName }}</p>
         <p><i>{{ length }}</i></p>
         <!-- <p>{{ snippet }}</p> -->
@@ -33,6 +33,7 @@ import { computed } from '@vue/reactivity'
 
 export default {
     props: [ 'song' ],
+    emits: ['openThis'],
     setup(props) {
         const snippet = computed(() => {
             return props.song.Description ? props.song.Description.substring(0, 100) : ''
@@ -41,11 +42,17 @@ export default {
             return props.song.Length ? props.song.Length.slice(2) : ''
         })
         return { snippet, length }
+    },
+    methods: {
+        openSingle(type, da) {
+            let data = { type: type, data: da }
+            this.$emit('openThis', data)
+        }
     }
 }
 </script>
 
-<style>
+<style scoped>
 .asong {
     width: 800px;
     height: 60px;
@@ -114,5 +121,9 @@ export default {
 .asvalues li.grd {
     background: url('../../assets/images/table/grd.png');
     background-size: cover;
+}
+p a:hover {
+    color: #222;
+    transition-duration: 200ms;
 }
 </style>

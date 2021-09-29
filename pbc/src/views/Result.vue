@@ -3,7 +3,7 @@
     <div class="resultWrapper" v-bind:class="{ moveToRight: sliderPanel || presetPanel, moveDown: searchPanel }">
         <div v-if="songs.length">
             <ResultHead :songCount="songCount" :resultQuery="resultQuery" @clearVal="clearValue($event)" />
-            <SongList :songs="fltBySearch" />
+            <SongList :songs="fltBySearch" @passThis="openSingle($event)" />
         </div>
         <div v-else> Loading... </div>
     </div>
@@ -19,36 +19,48 @@
     </transition>
 
     <div id="navLeft" class="cornerNavs">
-    <a @click="toggleSliderPanel">
-        <img v-if="sliderPanel" class="navIcons active filters" :src="require('../assets/images/header/Filter_Icon_white.svg')" alt="Filter">
-        <img v-else class="navIcons filters" :src="require('../assets/images/header/Filter_Icon.svg')" alt="Filter">
-    </a>
-    <a @click="togglePresetPanel">
-        <img v-if="presetPanel" class="navIcons active filters" :src="require('../assets/images/header/Preset_Icon_white.svg')" alt="Filter">
-        <img v-else class="navIcons filters" :src="require('../assets/images/header/Preset_Icon.svg')" alt="Filter">
-    </a>
-    <a @click="toggleSearchPanel">
-        <img v-if="searchPanel" class="navIcons active filters" :src="require('../assets/images/header/Search_Icon_white.svg')" alt="Filter">
-        <img v-else class="navIcons filters" :src="require('../assets/images/header/Search_Icon.svg')" alt="Filter">
-    </a>
+        <a @click="toggleSliderPanel">
+            <img v-if="sliderPanel" class="navIcons active filters" :src="require('../assets/images/header/Filter_Icon_white.svg')" alt="Filter">
+            <img v-else class="navIcons filters" :src="require('../assets/images/header/Filter_Icon.svg')" alt="Filter">
+        </a>
+        <a @click="togglePresetPanel">
+            <img v-if="presetPanel" class="navIcons active filters" :src="require('../assets/images/header/Preset_Icon_white.svg')" alt="Filter">
+            <img v-else class="navIcons filters" :src="require('../assets/images/header/Preset_Icon.svg')" alt="Filter">
+        </a>
+        <a @click="toggleSearchPanel">
+            <img v-if="searchPanel" class="navIcons active filters" :src="require('../assets/images/header/Search_Icon_white.svg')" alt="Filter">
+            <img v-else class="navIcons filters" :src="require('../assets/images/header/Search_Icon.svg')" alt="Filter">
+        </a>
     </div>
+
+    <div v-if="singlePanels" class="singlePanelScreen" @click="closeSingles"></div>
+        <div v-if="singlePanels" class="singlePageCoutainer">
+            <SingleSong v-if="singleSongPanel" :song="tempSongData" :album="tempAlbumData" />
+            <div class="closeIcon" @click="closeSingles">
+                <img :src="require('../assets/images/global/Close_Icon_dark.svg')" alt="Close">
+            </div>
+        </div>
+
 </div>
 </template>
 
 <script>
 import getSongs from '../composables/getSongs'
+import getAlbums from '../composables/getAlbums'
 import SongList from '../components/songtable/SongList.vue'
 import ResultHead from '../components/songtable/ResultHead.vue'
 import { ref } from '@vue/reactivity'
 import Search from '../components/filter/Search.vue'
 import Filters from '../components/filter/Filters.vue'
 import Presets from '../components/filter/Presets.vue'
+import SingleSong from '../components/singles/SingleSong.vue'
 
 export default {
     name: 'Result',
-    components: { SongList, Search, Filters, ResultHead, Presets },
+    components: { SongList, Search, Filters, ResultHead, Presets, SingleSong },
     setup() {
         const { songs, error, load } = getSongs()
+        const { albums, albumserror, loadAlbums } = getAlbums()
         // const search = ref('')
         const searchPanel = ref(false)
         const sliderPanel = ref(true)
@@ -60,9 +72,14 @@ export default {
         const organic = ref({ min: 0, max: 10 })
         const search = ref('')
         const allSearch = ref([])
+        const singlePanels = ref(false)
+        const singleSongPanel = ref(false)
+        const tempSongData = ref('')
+        const tempAlbumData = ref('')
         load()
+        loadAlbums()
 
-        return { songs, error, searchPanel, sliderPanel, presetPanel, rhythm, speed, experimental, mood, organic, search, allSearch } 
+        return { songs, error, searchPanel, sliderPanel, presetPanel, rhythm, speed, experimental, mood, organic, search, allSearch, singleSongPanel, singlePanels, tempSongData, albums, albumserror, tempAlbumData } 
     },
     computed: {
         fltBySearch: function() {
@@ -81,7 +98,6 @@ export default {
                 }
             }
         })
-            
         },
         songCount: function() {
             return this.fltBySearch.length;
@@ -94,10 +110,32 @@ export default {
                 mood: this.mood,
                 organic: this.organic,
                 search: this.allSearch
-                 }
+                }
         }
     },
     methods: {
+        openSingle(data) {
+            let singleData = data.data
+            let singleType = data.type
+            if(singleType == 'song') {
+                for (let a = 0; a < this.albums.length; a++ ) {
+                    if ( this.albums[a].AlbumID == singleData.CatNum) {
+                        this.tempAlbumData = this.albums[a].Year
+                    }
+                }
+                this.tempSongData = singleData
+                this.singleSongPanel = true
+            }
+            if(!this.singlePanels) {
+                this.singlePanels = true
+            }
+        },
+        closeSingles() {
+            if(this.singleSongPanel) {
+                this.singleSongPanel = false
+            }
+            this.singlePanels = false
+        },
         updateResult(searchkey) {
             // this.search = searchkey[0];
             this.allSearch = searchkey;
@@ -397,5 +435,38 @@ export default {
 .navIcons.active {
     background: #666;
     border-radius: 50%;
+}
+
+.singlePanelScreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #00000033;
+    z-index: 2000;
+    cursor: pointer;
+}
+.singlePageCoutainer {
+    position: fixed;
+    top: 20px;
+    left: auto;
+    right: 20px;
+    bottom: 20px;
+    width: 860px;
+    padding: 50px;
+    height: fit-content;
+    max-height: calc(100% - 140px);
+    border-radius: 5px;
+    background: #ffffff;
+    z-index: 3000;
+}
+.closeIcon {
+    width: 50px;
+    height: 50px;
+    position: fixed;
+    top: 50px;
+    right: 50px;
+    cursor: pointer;
 }
 </style>

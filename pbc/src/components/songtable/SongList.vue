@@ -11,7 +11,7 @@
         <p>ORG</p>
     </div>
     <div v-for="song in songs" :key="song.ID">
-        <ASong :song="song" /> 
+        <ASong :song="song" @openThis="passSingle($event)" /> 
     </div>
 </div>
 </template>
@@ -22,9 +22,12 @@ import ASong from './ASong.vue'
 export default {
     props: ['songs'],
     components: { ASong },
-    // setup(props) {
-    //     console.log('songs are read')
-    // }
+    emits: ['passThis'],
+    methods: {
+        passSingle(data) {
+            this.$emit('passThis', data)
+        }
+    }
 }
 </script>
 
