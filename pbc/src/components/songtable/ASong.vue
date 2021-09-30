@@ -4,8 +4,8 @@
     <div class="ascover">
         <img :src="'https://pblibrary.s3.us-east-2.amazonaws.com/' + song.CatNum +'/cover-thumb.jpg'" :alt="song.AlbumTitle">
     </div>
-    <div class="asname">
-        <p><a @click="openSingle('song', song)"><b>{{ song.Title }}</b></a></p>
+    <div class="asname" @click="openSingle('song', song)">
+        <p><b>{{ song.Title }}</b></p>
         <p>by {{ song.ArtistName }}</p>
         <p><i>{{ length }}</i></p>
         <!-- <p>{{ snippet }}</p> -->
@@ -24,6 +24,16 @@
         <li class="mod">{{ song.PBMood }}</li>
         <li class="grd">{{ song.PBOrganic }}</li>
     </ul>
+    <div class="actions">
+        <img :src="require('../../assets/images/actions/playSong_dark.svg')" alt="Play Track">
+        <img :src="require('../../assets/images/actions/addToQueue_dark.svg')" alt="Add to Queue">
+        <img :src="require('../../assets/images/actions/SimilarSong_Icon_dark.svg')" alt="Similar Songs" @click="openPanel('similar', song)">
+        <img :src="require('../../assets/images/actions/CustomWork_dark.svg')" alt="Custom Work">
+        <img :src="require('../../assets/images/actions/Share_Icon_dark.svg')" alt="Share">
+        <img :src="require('../../assets/images/actions/seeSong_Icon_dark.svg')" alt="Track Page">
+        <img :src="require('../../assets/images/actions/seeArtist_Icon_dark.svg')" alt="Artist Page">  
+        <button class="small">LICENSE</button> 
+    </div>
   </div>
 <!-- </router-link> -->
 </template>
@@ -33,7 +43,7 @@ import { computed } from '@vue/reactivity'
 
 export default {
     props: [ 'song' ],
-    emits: ['openThis'],
+    emits: ['openThis', 'showPanel'],
     setup(props) {
         const snippet = computed(() => {
             return props.song.Description ? props.song.Description.substring(0, 100) : ''
@@ -47,6 +57,10 @@ export default {
         openSingle(type, da) {
             let data = { type: type, data: da }
             this.$emit('openThis', data)
+        },
+        openPanel(panel, data) {
+            let da = { type: panel, data: data}
+            this.$emit('showPanel', da)
         }
     }
 }
@@ -122,8 +136,18 @@ export default {
     background: url('../../assets/images/table/grd.png');
     background-size: cover;
 }
-p a:hover {
+.asname:hover {
     color: #222;
     transition-duration: 200ms;
+}
+.actions {
+    display: none;
+    margin: auto 10px;
+}
+.asong:hover .asflow, .asong:hover .askey, .asong:hover .asvalues {
+    display: none;
+}
+.asong:hover .actions{
+    display: block;
 }
 </style>

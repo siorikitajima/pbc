@@ -10,7 +10,7 @@
           <span @click="clearValue('organic')">ORG <b>{{ orgValue }}</b></span>
           </p>
           <p>
-          <span v-for="searchKey in searchKeys" class="searchWords" @click="clearValue( searchKey )">{{ searchKey }}</span>
+          <span v-for="searchKey in searchKeys" :key="searchKey" class="searchWords" @click="clearValue( searchKey )">{{ searchKey }}</span>
           </p>
           <!-- <div class="resultActions">
               <p class="trackCount"><b>{{ songCount }}</b> Tracks</p>

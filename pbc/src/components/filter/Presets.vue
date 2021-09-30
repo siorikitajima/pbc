@@ -46,7 +46,7 @@ export default {
   padding: 120px 20px 50px 20px;
   top: 0;
   left: 0;
-  background: #c1b0b7cc;
+  background: #b4acafcc;
   border-right: #44444444 1px solid;
   z-index: -1;
   overflow-y: scroll;

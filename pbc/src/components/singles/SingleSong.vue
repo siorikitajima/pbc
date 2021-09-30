@@ -11,7 +11,7 @@
           <div class="actions">
             <img :src="require('../../assets/images/actions/playSong_dark.svg')" alt="Play Track">
             <img :src="require('../../assets/images/actions/addToQueue_dark.svg')" alt="Add to Queue">
-            <img :src="require('../../assets/images/actions/SimilarSong_Icon_dark.svg')" alt="Similar Songs">
+            <img :src="require('../../assets/images/actions/SimilarSong_Icon_dark.svg')" alt="Similar Songs" @click="openPanel(song)">
             <img :src="require('../../assets/images/actions/CustomWork_dark.svg')" alt="Custom Work">
             <img :src="require('../../assets/images/actions/Share_Icon_dark.svg')" alt="Share">
             <img :src="require('../../assets/images/actions/seeSong_Icon_dark.svg')" alt="Track Page">
@@ -62,7 +62,7 @@
             <p>{{ song.Genre }}, {{ song.SubGenreA }}</p>
         </div>
     </div>
-    <div class="channels">
+    <!-- <div class="channels">
         <img :src="require('../../assets/images/singles/Single-Song_Apple.svg')" alt="Apple Music">
         <img :src="require('../../assets/images/singles/Single-Song_Bandcamp.svg')" alt="Bandcamp">
         <img :src="require('../../assets/images/singles/Single-Song_GooglePlay.svg')" alt="Google Play">
@@ -72,7 +72,7 @@
         <img :src="require('../../assets/images/singles/Single-Song_Youtube.svg')" alt="Youtube">   
         <img :src="require('../../assets/images/singles/Single-Song_Tidal.svg')" alt="Tidal">   
         <img :src="require('../../assets/images/singles/Single-Song_Deezer.svg')" alt="Deezer">   
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -81,11 +81,18 @@ import { computed } from '@vue/reactivity'
 
 export default {
     props: ['song', 'album'],
+    emits: ['passPanel'],
     setup(props) {
         const length = computed(() => {
             return props.song.Length ? props.song.Length.slice(2) : ''
         })
         return { length }
+    },
+    methods: {
+        openPanel(song) {
+            let da = { type: 'similar', data: song}
+            this.$emit('passPanel', da)
+        }
     }
 }
 </script>
@@ -160,10 +167,14 @@ ul li span, ul li b {
     margin: 10px 0 0 0;
 }
 .actions {
-    margin-top: 20px;
-    position: relative;
+/*     height: fit-content;
+    margin: 10px 0;
+    padding: 10px 0 5px 0;
+    position: relative;*/
+    border-top: #ddd 1px solid;
+    border-bottom: #ddd 1px solid;
 }
-.actions img, .channels img {
+/*.actions img, .channels img {
     width: 32px;
     height: 32px;
     margin: 0 10px 0 0;
@@ -171,14 +182,15 @@ ul li span, ul li b {
     display: inline-block;
 }
 .actions img {
-    margin: 0 16px 16px 0;
+    margin: 0 16px 0 0;
 }
 .actions button.small {
     display: inline-block;
     position: absolute;
     top: 2px;
     margin-left: 5px;
-}
+    margin: 10px 16px 0 0;
+} */
 .flowWrapper {
     display: flex;
     justify-content: left;

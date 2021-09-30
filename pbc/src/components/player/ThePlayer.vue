@@ -13,21 +13,37 @@
         <div class="duration"></div>
     </div>
     <div class="icons">
+        <!-- <img :src="require('../../assets/images/actions/playSong_white.svg')" alt="Play"> -->
         <img :src="require('../../assets/images/actions/addToQueue_white.svg')" alt="Add to Queue">
-        <img :src="require('../../assets/images/actions/SimilarSong_Icon_white.svg')" alt="Similar Songs">
+        <img :src="require('../../assets/images/actions/SimilarSong_Icon_white.svg')" alt="Similar Songs" @click="openPanel('similar', song)">
         <img :src="require('../../assets/images/actions/CustomWork_white.svg')" alt="Custom Work">
         <img :src="require('../../assets/images/actions/Share_Icon_white.svg')" alt="Share">
         <img :src="require('../../assets/images/actions/seeSong_Icon_white.svg')" alt="Track">
         <img :src="require('../../assets/images/actions/seeArtist_Icon_white.svg')" alt="Artist">
-        <img :src="require('../../assets/images/actions/PlayList_Icon.svg')" alt="Playlist">
+        <img :src="require('../../assets/images/actions/PlayList_Icon.svg')" alt="Playlist" @click="openPanel('queue', song)">
     </div>
   </div>
 </template>
 
 <script>
+import getSong from '../../composables/getSong'
+
 export default {
     name: 'thePlayer',
-    props: [ 'song' ]
+    props: [ 'songID' ],
+    emits: [ 'showPanel' ],
+    setup(props) {
+        const { song, songerror, songload } = getSong(props.songID)
+        songload()
+
+        return { song, songerror }
+    },
+    methods: {
+        openPanel(panel, data) {
+            let da = { type: panel, data: data}
+            this.$emit('showPanel', da)
+        }
+    }
 }
 </script>
 
@@ -52,7 +68,7 @@ export default {
 }
 .thePlayer .controller img, .thePlayer .icons img {
     height: 32px;
-    margin: 4px 14px;
+    margin: 4px 10px;
     cursor: pointer;
     opacity: 0.5;
 }

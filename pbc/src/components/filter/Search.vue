@@ -88,7 +88,7 @@ export default {
   position: absolute;
   top: 0;
   left: 0;
-  background: #f2f2f288;
+  background: #f2f2f2aa;
   border-bottom: #44444444 1px solid;
   z-index: -1;
 }
@@ -114,7 +114,7 @@ input.searchBox {
   position: fixed;
   top: 40px;
   left: 0;
-  z-index: 200;
+  z-index: 2000;
   text-align: center;
 }
 .searchKey {

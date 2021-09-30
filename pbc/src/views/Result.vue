@@ -3,7 +3,7 @@
     <div class="resultWrapper" v-bind:class="{ moveToRight: sliderPanel || presetPanel, moveDown: searchPanel }">
         <div v-if="songs.length">
             <ResultHead :songCount="songCount" :resultQuery="resultQuery" @clearVal="clearValue($event)" />
-            <SongList :songs="fltBySearch" @passThis="openSingle($event)" />
+            <SongList :songs="fltBySearch" @passThis="openSingle($event)" @openPanel="passPanel($event)" />
         </div>
         <div v-else> Loading... </div>
     </div>
@@ -17,6 +17,9 @@
     <transition name="slideFRLeft">
         <Search @loadSearch="updateResult($event)" v-show="searchPanel" :search="search" :allSearch="allSearch" />
     </transition>
+    <!-- <transition name="slideFRBottom">
+        <SimilarSongs v-show="similarPanel" :similarList="similarSongList" :ogSong="findASong" />
+    </transition> -->
 
     <div id="navLeft" class="cornerNavs">
         <a @click="toggleSliderPanel">
@@ -35,7 +38,7 @@
 
     <div v-if="singlePanels" class="singlePanelScreen" @click="closeSingles"></div>
         <div v-if="singlePanels" class="singlePageCoutainer">
-            <SingleSong v-if="singleSongPanel" :song="tempSongData" :album="tempAlbumData" />
+            <SingleSong v-if="singleSongPanel" :song="tempSongData" :album="tempAlbumData" @passPanel="panelAndClose($event)" />
             <div class="closeIcon" @click="closeSingles">
                 <img :src="require('../assets/images/global/Close_Icon_dark.svg')" alt="Close">
             </div>
@@ -54,32 +57,45 @@ import Search from '../components/filter/Search.vue'
 import Filters from '../components/filter/Filters.vue'
 import Presets from '../components/filter/Presets.vue'
 import SingleSong from '../components/singles/SingleSong.vue'
+// import SimilarSongs from '../components/similar/SimilarSongs.vue'
 
 export default {
     name: 'Result',
     components: { SongList, Search, Filters, ResultHead, Presets, SingleSong },
+    emits: ['panelReq'],
     setup() {
         const { songs, error, load } = getSongs()
         const { albums, albumserror, loadAlbums } = getAlbums()
-        // const search = ref('')
+        load()
+        loadAlbums()
+
         const searchPanel = ref(false)
         const sliderPanel = ref(true)
         const presetPanel = ref(false)
+        // const similarPanel = ref(false)
+
         const rhythm = ref({ min: 0, max: 10 })
         const speed = ref({ min: 0, max: 10 })
         const experimental = ref({ min: 0, max: 10 })
         const mood = ref({ min: 0, max: 10 })
         const organic = ref({ min: 0, max: 10 })
+        
         const search = ref('')
         const allSearch = ref([])
+
         const singlePanels = ref(false)
         const singleSongPanel = ref(false)
         const tempSongData = ref('')
         const tempAlbumData = ref('')
-        load()
-        loadAlbums()
 
-        return { songs, error, searchPanel, sliderPanel, presetPanel, rhythm, speed, experimental, mood, organic, search, allSearch, singleSongPanel, singlePanels, tempSongData, albums, albumserror, tempAlbumData } 
+        // const ogSongData = ref('')
+
+        return { 
+        songs, error, albums, albumserror,
+        searchPanel, sliderPanel, presetPanel, 
+        rhythm, speed, experimental, mood, organic, 
+        search, allSearch, 
+        singleSongPanel, singlePanels, tempSongData, tempAlbumData } 
     },
     computed: {
         fltBySearch: function() {
@@ -88,16 +104,16 @@ export default {
                     if( this.allSearch.length == 0 ) { 
                         return true
                     } else {
-                    for(let s = 0; s < this.allSearch.length; s++ ) {
-                        if ( song.Title.toLowerCase().match(this.allSearch[s].toLowerCase())) { return true }
-                        else if ( song.ArtistName.toLowerCase().match(this.allSearch[s].toLowerCase())) { return true }
-                        else if ( song.Writers.toLowerCase().match(this.allSearch[s].toLowerCase())) { return true }
-                        // else { return false }
+                        for(let s = 0; s < this.allSearch.length; s++ ) {
+                            if ( song.Title.toLowerCase().match(this.allSearch[s].toLowerCase())) { return true }
+                            else if ( song.ArtistName.toLowerCase().match(this.allSearch[s].toLowerCase())) { return true }
+                            else if ( song.Writers.toLowerCase().match(this.allSearch[s].toLowerCase())) { return true }
+                            // else { return false }
+                        }
+                        return false
                     }
-                    return false
                 }
-            }
-        })
+            })
         },
         songCount: function() {
             return this.fltBySearch.length;
@@ -114,6 +130,13 @@ export default {
         }
     },
     methods: {
+        passPanel(data) {
+            this.$emit('panelReq', data)
+        },
+        panelAndClose(data) {
+            this.closeSingles()
+            this.$emit('panelReq', data)
+        },
         openSingle(data) {
             let singleData = data.data
             let singleType = data.type
@@ -137,9 +160,8 @@ export default {
             this.singlePanels = false
         },
         updateResult(searchkey) {
-            // this.search = searchkey[0];
             this.allSearch = searchkey;
-            console.log(searchkey)
+            // console.log(searchkey)
         },
         toggleSearchPanel() {
             this.searchPanel = !this.searchPanel
@@ -412,17 +434,6 @@ export default {
     top: 80px;
 }
 
-.slideFRLeft-enter-active,
-.slideFRLeft-leave-active,
-.slideFRTop-enter-active,
-.slideFRTop-leave-active {
-    transition: 200ms;
-}
-.slideFRLeft-enter-from { transform: translate(-110%, 0); }
-.slideFRLeft-leave-to { transform: translate(-110%, 0); }
-.slideFRTop-enter-from { transform: translate(0, -110%); }
-.slideFRTop-leave-to { transform: translate(0, -110%); }
-
 .navIcons.filters {
   width: 24px;
   height: 24px;
@@ -467,6 +478,11 @@ export default {
     position: fixed;
     top: 50px;
     right: 50px;
+    opacity: 0.3;
     cursor: pointer;
+}
+.closeIcon:hover {
+    opacity: 1;
+    transition-duration: 200ms;
 }
 </style>

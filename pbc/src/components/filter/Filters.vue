@@ -43,7 +43,7 @@ export default {
   padding: 120px 20px 50px 20px;
   top: 0;
   left: 0;
-  background: #e7ecee;
+  background: #e7eceeee;
   border-right: #44444444 1px solid;
   z-index: -1;
 }

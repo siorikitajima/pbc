@@ -44,3 +44,43 @@ button.small:hover {
     background: #0092C5;
     transition-duration: 200ms;
 }
+
+.slideFRLeft-enter-active,
+.slideFRLeft-leave-active,
+.slideFRTop-enter-active,
+.slideFRTop-leave-active,
+.slideFRBottom-enter-active,
+.slideFRBottom-leave-active {
+    transition: 200ms;
+}
+.slideFRLeft-enter-from { transform: translate(-110%, 0); }
+.slideFRLeft-leave-to { transform: translate(-110%, 0); }
+.slideFRTop-enter-from { transform: translate(0, -110%); }
+.slideFRTop-leave-to { transform: translate(0, -110%); }
+.slideFRBottom-enter-from { transform: translate(0, 220%); }
+.slideFRBottom-leave-to { transform: translate(0, 220%); }
+
+
+.actions {
+    height: fit-content;
+    margin: 10px 0;
+    padding: 10px 0 5px 0;
+    position: relative;
+}
+.actions img, .channels img {
+    width: 32px;
+    height: 32px;
+    margin: 0 10px 0 0;
+    cursor: pointer;
+    display: inline-block;
+}
+.actions img {
+    margin: 0 16px 0 0;
+}
+.actions button.small {
+    display: inline-block;
+    position: absolute;
+    top: 2px;
+    margin-left: 5px;
+    margin: 10px 16px 0 0;
+}
