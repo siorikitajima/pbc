@@ -14,7 +14,9 @@
             <img :src="require('../../assets/images/actions/SimilarSong_Icon_dark.svg')" alt="Similar Songs" @click="openPanel(song)">
             <img :src="require('../../assets/images/actions/CustomWork_dark.svg')" alt="Custom Work">
             <img :src="require('../../assets/images/actions/Share_Icon_dark.svg')" alt="Share">
+            <router-link :to="'/song/' + song.ID + '-' + slug" v-if="panel">
             <img :src="require('../../assets/images/actions/seeSong_Icon_dark.svg')" alt="Track Page">
+            </router-link>
             <img :src="require('../../assets/images/actions/seeArtist_Icon_dark.svg')" alt="Artist Page">  
             <button class="small">LICENSE</button> 
           </div>
@@ -24,55 +26,24 @@
     </div>
     <div class="flex">
         <ul class="div260">
-            <li><b>Rhythm</b><span>{{ song.PBRhythm }}</span>/10</li>
-            <li><b>Speed</b><span>{{ song.PBSpeed }}</span>/10</li>
-            <li><b>Flow</b><span>{{ song.ShapeArc }}</span></li>
-            <li><b>Duration</b><span>{{ length }}</span></li>
+            <li><b>Rhythm</b>{{ song.PBRhythm }}<span>/10</span></li>
+            <li><b>Speed</b>{{ song.PBSpeed }}<span>/10</span></li>
+            <li><b>Flow</b>{{ song.ShapeArc }}</li>
+            <li><b>Duration</b>{{ length }}</li>
         </ul>
         <ul class="div260">
-            <li><b>Experimental</b><span>{{ song.PBExperimental }}</span>/10</li>
-            <li><b>Mood</b><span>{{ song.PBMood }}</span>/10</li>
-            <li><b>Key</b><span>{{ song.MusicKey }}</span></li>
-            <li><b>BPM</b><span>{{ song.BPM }}</span></li>
+            <li><b>Experimental</b>{{ song.PBExperimental }}<span>/10</span></li>
+            <li><b>Mood</b>{{ song.PBMood }}<span>/10</span></li>
+            <li><b>Key</b>{{ song.MusicKey }}</li>
+            <li><b>BPM</b>{{ song.BPM }}</li>
         </ul>
         <ul class="div260">
-            <li><b>Organic</b><span>{{ song.PBOrganic }}</span>/10</li>
-            <li><b>Density</b><span>5</span>/10</li>
-            <li><b>Stems</b><span>{{ song.Stems }}</span></li>
-            <li><b>ISRC</b><span>QM-HRH-13-00026(t)</span></li>
+            <li><b>Organic</b>{{ song.PBOrganic }}<span>/10</span></li>
+            <li><b>Density</b>5<span>/10</span></li>
+            <li><b>Stems</b>{{ song.Stems }}</li>
+            <li><b>ISRC</b>{{ song.ISRCCode }}</li>
         </ul>
     </div>
-    <div class="flex">
-        <div class="div400 group">
-            <p><b>Artists</b></p>
-            <p>{{ song.Writers }}</p>
-        </div>
-        <div class="div400 group">
-            <p><b>Album</b></p>
-            <p>{{ song.AlbumTitle }} ({{ album }})</p>
-        </div>
-    </div>
-    <div class="flex">
-        <div class="div400 group">
-            <p><b>Instruments</b></p>
-            <p>{{ song.Instruments }}</p>
-        </div>
-        <div class="div400 group">
-            <p><b>Genres/Mood</b></p>
-            <p>{{ song.Genre }}, {{ song.SubGenreA }}</p>
-        </div>
-    </div>
-    <!-- <div class="channels">
-        <img :src="require('../../assets/images/singles/Single-Song_Apple.svg')" alt="Apple Music">
-        <img :src="require('../../assets/images/singles/Single-Song_Bandcamp.svg')" alt="Bandcamp">
-        <img :src="require('../../assets/images/singles/Single-Song_GooglePlay.svg')" alt="Google Play">
-        <img :src="require('../../assets/images/singles/Single-Song_SoundCloud.svg')" alt="SoundCloud">
-        <img :src="require('../../assets/images/singles/Single-Song_Spotify.svg')" alt="Spotify">   
-        <img :src="require('../../assets/images/singles/Single-Song_Vimeo.svg')" alt="Vimeo">   
-        <img :src="require('../../assets/images/singles/Single-Song_Youtube.svg')" alt="Youtube">   
-        <img :src="require('../../assets/images/singles/Single-Song_Tidal.svg')" alt="Tidal">   
-        <img :src="require('../../assets/images/singles/Single-Song_Deezer.svg')" alt="Deezer">   
-    </div> -->
   </div>
 </template>
 
@@ -80,13 +51,16 @@
 import { computed } from '@vue/reactivity'
 
 export default {
-    props: ['song', 'album'],
+    props: ['song', 'panel'],
     emits: ['passPanel'],
     setup(props) {
         const length = computed(() => {
             return props.song.Length ? props.song.Length.slice(2) : ''
         })
-        return { length }
+        const slug = computed(() => {
+            return props.song.Title.toLowerCase().replace(/\s+/g, '-')
+        })
+        return { length, slug }
     },
     methods: {
         openPanel(song) {
@@ -156,8 +130,12 @@ ul li {
 ul li:nth-of-type(3), ul li:nth-of-type(4) {
     background: #f2f2f2;
 }
-ul li span, ul li b {
+ul li b {
     padding-left: 10px;
+    padding-right: 10px;
+}
+ul li span {
+    font-size: 0.8em;
 }
 .channels {
     text-align: center;

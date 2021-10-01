@@ -18,7 +18,9 @@
         <img :src="require('../../assets/images/actions/SimilarSong_Icon_white.svg')" alt="Similar Songs" @click="openPanel('similar', song)">
         <img :src="require('../../assets/images/actions/CustomWork_white.svg')" alt="Custom Work">
         <img :src="require('../../assets/images/actions/Share_Icon_white.svg')" alt="Share">
+        <router-link :to="'/song/' + song.ID + '-' + song.Title">
         <img :src="require('../../assets/images/actions/seeSong_Icon_white.svg')" alt="Track">
+        </router-link>
         <img :src="require('../../assets/images/actions/seeArtist_Icon_white.svg')" alt="Artist">
         <img :src="require('../../assets/images/actions/PlayList_Icon.svg')" alt="Playlist" @click="openPanel('queue', song)">
     </div>

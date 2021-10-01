@@ -9,7 +9,7 @@
     </router-link>
   </div>
 
-  <router-view @panelReq="openPanel($event)"/>
+  <router-view @panelReq="openPanel($event)" :key="$route.fullPath" />
 
   <transition name="slideFRBottom">
       <PlayerQueue v-show="queuePanel" @closeThis="closeQueue" />
@@ -18,7 +18,7 @@
       <SimilarSongs v-show="similarPanel" :similarList="similarSongList" :ogSong="ogSongData" @closeThis="closeSimilar" />
   </transition>
 
-  <div v-if="theSongID">
+  <div v-if="songs.length">
   <ThePlayer :songID="theSongID" @showPanel="openPanel($event)" />
   </div>
 </div>
@@ -27,7 +27,7 @@
 <script>
 import getSongs from './composables/getSongs'
 import getSong from './composables/getSong'
-import { ref, computed } from '@vue/reactivity'
+import { ref } from '@vue/reactivity'
 import ThePlayer from './components/player/ThePlayer.vue'
 import SimilarSongs from './components/similar/SimilarSongs.vue'
 import PlayerQueue from './components/player/PlayerQueue.vue'

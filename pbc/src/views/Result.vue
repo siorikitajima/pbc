@@ -38,7 +38,8 @@
 
     <div v-if="singlePanels" class="singlePanelScreen" @click="closeSingles"></div>
         <div v-if="singlePanels" class="singlePageCoutainer">
-            <SingleSong v-if="singleSongPanel" :song="tempSongData" :album="tempAlbumData" @passPanel="panelAndClose($event)" />
+            <SingleSong v-if="singleSongPanel" :song="tempSongData" :panel="true" @passPanel="panelAndClose($event)" />
+            <SongInfoPanel v-if="singleSongPanel" :song="tempSongData" />
             <div class="closeIcon" @click="closeSingles">
                 <img :src="require('../assets/images/global/Close_Icon_dark.svg')" alt="Close">
             </div>
@@ -57,11 +58,13 @@ import Search from '../components/filter/Search.vue'
 import Filters from '../components/filter/Filters.vue'
 import Presets from '../components/filter/Presets.vue'
 import SingleSong from '../components/singles/SingleSong.vue'
-// import SimilarSongs from '../components/similar/SimilarSongs.vue'
+import SongInfoPanel from '../components/singles/SongInfoPanel.vue'
 
 export default {
     name: 'Result',
-    components: { SongList, Search, Filters, ResultHead, Presets, SingleSong },
+    components: { SongList, ResultHead, 
+    Search, Filters, Presets, 
+    SingleSong, SongInfoPanel },
     emits: ['panelReq'],
     setup() {
         const { songs, error, load } = getSongs()
@@ -143,7 +146,7 @@ export default {
             if(singleType == 'song') {
                 for (let a = 0; a < this.albums.length; a++ ) {
                     if ( this.albums[a].AlbumID == singleData.CatNum) {
-                        this.tempAlbumData = this.albums[a].Year
+                        singleData.Year = this.albums[a].Year
                     }
                 }
                 this.tempSongData = singleData

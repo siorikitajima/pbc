@@ -30,7 +30,9 @@
         <img :src="require('../../assets/images/actions/SimilarSong_Icon_dark.svg')" alt="Similar Songs" @click="openPanel('similar', song)">
         <img :src="require('../../assets/images/actions/CustomWork_dark.svg')" alt="Custom Work">
         <img :src="require('../../assets/images/actions/Share_Icon_dark.svg')" alt="Share">
-        <img :src="require('../../assets/images/actions/seeSong_Icon_dark.svg')" alt="Track Page">
+        <router-link :to="'/song/' + song.ID + '-' + slug">
+        <img :src="require('../../assets/images/actions/seeSong_Icon_dark.svg')" alt="Track Page" >
+        </router-link>
         <img :src="require('../../assets/images/actions/seeArtist_Icon_dark.svg')" alt="Artist Page">  
         <button class="small">LICENSE</button> 
     </div>
@@ -51,7 +53,10 @@ export default {
         const length = computed(() => {
             return props.song.Length ? props.song.Length.slice(2) : ''
         })
-        return { snippet, length }
+        const slug = computed(() => {
+            return props.song.Title.toLowerCase().replace(/\s+/g, '-')
+        })
+        return { snippet, length, slug }
     },
     methods: {
         openSingle(type, da) {

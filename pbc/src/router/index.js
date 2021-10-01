@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Result from '../views/Result.vue'
 import SingleSongPage from '../views/SingleSongPage.vue'
+import SingleArtistPage from '../views/SingleArtistPage.vue'
 
 const routes = [
   {
@@ -12,6 +13,12 @@ const routes = [
     path: '/song/:id-:title',
     name: 'Single Song',
     component: SingleSongPage,
+    props: true
+  },
+  {
+    path: '/project/:name',
+    name: 'Single Artist',
+    component: SingleArtistPage,
     props: true
   }
 ]
