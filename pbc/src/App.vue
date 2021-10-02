@@ -9,7 +9,8 @@
     </router-link>
   </div>
 
-  <router-view @panelReq="openPanel($event)" :key="$route.fullPath" />
+
+  <router-view :songs="songs" @panelReq="openPanel($event)" @singlePanel="openSingle($event)" :key="$route.fullPath" />
 
   <transition name="slideFRBottom">
       <PlayerQueue v-show="queuePanel" @closeThis="closeQueue" />
@@ -21,22 +22,35 @@
   <div v-if="songs.length">
   <ThePlayer :songID="theSongID" @showPanel="openPanel($event)" />
   </div>
+
+  <div v-if="singlePanels" class="singlePanelScreen" @click="closeSingles"></div> 
+    <div v-if="singlePanels" class="singlePageCoutainer">
+        <SingleSong v-if="singleSongPanel" :song="tempSongData" :panel="true" @passPanel="openPanel($event)" @closeSingle="closeSinglePanel" />
+        <SongInfoPanel v-if="singleSongPanel" :song="tempSongData" />
+        <div class="closeIcon" @click="closeSingles">
+            <img :src="require('./assets/images/global/Close_Icon_dark.svg')" alt="Close">
+        </div>
+    </div>
+
 </div>
 </template>
 
 <script>
+import getSingleSong from './composables/getSingleSong'
 import getSongs from './composables/getSongs'
-import getSong from './composables/getSong'
 import { ref } from '@vue/reactivity'
 import ThePlayer from './components/player/ThePlayer.vue'
 import SimilarSongs from './components/similar/SimilarSongs.vue'
 import PlayerQueue from './components/player/PlayerQueue.vue'
+import SingleSong from './components/singles/SingleSong.vue'
+import SongInfoPanel from './components/singles/SongInfoPanel.vue'
 
 export default {
-  components: { ThePlayer, SimilarSongs, PlayerQueue },
+  components: { ThePlayer, SimilarSongs, PlayerQueue, 
+  SingleSong, SongInfoPanel },
   setup() {
     const { songs, error, load } = getSongs()
-    
+    load()
     const theSongID = ref('PBC0105')
     const ogSongData = ref('')
     const queueMaster = ref([])
@@ -44,20 +58,17 @@ export default {
     const similarPanel = ref(false)
     const queuePanel = ref(false)
 
-    load()
+    const singlePanels = ref(false)
+    const singleSongPanel = ref(false)
+    const tempSongData = ref('')
+    const tempAlbumData = ref('')
 
-    const { song, songerror, songload } = getSong(theSongID.value)
-    songload()
-
-    return { songs, error, song, songerror,
+    return { songs, error, 
     theSongID, ogSongData, queueMaster,
-    similarPanel, queuePanel }
+    similarPanel, queuePanel,
+    singleSongPanel, singlePanels, tempSongData, tempAlbumData }
   },
   computed: {
-    // findASong: function() {
-    //   // console.log(this.songs[10])
-    //   return this.song
-    // },
     similarSongList: function() {
         let gap = 1.5
         let theOG = this.ogSongData
@@ -84,7 +95,9 @@ export default {
         if (!this.similarPanel) {
           this.ogSongData = da.data
           this.similarPanel = !this.similarPanel
+          if(this.singlePanels) { this.closeSingles() }
         } else if (this.ogSongData.ID !== da.data.ID && this.similarPanel) {
+          if(this.singlePanels) { this.closeSingles() }
           this.similarPanel = false
           this.ogSongData = da.data
           setTimeout(() => { this.similarPanel = true}, 200)
@@ -100,7 +113,29 @@ export default {
     },
     closeQueue() {
       this.queuePanel = false
+    },
+    closeSinglePanel() {
+      this.singleSongPanel = false
+      this.singlePanels = false
+    },
+    async openSingle(data) {
+    let singleType = data.type
+    if(singleType == 'song') {
+      const { singlesong, singlesongload } = getSingleSong(data.data.ID)
+      await singlesongload()
+        this.tempSongData = await singlesong
+        this.singleSongPanel = true
     }
+    if(!this.singlePanels) {
+        this.singlePanels = true
+    }
+    },
+    closeSingles() {
+        if(this.singleSongPanel) {
+            this.singleSongPanel = false
+        }
+        this.singlePanels = false
+    },
   }
 }
 </script>

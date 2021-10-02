@@ -5,10 +5,11 @@
         <img :src="'https://pblibrary.s3.us-east-2.amazonaws.com/' + song.CatNum +'/cover-thumb.jpg'" :alt="song.AlbumTitle">
     </div>
     <div class="asname" @click="openSingle('song', song)">
-        <p><b>{{ song.Title }}</b></p>
+        <p><b>{{ song.Title }} </b><img src="../../assets/images/table/eye.svg" alt="See More"></p>
         <p>by {{ song.ArtistName }}</p>
         <p><i>{{ length }}</i></p>
         <!-- <p>{{ snippet }}</p> -->
+        
     </div>
     <div class="asflow">
         <img :src="require('../../assets/images/table/' + song.ShapeArc + '.png')" :alt="song.ShapeArc">
@@ -33,7 +34,9 @@
         <router-link :to="'/song/' + song.ID + '-' + slug">
         <img :src="require('../../assets/images/actions/seeSong_Icon_dark.svg')" alt="Track Page" >
         </router-link>
+        <router-link :to="'/project/' + artistslug" v-if="showProjectLink">
         <img :src="require('../../assets/images/actions/seeArtist_Icon_dark.svg')" alt="Artist Page">  
+        </router-link>
         <button class="small">LICENSE</button> 
     </div>
   </div>
@@ -41,10 +44,10 @@
 </template>
 
 <script>
-import { computed } from '@vue/reactivity'
+import { computed, ref } from '@vue/reactivity'
 
 export default {
-    props: [ 'song' ],
+    props: [ 'song', 'dist' ],
     emits: ['openThis', 'showPanel'],
     setup(props) {
         const snippet = computed(() => {
@@ -56,7 +59,15 @@ export default {
         const slug = computed(() => {
             return props.song.Title.toLowerCase().replace(/\s+/g, '-')
         })
-        return { snippet, length, slug }
+        const artistslug = computed(() => {
+            return props.song.ArtistName.toLowerCase().replace(/\s+/g, '-')
+        })
+        // const dist = ref(props.dist)
+        const showProjectLink = computed(() => {
+            if(props.dist == 'project') { return false }
+            else { return true }
+        })
+        return { snippet, length, slug, artistslug, showProjectLink }
     },
     methods: {
         openSingle(type, da) {
@@ -74,7 +85,8 @@ export default {
 <style scoped>
 .asong {
     width: 800px;
-    height: 60px;
+    min-height: 60px;
+    height: fit-content;
     max-width: 90%;
     margin: 5px auto;
     background: #f2f2f2;
@@ -97,8 +109,19 @@ export default {
 }
 .asname {
     padding-left: 10px;
+    /* margin-top: -10px; */
     width: 250px;
 }
+.asname img {
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 -5px 10px;
+    opacity: 0;
+}
+.asname:hover img {
+    opacity: 1;
+    transition-duration: 200ms;
+} 
 .asflow {
     width: 120px;
     margin: auto 20px auto 0;

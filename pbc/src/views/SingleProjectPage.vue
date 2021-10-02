@@ -1,19 +1,19 @@
 <template>
   <div class="pagewrapper">
-    <div v-if="artist">
-        <SingleArtist :artist="artist" />
+    <div v-if="project">
+        <SingleArtist :artist="project" />
     </div>
         <h2>// FEATURED TRACKS //</h2>
         <div v-if="featuredTracks.length">
-            <SongList :fltdsongs="featuredTracks.slice(0,5)" :dist="'artist'" @passThis="passSingle($event)" @openPanel="passPanel($event)" />
+            <SongList :fltdsongs="featuredTracks.slice(0,5)" :dist="'project'" @passThis="passSingle($event)" @openPanel="passPanel($event)" />
         </div>
         <div v-else><Loading /></div>
 
     <h2>// RELATED ARTISTS //</h2>
-    <RelatedArtists :artist="artist" />
+    <RelatedArtists :artist="project" />
 
-    <div v-if="featuredTracks.length > 6">
-        <SongList :fltdsongs="featuredTracks.slice(6,featuredTracks.length-1)" :dist="'artist'" @passThis="passSingle($event)" @openPanel="passPanel($event)" />
+    <div v-if="featuredTracks.length">
+        <SongList :fltdsongs="featuredTracks.slice(6,featuredTracks.length-1)" :dist="'project'" @passThis="passSingle($event)" @openPanel="passPanel($event)" />
     </div>
     <!-- <div v-else><Loading /></div> -->
   </div>
@@ -21,7 +21,7 @@
 
 <script>
 import SingleArtist from '../components/singles/SingleArtist.vue'
-import getArtist from '../composables/getArtist'
+import getProject from '../composables/getProject'
 // import getSongs from '../composables/getSongs'
 import SongList from '../components/songtable/SongList.vue'
 import Loading from '../components/songtable/Loading.vue'
@@ -30,20 +30,21 @@ import RelatedArtists from '../components/singles/RelatedArtists.vue'
 import { ref } from '@vue/reactivity'
 
 export default {
-    name: 'SingleArtistPage',
-    components: { SingleArtist, SongList, RelatedArtists, Loading },
+    name: 'SingleProjectPage',
+    components: { SingleArtist, 
+    SongList, RelatedArtists, Loading },
     emits: ['panelReq', 'singlePanel'],
     props: [ 'name', 'songs' ],
     setup(props) {
         const theName = ref(props.name)
-        
-        const { artist, artisterror, loadArtist } = getArtist(theName.value)
-        loadArtist()
+        // const songs = ref(props.songs)
+        const { project, projecterror, loadProject } = getProject(theName.value)
+        loadProject()
 
         // const { songs, error, load } = getSongs()
         // load()
 
-        return { artist, artisterror, theName }
+        return { project, projecterror, theName }
     },
     methods: {
         passPanel(data) {
@@ -56,8 +57,7 @@ export default {
     computed: {
         featuredTracks: function() {
             return this.songs.filter((song) => {
-                if ( song.Writers.toLowerCase().match(this.artist.ArtistName.toLowerCase()) ) { return true }
-                else { return false }
+                return song.ArtistName.toLowerCase().match(this.project.ArtistName.toLowerCase())
             })
         }
     }
@@ -74,4 +74,5 @@ h2 {
     font-size: 1.2em;
     margin: 40px auto 20px auto;
 }
+
 </style>

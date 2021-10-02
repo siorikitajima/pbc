@@ -14,10 +14,12 @@
             <img :src="require('../../assets/images/actions/SimilarSong_Icon_dark.svg')" alt="Similar Songs" @click="openPanel(song)">
             <img :src="require('../../assets/images/actions/CustomWork_dark.svg')" alt="Custom Work">
             <img :src="require('../../assets/images/actions/Share_Icon_dark.svg')" alt="Share">
-            <router-link :to="'/song/' + song.ID + '-' + slug" v-if="panel">
+            <router-link :to="'/song/' + song.ID + '-' + slug" v-if="panel" @click.native="closeSinglePanel()" >
             <img :src="require('../../assets/images/actions/seeSong_Icon_dark.svg')" alt="Track Page">
             </router-link>
+            <router-link :to="'/project/' + artistslug" @click.native="closeSinglePanel()" >
             <img :src="require('../../assets/images/actions/seeArtist_Icon_dark.svg')" alt="Artist Page">  
+            </router-link>
             <button class="small">LICENSE</button> 
           </div>
           <p>{{ song.Description }}</p>
@@ -52,7 +54,7 @@ import { computed } from '@vue/reactivity'
 
 export default {
     props: ['song', 'panel'],
-    emits: ['passPanel'],
+    emits: ['passPanel', 'closeSingle'],
     setup(props) {
         const length = computed(() => {
             return props.song.Length ? props.song.Length.slice(2) : ''
@@ -60,12 +62,18 @@ export default {
         const slug = computed(() => {
             return props.song.Title.toLowerCase().replace(/\s+/g, '-')
         })
-        return { length, slug }
+        const artistslug = computed(() => {
+            return props.song.ArtistName.toLowerCase().replace(/\s+/g, '-')
+        })
+        return { length, slug, artistslug }
     },
     methods: {
         openPanel(song) {
             let da = { type: 'similar', data: song}
             this.$emit('passPanel', da)
+        },
+        closeSinglePanel() {
+            this.$emit('closeSingle')
         }
     }
 }

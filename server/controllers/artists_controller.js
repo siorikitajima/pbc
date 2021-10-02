@@ -2,6 +2,23 @@
 
 const Artist = require('../models/artist_schema');
 const FeatArtist = require('../models/featartist_schema');
+const slugVsNameList = [
+  { 'slug': 'microstructures', 'name': 'Microstructures' },
+  { 'slug': 'the-patternbased-corporation', 'name': 'The PatternBased Corporation' },
+  { 'slug': 'hill-sleepers', 'name': 'Hill Sleepers' },
+  { 'slug': 'joseph-minadeo-and-curt-brown', 'name': 'Joseph Minadeo and Curt Brown' },
+  { 'slug': 'amehuru', 'name': 'Amehuru' },
+  { 'slug': 'joseph-minadeo-and-shinya-sugimoto', 'name': 'Joseph Minadeo and Shinya Sugimoto' },
+  { 'slug': 'onomatopedal', 'name': 'OnomatoPedal' },
+  { 'slug': 'solver', 'name': 'Solver' },
+  { 'slug': 'insect-sounds', 'name': 'Insect Sounds' },
+  { 'slug': 'joseph-minadeo', 'name': 'Joseph Minadeo' },
+  { 'slug': 'low-in-the-sky', 'name': 'Low In The Sky' },
+  { 'slug': 'gnosotros', 'name': 'Gnosotros' },
+  { 'slug': 'tokyo-shapiro', 'name': 'Tokyo Shapiro' },
+  { 'slug': 'joseph-minadeo-and-michael-tolan', 'name': 'Joseph Minadeo and Michael Tolan' },
+  { 'slug': 'puffy-shapes', 'name': 'Puffy Shapes' }
+]
 
 const readArtistsData = (req, res) => {
     Artist.find()
@@ -31,7 +48,10 @@ const readArtistData = (req, res) => {
       return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
     }
   );
-  console.log(titled)
+
+  let related = []; ///
+
+  // console.log(titled)
   Artist.findOne({ ArtistName: titled, Type: 'A'})
   .then((data) => {
       let dataO = data.toObject();
@@ -39,7 +59,22 @@ const readArtistData = (req, res) => {
       let slug = aname.toLowerCase().replace(/\s+/g, '-');
       const slugdata = { SlugName: slug }
       Object.assign(dataO, slugdata)
-    res.status(200).json(dataO);
+
+    related = dataO.RelatedEntities.split(', '); ////
+    Artist.find({ 'ArtistName': {$in: related} }) ////
+      .then((ardata) => {
+        let relatedArray = [];
+        for(let a = 0; a < ardata.length; a++) {
+            let item = { name: ardata[a].ArtistName, img: ardata[a].Img }
+            relatedArray.push(item);
+        }
+        const relatedinfo = {
+          RelatedEntities: relatedArray
+        }
+        Object.assign(dataO, relatedinfo) ////
+
+        res.status(200).json(dataO);
+      })
   })
   .catch((err) => {
     console.error(err);
@@ -49,13 +84,16 @@ const readArtistData = (req, res) => {
 
 const readProjectData = (req, res) => {
   let slug = req.params.slug;
-  let nohyph = slug.replace('-', ' ');
-  let titled = nohyph.replace( /\w\S*/g,
-    function(txt) {
-      return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+  let titled;
+
+  let related = []; ///
+
+  for(let n = 0; n < slugVsNameList.length; n++) {
+    if(slugVsNameList[n].slug === slug) {
+      titled = slugVsNameList[n].name
     }
-  );
-  console.log(titled)
+  }
+  // console.log(titled)
   Artist.findOne({ ArtistName: titled, Type: 'P'})
   .then((data) => {
       let dataO = data.toObject();
@@ -63,7 +101,22 @@ const readProjectData = (req, res) => {
       let slug = aname.toLowerCase().replace(/\s+/g, '-');
       const slugdata = { SlugName: slug }
       Object.assign(dataO, slugdata)
-    res.status(200).json(dataO);
+
+      related = dataO.RelatedEntities.split(', '); ////
+      Artist.find({ 'ArtistName': {$in: related} }) ////
+        .then((ardata) => {
+          let relatedArray = [];
+          for(let a = 0; a < ardata.length; a++) {
+              let item = { name: ardata[a].ArtistName, img: ardata[a].Img }
+              relatedArray.push(item);
+          }
+          const relatedinfo = {
+            RelatedEntities: relatedArray
+          }
+          Object.assign(dataO, relatedinfo) ////
+          res.status(200).json(dataO);
+
+        })
   })
   .catch((err) => {
     console.error(err);

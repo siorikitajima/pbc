@@ -3,9 +3,9 @@
     <div class="resultWrapper" v-bind:class="{ moveToRight: sliderPanel || presetPanel, moveDown: searchPanel }">
         <div v-if="songs.length">
             <ResultHead :songCount="songCount" :resultQuery="resultQuery" @clearVal="clearValue($event)" />
-            <SongList :songs="fltBySearch" @passThis="openSingle($event)" @openPanel="passPanel($event)" />
+            <SongList :fltdsongs="fltBySearch" :dist="'result'" @passThis="passSingle($event)" @openPanel="passPanel($event)" />
         </div>
-        <div v-else> Loading... </div>
+        <div v-else><Loading /></div>
     </div>
 
     <transition name="slideFRTop">
@@ -17,9 +17,6 @@
     <transition name="slideFRLeft">
         <Search @loadSearch="updateResult($event)" v-show="searchPanel" :search="search" :allSearch="allSearch" />
     </transition>
-    <!-- <transition name="slideFRBottom">
-        <SimilarSongs v-show="similarPanel" :similarList="similarSongList" :ogSong="findASong" />
-    </transition> -->
 
     <div id="navLeft" class="cornerNavs">
         <a @click="toggleSliderPanel">
@@ -36,46 +33,32 @@
         </a>
     </div>
 
-    <div v-if="singlePanels" class="singlePanelScreen" @click="closeSingles"></div>
-        <div v-if="singlePanels" class="singlePageCoutainer">
-            <SingleSong v-if="singleSongPanel" :song="tempSongData" :panel="true" @passPanel="panelAndClose($event)" />
-            <SongInfoPanel v-if="singleSongPanel" :song="tempSongData" />
-            <div class="closeIcon" @click="closeSingles">
-                <img :src="require('../assets/images/global/Close_Icon_dark.svg')" alt="Close">
-            </div>
-        </div>
-
 </div>
 </template>
 
 <script>
-import getSongs from '../composables/getSongs'
-import getAlbums from '../composables/getAlbums'
+// import getSongs from '../composables/getSongs'
 import SongList from '../components/songtable/SongList.vue'
+import Loading from '../components/songtable/Loading.vue'
 import ResultHead from '../components/songtable/ResultHead.vue'
 import { ref } from '@vue/reactivity'
 import Search from '../components/filter/Search.vue'
 import Filters from '../components/filter/Filters.vue'
 import Presets from '../components/filter/Presets.vue'
-import SingleSong from '../components/singles/SingleSong.vue'
-import SongInfoPanel from '../components/singles/SongInfoPanel.vue'
 
 export default {
     name: 'Result',
     components: { SongList, ResultHead, 
-    Search, Filters, Presets, 
-    SingleSong, SongInfoPanel },
-    emits: ['panelReq'],
+    Search, Filters, Presets, Loading }, 
+    props: ['songs'],
+    emits: ['panelReq', 'singlePanel'],
     setup() {
-        const { songs, error, load } = getSongs()
-        const { albums, albumserror, loadAlbums } = getAlbums()
-        load()
-        loadAlbums()
+        // const { songs, error, load } = getSongs()
+        // load()
 
         const searchPanel = ref(false)
         const sliderPanel = ref(true)
         const presetPanel = ref(false)
-        // const similarPanel = ref(false)
 
         const rhythm = ref({ min: 0, max: 10 })
         const speed = ref({ min: 0, max: 10 })
@@ -86,19 +69,10 @@ export default {
         const search = ref('')
         const allSearch = ref([])
 
-        const singlePanels = ref(false)
-        const singleSongPanel = ref(false)
-        const tempSongData = ref('')
-        const tempAlbumData = ref('')
-
-        // const ogSongData = ref('')
-
         return { 
-        songs, error, albums, albumserror,
         searchPanel, sliderPanel, presetPanel, 
         rhythm, speed, experimental, mood, organic, 
-        search, allSearch, 
-        singleSongPanel, singlePanels, tempSongData, tempAlbumData } 
+        search, allSearch } 
     },
     computed: {
         fltBySearch: function() {
@@ -136,35 +110,15 @@ export default {
         passPanel(data) {
             this.$emit('panelReq', data)
         },
-        panelAndClose(data) {
-            this.closeSingles()
-            this.$emit('panelReq', data)
-        },
-        openSingle(data) {
-            let singleData = data.data
-            let singleType = data.type
-            if(singleType == 'song') {
-                for (let a = 0; a < this.albums.length; a++ ) {
-                    if ( this.albums[a].AlbumID == singleData.CatNum) {
-                        singleData.Year = this.albums[a].Year
-                    }
-                }
-                this.tempSongData = singleData
-                this.singleSongPanel = true
-            }
-            if(!this.singlePanels) {
-                this.singlePanels = true
-            }
-        },
-        closeSingles() {
-            if(this.singleSongPanel) {
-                this.singleSongPanel = false
-            }
-            this.singlePanels = false
+        // panelAndClose(data) {
+        //     this.closeSingles()
+        //     this.$emit('panelReq', data)
+        // },
+        passSingle(data) {
+            this.$emit('singlePanel', data)
         },
         updateResult(searchkey) {
             this.allSearch = searchkey;
-            // console.log(searchkey)
         },
         toggleSearchPanel() {
             this.searchPanel = !this.searchPanel
@@ -223,7 +177,6 @@ export default {
                 this.search = ''
                 for(let s = 0; s < this.allSearch.length; s++ ) {
                     if(this.allSearch[s] == word) {
-                        // console.log(this.allSearch, word, s)
                         this.allSearch.splice(s, 1)
                     }
                 }

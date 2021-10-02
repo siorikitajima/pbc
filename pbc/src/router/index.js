@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Result from '../views/Result.vue'
 import SingleSongPage from '../views/SingleSongPage.vue'
+import SingleProjectPage from '../views/SingleProjectPage.vue'
 import SingleArtistPage from '../views/SingleArtistPage.vue'
 
 const routes = [
@@ -17,6 +18,12 @@ const routes = [
   },
   {
     path: '/project/:name',
+    name: 'Single Project',
+    component: SingleProjectPage,
+    props: true
+  },
+  {
+    path: '/artist/:name',
     name: 'Single Artist',
     component: SingleArtistPage,
     props: true
@@ -26,6 +33,9 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes
+  // scrollBehavior() {
+  //   document.getElementById('app').scrollIntoView();
+  // }
 })
 
 export default router

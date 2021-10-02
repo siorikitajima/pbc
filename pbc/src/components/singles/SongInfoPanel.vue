@@ -13,7 +13,7 @@
       <div class="flex">
         <div class="div400 group">
             <p><b>Artists</b></p>
-            <p> {{ song.Writers }}</p>
+            <p><span v-for="writer in song.Writers" :key="writer">{{ writer.name }}, </span></p>
         </div>
         <div class="div400 group">
             <p><b>Album</b></p>

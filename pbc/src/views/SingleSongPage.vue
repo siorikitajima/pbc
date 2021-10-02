@@ -5,9 +5,9 @@
 
         <h2>// SIMILAR SONGS //</h2>
         <div v-if="similarSongList.length">
-            <SongList :songs="similarSongList" @passThis="openSingle($event)" @openPanel="passPanel($event)" />
+            <SongList :fltdsongs="similarSongList" :dist="'song'" @passThis="passSingle($event)" @openPanel="passPanel($event)" @closeSingle="closeSinglePanel" />
         </div>
-        <div v-else> Loading... </div>
+        <div v-else><Loading /></div>
   </div>
 </template>
 
@@ -15,31 +15,38 @@
 import SingleSong from '../components/singles/SingleSong.vue'
 import SongInfoPage from '../components/singles/SongInfoPage.vue'
 import getSingleSong from '../composables/getSingleSong'
-import getSongs from '../composables/getSongs'
+// import getSongs from '../composables/getSongs'
 import SongList from '../components/songtable/SongList.vue'
+import Loading from '../components/songtable/Loading.vue'
 
 import { ref } from '@vue/reactivity'
 
 export default {
     name: 'SingleSongPage',
-    components: { SingleSong, SongInfoPage, SongList },
-    emits: ['panelReq'],
-    props: [ 'id', 'title' ],
+    components: { SingleSong, SongInfoPage, SongList, Loading },
+    emits: ['panelReq', 'singlePanel', 'closeSingle'],
+    props: [ 'id', 'title', 'songs' ],
     setup(props) {
         const theID = ref(props.id)
         
         const { singlesong, singlesongerror, singlesongload } = getSingleSong(theID.value)
         singlesongload()
 
-        const { songs, error, load } = getSongs()
-        load()
+        // const { songs, error, load } = getSongs()
+        // load()
 
-        return { singlesong, singlesongerror, songs, error }
+        return { singlesong, singlesongerror }
     },
     methods: {
         passPanel(data) {
             this.$emit('panelReq', data)
         },
+        passSingle(data) {
+            this.$emit('singlePanel', data)
+        },
+        closeSinglePanel() {
+            this.$emit('closeSingle')
+        }
     },
     computed: {
     similarSongList: function() {

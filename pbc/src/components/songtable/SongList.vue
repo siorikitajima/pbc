@@ -10,19 +10,24 @@
         <p>MOD</p>
         <p>ORG</p>
     </div>
-    <div v-for="song in songs" :key="song.ID">
-        <ASong :song="song" @openThis="passSingle($event)" @showPanel="passPanel($event)" /> 
+    <div v-for="fltdsong in fltdsongs" :key="fltdsong.ID">
+        <ASong :song="fltdsong" :dist="dist" @openThis="passSingle($event)" @showPanel="passPanel($event)" /> 
     </div>
 </div>
 </template>
 
 <script>
+import { ref } from '@vue/reactivity'
 import ASong from './ASong.vue'
 
 export default {
-    props: ['songs'],
+    props: ['fltdsongs', 'dist'],
     components: { ASong },
     emits: ['passThis', 'openPanel'],
+    setup(props) {
+        const dist = ref(props.dist)
+        return { dist }
+    },
     methods: {
         passSingle(data) {
             this.$emit('passThis', data)

@@ -4,19 +4,23 @@
         <p class="headerbg"><b>Project</b></p>
         <div class="flex">
             <div class="aWriter">
+                <router-link :to="'/project/' + artistslug">
                 <div class="artistThumb">
                     <img :src="'https://pblibrary.s3.us-east-2.amazonaws.com/artists/' + song.ArtistImage" :alt="song.ArtistName"/>
                 </div>
                 <p>{{ song.ArtistName }}</p>
+                </router-link>
             </div>
         </div>
         <p class="headerbg"><b>Artists</b></p>
         <div class="flex">
             <div class="aWriter" v-for="writer in song.Writers" :key="writer">
+                <router-link :to="'/artist/' + writer.name.toLowerCase().replace(/\s+/g, '-')">
                 <div class="artistThumb">
                     <img :src="'https://pblibrary.s3.us-east-2.amazonaws.com/artists/' + writer.img" :alt="writer.name"/>
                 </div>
                 <p>{{ writer.name }}</p>
+                </router-link>
             </div>
         </div>
     </div>
@@ -45,8 +49,16 @@
 </template>
 
 <script>
+import { computed } from '@vue/reactivity'
+
 export default {
-    props: ['song']
+    props: ['song'],
+    setup(props) {
+        const artistslug = computed(() => {
+            return props.song.ArtistName.toLowerCase().replace(/\s+/g, '-')
+        })
+        return { artistslug }
+    }
 }
 </script>
 
@@ -93,13 +105,16 @@ export default {
     background: #ddd;
     border-radius: 5px;
 }
-.aWriter, .aAlbum {
+.aWriter, .aWriter a, .aAlbum, .aAlbum a {
     display: flex;
     justify-content: center;
     padding: 10px;
     min-width: fit-content;
 }
-.aWriter p, .aAlbum p {
+.aWriter a, .aAlbum a {
+    padding: 0;
+}
+.aWriter p, .aWriter a p, .aAlbum p, .aAlbum a p {
     display: inline-block;
     margin: auto 10px;
 }
