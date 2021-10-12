@@ -1,11 +1,11 @@
 <template>
   <div class="pagewrapper" v-if="singlesong">
-        <SingleSong :song="singlesong" @passPanel="passPanel($event)" />
+        <SingleSong :song="singlesong" @passPanel="passPanel($event)" @queueAction="updateQueue($event)" />
         <SongInfoPage :song="singlesong" />
 
         <h2>// SIMILAR SONGS //</h2>
         <div v-if="similarSongList.length">
-            <SongList :fltdsongs="similarSongList" :dist="'song'" @passThis="passSingle($event)" @openPanel="passPanel($event)" @closeSingle="closeSinglePanel" />
+            <SongList :fltdsongs="similarSongList" :dist="'song'" @passThis="passSingle($event)" @openPanel="passPanel($event)" @closeSingle="closeSinglePanel" @queueAction="updateQueue($event)" />
         </div>
         <div v-else><Loading /></div>
   </div>
@@ -24,7 +24,7 @@ import { ref } from '@vue/reactivity'
 export default {
     name: 'SingleSongPage',
     components: { SingleSong, SongInfoPage, SongList, Loading },
-    emits: ['panelReq', 'singlePanel', 'closeSingle'],
+    emits: ['panelReq', 'singlePanel', 'closeSingle', 'queueAction'],
     props: [ 'id', 'title', 'songs' ],
     setup(props) {
         const theID = ref(props.id)
@@ -46,6 +46,9 @@ export default {
         },
         closeSinglePanel() {
             this.$emit('closeSingle')
+        },
+        updateQueue(data) {
+            this.$emit('queueAction', data)
         }
     },
     computed: {

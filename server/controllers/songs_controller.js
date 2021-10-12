@@ -28,17 +28,20 @@ const readSongData = (req, res) => {
 };
 
 const readSingleSongData = (req, res) => {
-  let id = req.params.id
-  let albumId, artistName;
-  let writers = [];
+  let id = req.params.id;
+  let albumId, artistName, slugArtistName;
+  let writers = []; 
   let singleSongData = {};
   Song.findOne({ 'ID': id })
     .then((data) => {
       albumId = data.CatNum;
       artistName = data.ArtistName;
-      writers = data.Writers.split(', ');
-      writers.push(artistName);
+      writers = data.Writers.split('; ');
       singleSongData = data.toObject();
+      slugArtistName = artistName.toLowerCase().replace(/\s+/g, '-');
+      let slugTitle = data.Title.toLowerCase().replace(/\s+/g, '-');
+      singleSongData.slugArtistName = slugArtistName;
+      singleSongData.slugTitle = slugTitle;
   Album.findOne({ 'AlbumID': albumId })
       .then((aldata) => {
         singleSongData.Year = aldata.Year;
@@ -48,19 +51,24 @@ const readSingleSongData = (req, res) => {
           let pimage;
           for(let a = 0; a < ardata.length; a++) {
             if(ardata[a].Type == 'A') {
-              let item = { name: ardata[a].ArtistName, img: ardata[a].Img }
-            writeArray.push(item);
-            } else if(ardata[a].Type == 'P' && ardata[a].ArtistName == artistName) {
-              pimage = ardata[a].Img;
+              let item = { name: ardata[a].ArtistName, slug: ardata[a].ArtistSlug, img: ardata[a].Img }
+              writeArray.push(item);
             }
           }
-          const writersinfo = {
-            Writers: writeArray, ArtistImage: pimage
-          }
-          Object.assign(singleSongData, writersinfo)
+          singleSongData.Writers = writeArray;
+          // console.log(writeArray);
 
+        Artist.find({ 'ArtistSlug': slugArtistName, 'Type': 'P' })
+          .then((imgdata) => {
+            // console.log(imgdata);
+
+            for(let a = 0; a < imgdata.length; a++) {
+            pimage = imgdata[a].Img;
+            }
+          singleSongData.ArtistImage = pimage;
           res.status(200).json(singleSongData)
         })
+      })
     })
   })
     .catch((err) => {

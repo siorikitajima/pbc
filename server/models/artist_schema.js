@@ -5,6 +5,7 @@ const artistSchema = new Schema(
     ID: { type: String },
     Type: { type: String },
     Show: { type: String },
+    ArtistSlug: { type: String },
     ArtistName: { type: String },
     Bio: { type: String },
     RelatedEntities: { type: String },

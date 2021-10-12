@@ -5,15 +5,15 @@
     </div>
         <h2>// FEATURED TRACKS //</h2>
         <div v-if="featuredTracks.length">
-            <SongList :fltdsongs="featuredTracks.slice(0,5)" :dist="'artist'" @passThis="passSingle($event)" @openPanel="passPanel($event)" />
+            <SongList :fltdsongs="featuredTracks.slice(0,5)" :dist="'artist'" @passThis="passSingle($event)" @openPanel="passPanel($event)" @queueAction="updateQueue($event)" />
         </div>
         <div v-else><Loading /></div>
 
     <h2>// RELATED ARTISTS //</h2>
-    <RelatedArtists :artist="artist" />
+    <RelatedArtists v-if="artist" :artist="artist" />
 
-    <div v-if="featuredTracks.length > 6">
-        <SongList :fltdsongs="featuredTracks.slice(6,featuredTracks.length-1)" :dist="'artist'" @passThis="passSingle($event)" @openPanel="passPanel($event)" />
+    <div v-if="featuredTracks.length > 5">
+        <SongList :fltdsongs="featuredTracks.slice(5,featuredTracks.length-1)" :dist="'artist'" @passThis="passSingle($event)" @openPanel="passPanel($event)" @queueAction="updateQueue($event)" />
     </div>
     <!-- <div v-else><Loading /></div> -->
   </div>
@@ -32,8 +32,8 @@ import { ref } from '@vue/reactivity'
 export default {
     name: 'SingleArtistPage',
     components: { SingleArtist, SongList, RelatedArtists, Loading },
-    emits: ['panelReq', 'singlePanel'],
-    props: [ 'name', 'songs' ],
+    emits: ['panelReq', 'singlePanel', 'queueAction'],
+    props: { name: String, songs: Array },
     setup(props) {
         const theName = ref(props.name)
         
@@ -51,12 +51,15 @@ export default {
         },
         passSingle(data) {
             this.$emit('singlePanel', data)
+        },
+        updateQueue(data) {
+            this.$emit('queueAction', data)
         }
     },
     computed: {
         featuredTracks: function() {
             return this.songs.filter((song) => {
-                if ( song.Writers.toLowerCase().match(this.artist.ArtistName.toLowerCase()) ) { return true }
+                if ( song.Writers.includes(this.artist.ArtistName) ) { return true }
                 else { return false }
             })
         }

@@ -1,51 +1,34 @@
 <template>
-<div class="wrapper">
-    <!-- <div class="div800"> -->
-        <div class="flex">
-            <div class="div400">
-                <p class="headerbg"><b>Project</b></p>
-                <div class="aWriter">
-                    <router-link :to="'/project/' + song.slugArtistName">
-                    <div class="artistThumb">
-                        <img :src="'https://pblibrary.s3.us-east-2.amazonaws.com/artists/' + song.ArtistImage" :alt="song.ArtistName"/>
-                    </div>
-                    <p>{{ song.ArtistName }}</p>
-                    </router-link>
-                </div>
-            </div>
-            <div class="div400">
-                <p class="headerbg"><b>Album</b></p>
-                <div class="aAlbum">
-                    <router-link :to="'/album/' + song.CatNum + '-' + albumslug">
-                    <div class="albumThumb" v-if="song">
-                        <img :src="'https://pblibrary.s3.us-east-2.amazonaws.com/' + song.CatNum +'/cover-thumb.jpg'" :alt="song.AlbumTitle"/>
-                    </div>
-                    <p>{{ song.AlbumTitle }} ({{ song.Year }})</p>
-                    </router-link>
-                </div>
-            </div>
-        </div>
+<div class="wrapper" v-if="album">
+    <div class="flex">
+        <ul class="div400">
+            <li><b>Year</b>{{ album.Year }}</li>
+            <li><b>Track Count</b>{{ album.Tracks }}</li>
+        </ul>
+        <ul class="div400">
+            <li><b>Album ID</b>{{ album.AlbumID }}</li>
+            <li><b>UPC Code</b>{{ album.UPCCode }}</li>
+        </ul>
+    </div>
 
      <div class="div800">    
-        <p class="headerbg"><b>Artists</b></p>
-        <div class="flex">
-            <div class="aWriter" v-for="writer in song.Writers || []" :key="writer">
-                <router-link :to="'/artist/' + writer.slug">
-                <div class="artistThumb">
-                    <img :src="'https://pblibrary.s3.us-east-2.amazonaws.com/artists/' + writer.img" :alt="writer.name"/>
+        <p class="headerbg"><b>Cover Artist</b></p>
+        <a :href="album.coverLink" target="_blank">
+            <div class="aWriter">
+                <div class="artistThumb" v-if="album">
+                <img :src="'https://pblibrary.s3.us-east-2.amazonaws.com/' + album.AlbumID +'/cover.jpg'" :alt="album.Title">
                 </div>
-                <p>{{ writer.name }}</p>
-                </router-link>
+                <p>{{ album.AlbumArt }}</p>
             </div>
-        </div>
+        </a>
     </div>
 
     <div class="channels">
-        <img :src="require('../../assets/images/singles/Single-Song_Apple.svg')" alt="Apple Music">
         <img :src="require('../../assets/images/singles/Single-Song_Bandcamp.svg')" alt="Bandcamp">
+        <img :src="require('../../assets/images/singles/Single-Song_Spotify.svg')" alt="Spotify">   
+        <img :src="require('../../assets/images/singles/Single-Song_Apple.svg')" alt="Apple Music">
         <img :src="require('../../assets/images/singles/Single-Song_GooglePlay.svg')" alt="Google Play">
         <img :src="require('../../assets/images/singles/Single-Song_SoundCloud.svg')" alt="SoundCloud">
-        <img :src="require('../../assets/images/singles/Single-Song_Spotify.svg')" alt="Spotify">   
         <img :src="require('../../assets/images/singles/Single-Song_Vimeo.svg')" alt="Vimeo">   
         <img :src="require('../../assets/images/singles/Single-Song_Youtube.svg')" alt="Youtube">   
         <img :src="require('../../assets/images/singles/Single-Song_Tidal.svg')" alt="Tidal">   
@@ -56,17 +39,10 @@
 </template>
 
 <script>
-import { computed } from '@vue/reactivity'
 
 export default {
-    name: 'SongInfoPage',
-    props: ['song'],
-    setup(props) {
-        const albumslug = computed(() => {
-            return props.song.AlbumTitle.toLowerCase().replace(/\s+/g, '-')
-        })
-        return { albumslug }
-    }
+    name: 'AlbumInfoPage',
+    props: ['album']
 }
 </script>
 
@@ -154,6 +130,24 @@ export default {
     padding: 10px 50px 0 50px;
     border-top: #ddd 1px solid;
     border-bottom: #ddd 1px solid;
-    margin: 10px 0 0 0;
+    margin: 10px 0 30px 0;
+}
+ul.div400 {
+    list-style: none;
+    padding: 10px 0;
+}
+ul li {
+    height: 24px;
+    padding: 3px;
+    margin-bottom: 5px;
+    background: #f2f2f2;
+}
+
+ul li b {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+ul li span {
+    font-size: 0.8em;
 }
 </style>

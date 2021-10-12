@@ -9,15 +9,15 @@
           <h2>{{ song.Title }}</h2>
           <p>by {{ song.ArtistName }}</p>
           <div class="actions">
-            <img :src="require('../../assets/images/actions/playSong_dark.svg')" alt="Play Track">
-            <img :src="require('../../assets/images/actions/addToQueue_dark.svg')" alt="Add to Queue">
+            <img :src="require('../../assets/images/actions/playSong_dark.svg')" alt="Play Track" @click="playThisNow(song.ID)">
+            <img :src="require('../../assets/images/actions/addToQueue_dark.svg')" alt="Add to Queue" @click="addToQueue(song.ID)">
             <img :src="require('../../assets/images/actions/SimilarSong_Icon_dark.svg')" alt="Similar Songs" @click="openPanel(song)">
             <img :src="require('../../assets/images/actions/CustomWork_dark.svg')" alt="Custom Work">
             <img :src="require('../../assets/images/actions/Share_Icon_dark.svg')" alt="Share">
-            <router-link :to="'/song/' + song.ID + '-' + slug" v-if="panel" @click.native="closeSinglePanel()" >
+            <router-link :to="'/song/' + song.ID + '-' + song.slugTitle" v-if="panel" @click.native="closeSinglePanel()" >
             <img :src="require('../../assets/images/actions/seeSong_Icon_dark.svg')" alt="Track Page">
             </router-link>
-            <router-link :to="'/project/' + artistslug" @click.native="closeSinglePanel()" >
+            <router-link :to="'/project/' + song.slugArtistName" @click.native="closeSinglePanel()" >
             <img :src="require('../../assets/images/actions/seeArtist_Icon_dark.svg')" alt="Artist Page">  
             </router-link>
             <button class="small">LICENSE</button> 
@@ -53,19 +53,14 @@
 import { computed } from '@vue/reactivity'
 
 export default {
+    name: 'SingleSong',
     props: ['song', 'panel'],
-    emits: ['passPanel', 'closeSingle'],
+    emits: ['passPanel', 'closeSingle', 'queueAction'],
     setup(props) {
         const length = computed(() => {
             return props.song.Length ? props.song.Length.slice(2) : ''
         })
-        const slug = computed(() => {
-            return props.song.Title.toLowerCase().replace(/\s+/g, '-')
-        })
-        const artistslug = computed(() => {
-            return props.song.ArtistName.toLowerCase().replace(/\s+/g, '-')
-        })
-        return { length, slug, artistslug }
+        return { length }
     },
     methods: {
         openPanel(song) {
@@ -74,6 +69,14 @@ export default {
         },
         closeSinglePanel() {
             this.$emit('closeSingle')
+        },
+        addToQueue(songId) {
+            let data = { type: 'add', data: songId }
+            this.$emit('queueAction', data)
+        },
+        playThisNow(songId) {
+            let data = { type: 'play', data: songId }
+            this.$emit('queueAction', data)
         }
     }
 }

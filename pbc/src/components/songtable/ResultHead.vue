@@ -1,6 +1,11 @@
 <template>
   <div class="resultHead">
-      <div class="resultIcon"><p class="trackCount"><b>{{ songCount }}</b><br/>Tracks</p></div>
+      <div class="resultIcon" @click="playTen">
+          <p class="trackCount"><b>{{ songCount }}</b><br/>Tracks</p>
+          <div class="screen">
+            <img :src="require('../../assets/images/actions/playSong_light.svg')" alt="Play">
+          </div>
+      </div>
       <div class="resultQuery">
           <p>
           <span @click="clearValue('rhythm')">RTM <b>{{ rthValue }}</b></span>
@@ -26,7 +31,7 @@
 export default {
     name: 'ResultHead',
     props: ['songCount', 'resultQuery'],
-    emits: ['clearVal'],
+    emits: ['clearVal', 'queueAction'],
     // setup() {
     //     const searchWords = ref('')
     //     return { searchWords }
@@ -62,6 +67,10 @@ export default {
         clearValue(type) {
             this.$emit('clearVal', type)
         },
+        playTen() {
+            let data = { type: 'playTen' }
+            this.$emit('queueAction', data)
+        },
         // deleteKey(key) {
         //     this.$emit('deleteKey', key)
         // }
@@ -83,6 +92,25 @@ export default {
     margin-right: 10px;
     text-align: center;
     flex-shrink: 0;
+    position: relative;
+}
+.resultIcon .screen {
+    width: 60px;
+    height: 60px;
+    background: #00000088;
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+}
+.resultIcon .screen img {
+    width: 40px;
+    height: 40px;
+    padding: 10px;
+}
+.resultIcon:hover .screen {
+    opacity: 1;
+    transition-duration: 200ms;
 }
 .resultActions {
     margin-top: 5px;

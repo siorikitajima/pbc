@@ -1,36 +1,32 @@
 <template>
 <div>
-  <div id="navRight" class="cornerNavs">
-    <router-link to="/">
-      <img class="navIcons" :src="require('./assets/images/header/PatternBased_Icon.svg')" alt="PatternBased">
-    </router-link>
-    <router-link to="/">
-        <img class="navIcons" :src="require('./assets/images/header/Menu_Icon.svg')" alt="Menu">
-    </router-link>
-  </div>
+  <teleport to="#sidePanels">
+  <SideNav />
+  </teleport>
 
-
-  <router-view :songs="songs" @panelReq="openPanel($event)" @singlePanel="openSingle($event)" :key="$route.fullPath" />
+  <router-view :songs="songs" @panelReq="openPanel($event)" @singlePanel="openSingle($event)" :key="$route.fullPath" @queueAction="updateQueue($event)" />
 
   <transition name="slideFRBottom">
-      <PlayerQueue v-show="queuePanel" @closeThis="closeQueue" />
+      <PlayerQueue v-show="queuePanel" :spQueue="queueSongsData" :sqPlaying="sqPlayingData" :sqEnded="sqEndedData" @closeThis="closeQueue" @queueAction="updateQueue($event)" />
   </transition>
   <transition name="slideFRBottom">
-      <SimilarSongs v-show="similarPanel" :similarList="similarSongList" :ogSong="ogSongData" @closeThis="closeSimilar" />
+      <SimilarSongs v-show="similarPanel" :similarList="similarSongList" :ogSong="ogSongData" @closeThis="closeSimilar"  @singlePanel="openSingle($event)" @queueAction="updateQueue($event)" />
   </transition>
 
   <div v-if="songs.length">
-  <ThePlayer :songID="theSongID" @showPanel="openPanel($event)" />
+      <ThePlayer :song="sqPlayingData" @showPanel="openPanel($event)" />
   </div>
 
+<teleport to="#singlePanels">
   <div v-if="singlePanels" class="singlePanelScreen" @click="closeSingles"></div> 
     <div v-if="singlePanels" class="singlePageCoutainer">
-        <SingleSong v-if="singleSongPanel" :song="tempSongData" :panel="true" @passPanel="openPanel($event)" @closeSingle="closeSinglePanel" />
-        <SongInfoPanel v-if="singleSongPanel" :song="tempSongData" />
+        <SingleSong v-if="singleSongPanel" :song="tempSongData" :panel="true" @passPanel="openPanel($event)" @closeSingle="closeSinglePanel" @queueAction="updateQueue($event)" />
+        <SongInfoPanel v-if="singleSongPanel" :song="tempSongData" @closeSingle="closeSinglePanel" />
         <div class="closeIcon" @click="closeSingles">
             <img :src="require('./assets/images/global/Close_Icon_dark.svg')" alt="Close">
         </div>
     </div>
+</teleport>
 
 </div>
 </template>
@@ -44,10 +40,10 @@ import SimilarSongs from './components/similar/SimilarSongs.vue'
 import PlayerQueue from './components/player/PlayerQueue.vue'
 import SingleSong from './components/singles/SingleSong.vue'
 import SongInfoPanel from './components/singles/SongInfoPanel.vue'
+import SideNav from './components/global/SideNav'
 
 export default {
-  components: { ThePlayer, SimilarSongs, PlayerQueue, 
-  SingleSong, SongInfoPanel },
+  components: { ThePlayer, SimilarSongs, PlayerQueue, SingleSong, SongInfoPanel, SideNav },
   setup() {
     const { songs, error, load } = getSongs()
     load()
@@ -63,16 +59,20 @@ export default {
     const tempSongData = ref('')
     const tempAlbumData = ref('')
 
+    const spQueue = ref([])
+    const sqPlaying = ref([])
+    const sqEnded = ref([])
+
     return { songs, error, 
     theSongID, ogSongData, queueMaster,
     similarPanel, queuePanel,
-    singleSongPanel, singlePanels, tempSongData, tempAlbumData }
+    singleSongPanel, singlePanels, tempSongData, tempAlbumData,
+    spQueue, sqPlaying, sqEnded }
   },
   computed: {
     similarSongList: function() {
         let gap = 1.5
         let theOG = this.ogSongData
-        // if(theOG === undefined) { return console.log('undefined')} ////
         return this.songs.filter((song) => {
             let minRhythm = ( theOG.PBRhythm < gap ) ? 0 : theOG.PBRhythm - gap
             let maxRhythm = ( theOG.PBRhythm > (10 - gap) ) ? 10 : theOG.PBRhythm + gap
@@ -87,6 +87,61 @@ export default {
             if ( song.PBRhythm >= minRhythm && song.PBRhythm <= maxRhythm && song.PBSpeed >= minSpeed && song.PBSpeed <= maxSpeed && song.PBExperimental >= minExperimental && song.PBExperimental <= maxExperimental && song.PBMood >= minMood && song.PBMood <= maxMood && song.PBOrganic >= minOrganic && song.PBOrganic <= maxOrganic && song.ID !== theOG.ID ) { return true }
             else { return false }
         })
+    },
+    queueSongsData: function() {
+        let queueData = []
+        if(this.spQueue.length == 0 && !localStorage.getItem("spQueue")) { 
+          return []
+        } else {
+          if(this.spQueue.length == 0 && localStorage.getItem("spQueue")) {
+              this.spQueue = JSON.parse(localStorage.getItem("spQueue"))
+          }
+          for(let q = 0; q < this.spQueue.length; q++) {
+            for(let s = 0; s < this.songs.length; s++) {
+              if( this.songs[s].ID == this.spQueue[q] ) {
+                queueData.push(this.songs[s])
+              }
+          }
+        }
+        localStorage.setItem("spQueue", JSON.stringify(this.spQueue))
+      }  
+      return queueData
+    },
+    sqPlayingData: function() {
+        let sqPlayingData = []
+        if(this.sqPlaying.length == 0 && !localStorage.getItem("sqPlaying")) { 
+          return this.songs[0]
+        } else {
+          if(this.sqPlaying.length == 0 && localStorage.getItem("sqPlaying")) {
+              this.sqPlaying = JSON.parse(localStorage.getItem("sqPlaying"))
+          }
+          for(let s = 0; s < this.songs.length; s++) {
+            if( this.songs[s].ID == this.sqPlaying[0] ) {
+              sqPlayingData.push(this.songs[s])
+            }
+        }
+        localStorage.setItem("sqPlaying", JSON.stringify(this.sqPlaying))
+        return sqPlayingData[0]
+      }  
+    },
+    sqEndedData: function() {
+        let endedData = []
+        if(this.sqEnded.length == 0 && !localStorage.getItem("sqEnded")) { 
+          return []
+        } else {
+          if(this.sqEnded.length == 0 && localStorage.getItem("sqEnded")) {
+              this.sqEnded = JSON.parse(localStorage.getItem("sqEnded"))
+          }
+          for(let q = 0; q < this.sqEnded.length; q++) {
+            for(let s = 0; s < this.songs.length; s++) {
+              if( this.songs[s].ID == this.sqEnded[q] ) {
+                endedData.push(this.songs[s])
+              }
+          }
+        }
+        localStorage.setItem("sqEnded", JSON.stringify(this.sqEnded))
+      }  
+      return endedData
     }
   },
   methods: {
@@ -136,47 +191,60 @@ export default {
         }
         this.singlePanels = false
     },
+    updateQueue(data) {
+      let action = data.type
+      if(action == 'add') { 
+        if(!this.spQueue.includes(data.data)) {
+          this.spQueue.push(data.data) 
+        }
+      }
+      else if(action == 'remove') { 
+        const index = this.spQueue.indexOf(data.data)
+        this.spQueue.splice(index, 1)
+      }
+      else if(action == 'play') { 
+        if(!this.spQueue.includes(data.data)) {
+          this.spQueue.unshift(data.data) 
+        } else {
+          const index = this.spQueue.indexOf(data.data)
+          this.spQueue.splice(index, 1)
+          this.spQueue.unshift(data.data)
+        }
+        this.sqEnded.push(this.sqPlaying[0])
+        this.sqPlaying.splice(0, 1)
+        this.sqPlaying.push(this.spQueue[0])
+        this.spQueue.splice(0, 1)
+      }
+      else if(action == 'skip') {
+        const index = this.spQueue.indexOf(data.data)
+        this.spQueue.splice(index, 1)
+        this.spQueue.unshift(data.data)
+        this.sqEnded.push(this.sqPlaying[0])
+        this.sqPlaying.splice(0, 1)
+        this.sqPlaying.push(this.spQueue[0])
+        this.spQueue.splice(0, 1)
+      }
+      else if(action == 'playAll') {
+        const reversed = data.data.reverse()
+        for (let s = 0; s < reversed.length; s++) {
+          this.spQueue.unshift(reversed[s])
+        }
+      }
+      else if(action == 'addAll') {
+        for (let s = 0; s < data.data.length; s++) {
+          this.spQueue.push(data.data[s])
+        }
+      }
+      else if (action == 'removeEnded') {
+        const index = this.sqEnded.indexOf(data.data)
+        this.sqEnded.splice(index, 1)
+      }
+    }
   }
 }
 </script>
 
 <style>
-.cornerNavs {
-  padding: 20px;
-  width: fit-content;
-  position: fixed;
-  z-index: 1000;
-}
 
-#navRight { right: 0; }
-#navLeft { left: 0; }
-#navMiddle {
-  padding: 20px;
-  position: fixed;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: -10;
-}
-#navMiddle img {
-  height: auto;
-  width: 180px;
-}
-
-.cornerNavs a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-.cornerNavs a.router-link-exact-active {
-  color: #0092c5;
-}
-
-.navIcons {
-  width: 32px;
-  height: 32px;
-  margin: 0 10px;
-  padding: 5px;
-  cursor: pointer;
-}
 
 </style>

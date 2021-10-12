@@ -1,14 +1,16 @@
 <template>
 <!-- <router-link :to="{ name: 'PostDetails', params: { id: post.id }}"> -->
   <div class="asong">
-    <div class="ascover">
+    <div class="ascover" v-if="song" @click="playThisNow(song.ID)">
         <img :src="'https://pblibrary.s3.us-east-2.amazonaws.com/' + song.CatNum +'/cover-thumb.jpg'" :alt="song.AlbumTitle">
+        <div class="screen">
+            <img :src="require('../../assets/images/actions/playSong_light.svg')" alt="Play">
+        </div>
     </div>
     <div class="asname" @click="openSingle('song', song)">
         <p><b>{{ song.Title }} </b><img src="../../assets/images/table/eye.svg" alt="See More"></p>
         <p>by {{ song.ArtistName }}</p>
         <p><i>{{ length }}</i></p>
-        <!-- <p>{{ snippet }}</p> -->
         
     </div>
     <div class="asflow">
@@ -26,8 +28,8 @@
         <li class="grd">{{ song.PBOrganic }}</li>
     </ul>
     <div class="actions">
-        <img :src="require('../../assets/images/actions/playSong_dark.svg')" alt="Play Track">
-        <img :src="require('../../assets/images/actions/addToQueue_dark.svg')" alt="Add to Queue">
+        <img :src="require('../../assets/images/actions/playSong_dark.svg')" alt="Play Track" @click="playThisNow(song.ID)">
+        <img :src="require('../../assets/images/actions/addToQueue_dark.svg')" alt="Add to Queue" @click="addToQueue(song.ID)">
         <img :src="require('../../assets/images/actions/SimilarSong_Icon_dark.svg')" alt="Similar Songs" @click="openPanel('similar', song)">
         <img :src="require('../../assets/images/actions/CustomWork_dark.svg')" alt="Custom Work">
         <img :src="require('../../assets/images/actions/Share_Icon_dark.svg')" alt="Share">
@@ -44,12 +46,16 @@
 </template>
 
 <script>
-import { computed, ref } from '@vue/reactivity'
+import { ref, computed } from '@vue/reactivity'
 
 export default {
+    name: 'ASong',
     props: [ 'song', 'dist' ],
-    emits: ['openThis', 'showPanel'],
+    emits: ['openThis', 'showPanel', 'queueAction'],
     setup(props) {
+        const spQueue = ref([])
+        const sqPlaying = ref('')
+        const sqEnded = ref([])
         const snippet = computed(() => {
             return props.song.Description ? props.song.Description.substring(0, 100) : ''
         })
@@ -67,7 +73,7 @@ export default {
             if(props.dist == 'project') { return false }
             else { return true }
         })
-        return { snippet, length, slug, artistslug, showProjectLink }
+        return { spQueue, sqPlaying, sqEnded, snippet, length, slug, artistslug, showProjectLink }
     },
     methods: {
         openSingle(type, da) {
@@ -77,6 +83,32 @@ export default {
         openPanel(panel, data) {
             let da = { type: panel, data: data}
             this.$emit('showPanel', da)
+        },
+        // addToQueue(songId) {
+        //     if (!localStorage.getItem("spQueue")) {
+        //         localStorage.setItem("spQueue", JSON.stringify([]))
+        //     }
+        //     const queueItems = JSON.parse(localStorage.getItem("spQueue"))
+        //     queueItems.push(songId)
+        //     localStorage.setItem("spQueue", JSON.stringify(queueItems))
+        //     this.spQueue = JSON.parse(localStorage.getItem("spQueue"))
+        // },
+        // playThisNow(songId) {
+        //     if (!localStorage.getItem("spQueue")) {
+        //         localStorage.setItem("spQueue", JSON.stringify([]))
+        //     }
+        //     const queueItems = JSON.parse(localStorage.getItem("spQueue"))
+        //     queueItems.unshift(songId)
+        //     localStorage.setItem("spQueue", JSON.stringify(queueItems))
+        //     this.spQueue = JSON.parse(localStorage.getItem("spQueue"))
+        // }
+        addToQueue(songId) {
+            let data = { type: 'add', data: songId }
+            this.$emit('queueAction', data)
+        },
+        playThisNow(songId) {
+            let data = { type: 'play', data: songId }
+            this.$emit('queueAction', data)
         }
     }
 }
@@ -103,25 +135,35 @@ export default {
 .ascover {
     width: 60px;
     height: 60px;
+    position: relative;
 }
 .ascover img, .asflow img {
     width: 100%;
+}
+.ascover .screen {
+    width: 60px;
+    height: 60px;
+    background: #00000088;
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+}
+.ascover .screen img {
+    width: 40px;
+    height: 40px;
+    padding: 10px;
+}
+.ascover .screen:hover {
+    opacity: 1;
+    transition-duration: 200ms;
 }
 .asname {
     padding-left: 10px;
     /* margin-top: -10px; */
     width: 250px;
 }
-.asname img {
-    width: 20px;
-    height: 20px;
-    margin: -10px 0 -5px 10px;
-    opacity: 0;
-}
-.asname:hover img {
-    opacity: 1;
-    transition-duration: 200ms;
-} 
+
 .asflow {
     width: 120px;
     margin: auto 20px auto 0;

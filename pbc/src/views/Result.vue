@@ -2,8 +2,8 @@
 <div>
     <div class="resultWrapper" v-bind:class="{ moveToRight: sliderPanel || presetPanel, moveDown: searchPanel }">
         <div v-if="songs.length">
-            <ResultHead :songCount="songCount" :resultQuery="resultQuery" @clearVal="clearValue($event)" />
-            <SongList :fltdsongs="fltBySearch" :dist="'result'" @passThis="passSingle($event)" @openPanel="passPanel($event)" />
+            <ResultHead :songCount="songCount" :resultQuery="resultQuery" @clearVal="clearValue($event)" @queueAction="getList4Queue($event)" />
+            <SongList :fltdsongs="fltBySearch" :dist="'result'" @passThis="passSingle($event)" @openPanel="passPanel($event)" @queueAction="passQueue($event)" />
         </div>
         <div v-else><Loading /></div>
     </div>
@@ -51,7 +51,7 @@ export default {
     components: { SongList, ResultHead, 
     Search, Filters, Presets, Loading }, 
     props: ['songs'],
-    emits: ['panelReq', 'singlePanel'],
+    emits: ['panelReq', 'singlePanel', 'queueAction'],
     setup() {
         // const { songs, error, load } = getSongs()
         // load()
@@ -82,9 +82,7 @@ export default {
                         return true
                     } else {
                         for(let s = 0; s < this.allSearch.length; s++ ) {
-                            if ( song.Title.toLowerCase().match(this.allSearch[s].toLowerCase())) { return true }
-                            else if ( song.ArtistName.toLowerCase().match(this.allSearch[s].toLowerCase())) { return true }
-                            else if ( song.Writers.toLowerCase().match(this.allSearch[s].toLowerCase())) { return true }
+                            if ( song.Title.toLowerCase().match(this.allSearch[s].toLowerCase()) || song.ArtistName.toLowerCase().match(this.allSearch[s].toLowerCase())|| song.Writers.toLowerCase().match(this.allSearch[s].toLowerCase())) { return true }
                             // else { return false }
                         }
                         return false
@@ -107,6 +105,20 @@ export default {
         }
     },
     methods: {
+        getList4Queue(data) {
+            let songIds = []
+            if(data.type == 'playTen') {
+                for(let s = 0; s < 10; s++) {
+                    let id = this.fltBySearch[s].ID
+                    songIds.push(id)
+                }
+                const data = {type: 'playAll', data: songIds}
+                this.$emit('queueAction', data)
+            }
+        },
+        passQueue(data) {
+            this.$emit('queueAction', data)
+        },
         passPanel(data) {
             this.$emit('panelReq', data)
         },

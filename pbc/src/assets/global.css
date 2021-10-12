@@ -52,6 +52,8 @@ button.small:hover {
 
 .slideFRLeft-enter-active,
 .slideFRLeft-leave-active,
+.slideFRRight-enter-active,
+.slideFRRight-leave-active,
 .slideFRTop-enter-active,
 .slideFRTop-leave-active,
 .slideFRBottom-enter-active,
@@ -60,11 +62,23 @@ button.small:hover {
 }
 .slideFRLeft-enter-from { transform: translate(-110%, 0); }
 .slideFRLeft-leave-to { transform: translate(-110%, 0); }
+.slideFRRight-enter-from { transform: translate(110%, 0); }
+.slideFRRight-leave-to { transform: translate(110%, 0); }
 .slideFRTop-enter-from { transform: translate(0, -110%); }
 .slideFRTop-leave-to { transform: translate(0, -110%); }
 .slideFRBottom-enter-from { transform: translate(0, 220%); }
 .slideFRBottom-leave-to { transform: translate(0, 220%); }
 
+
+/* #sidePanels {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+} */
 
 .actions, .channels {
     height: fit-content;
@@ -94,3 +108,105 @@ button.small:hover {
     margin-left: 5px;
     margin: 10px 16px 0 0;
 }
+
+/* See More icon next to song name */
+.asname img {
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 -5px 10px;
+    opacity: 0;
+}
+.asname:hover img {
+    opacity: 1;
+    transition-duration: 200ms;
+} 
+
+/* Artist Blocks */
+
+.relatedArtists {
+    width: 100%;
+    padding: 0 0 50px 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.relArtist {
+    width: 180px;
+    height: 100px;
+    margin: 0 10px;
+    border-radius: 5px;
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+    color: #fff;
+}
+.relArtist img, .relArtist h3 {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+.relArtist img {
+    width: 100%;
+}
+.relArtist h3, .relArtist a h3 {
+    width: 90%;
+    font-size: 1em;
+    color: #fff;
+}
+.relArtist .screen {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top:0;
+    left: 0;
+    background: #00000088;
+}
+.relArtist:hover .screen {
+    background: #00000033;
+    transition-duration: 200ms;
+}
+
+
+/* Navs */
+#thenav {
+    position: fixed;
+    z-index: 1000;
+}
+.cornerNavs {
+    padding: 20px;
+    width: fit-content;
+    position: fixed;
+    top: 0;
+  }
+  
+  #navRight { right: 0; }
+  #navLeft { left: 0; }
+  #navMiddle {
+    padding: 20px;
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: -10;
+  }
+  #navMiddle img {
+    height: auto;
+    width: 180px;
+  }
+  
+  .cornerNavs a {
+    font-weight: bold;
+    color: #2c3e50;
+  }
+  
+  .cornerNavs a.router-link-exact-active {
+    color: #0092c5;
+  }
+  
+  .navIcons {
+    width: 32px;
+    height: 32px;
+    margin: 0 10px;
+    padding: 5px;
+    cursor: pointer;
+  }

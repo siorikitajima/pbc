@@ -5,7 +5,7 @@
         <img :src="require('../../assets/images/player/Play_btn.svg')" alt="Play">
         <img :src="require('../../assets/images/player/Next_btn.svg')" alt="Next">
     </div>
-    <div class="cover">
+    <div class="cover" v-if="song">
         <img :src="'https://pblibrary.s3.us-east-2.amazonaws.com/' + song.CatNum +'/cover-thumb.jpg'" :alt="song.AlbumTitle">
     </div>
     <div class="info">
@@ -14,32 +14,34 @@
     </div>
     <div class="icons">
         <!-- <img :src="require('../../assets/images/actions/playSong_white.svg')" alt="Play"> -->
-        <img :src="require('../../assets/images/actions/addToQueue_white.svg')" alt="Add to Queue">
+        <!-- <img :src="require('../../assets/images/actions/addToQueue_white.svg')" alt="Add to Queue"> -->
         <img :src="require('../../assets/images/actions/SimilarSong_Icon_white.svg')" alt="Similar Songs" @click="openPanel('similar', song)">
         <img :src="require('../../assets/images/actions/CustomWork_white.svg')" alt="Custom Work">
         <img :src="require('../../assets/images/actions/Share_Icon_white.svg')" alt="Share">
-        <router-link :to="'/song/' + song.ID + '-' + song.Title">
+        <router-link :to="'/song/' + song.ID + '-' + song.slugTitle">
         <img :src="require('../../assets/images/actions/seeSong_Icon_white.svg')" alt="Track">
         </router-link>
+        <router-link :to="'/project/' + song.slugArtistName">
         <img :src="require('../../assets/images/actions/seeArtist_Icon_white.svg')" alt="Artist">
-        <img :src="require('../../assets/images/actions/PlayList_Icon.svg')" alt="Playlist" @click="openPanel('queue', song)">
+        </router-link>
+        <img :src="require('../../assets/images/actions/PlayList_Icon.svg')" alt="Playlist" @click="openPanel('queue', null)">
     </div>
   </div>
 </template>
 
 <script>
-import getSong from '../../composables/getSong'
+// import getSingleSong from '../../composables/getSingleSong'
 
 export default {
     name: 'thePlayer',
-    props: [ 'songID' ],
+    props: [ 'song' ],
     emits: [ 'showPanel' ],
-    setup(props) {
-        const { song, songerror, songload } = getSong(props.songID)
-        songload()
+    // setup(props) {
+    //     const { singlesong, singlesongerror, singlesongload } = getSingleSong(props.songID)
+    //     singlesongload()
 
-        return { song, songerror }
-    },
+    //     return { singlesong, singlesongerror }
+    // },
     methods: {
         openPanel(panel, data) {
             let da = { type: panel, data: data}

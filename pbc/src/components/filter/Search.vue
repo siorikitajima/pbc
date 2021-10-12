@@ -19,8 +19,8 @@
     <div v-if="filteredKeys.length && searchPanel">
       <ul class="searchKeys">
         <li class="searchKey" 
-        v-for="filteredKey in filteredKeys" 
-        @click="setKey(filteredKey.key)" :key="filteredKey.key">
+        v-for="(filteredKey, index) in filteredKeys" 
+        @click="setKey(filteredKey.key)" :key="filteredKey.key + '-' + index">
           <span class="pill">{{filteredKey.type}}</span>
           {{filteredKey.key}}
         </li>

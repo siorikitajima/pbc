@@ -13,11 +13,17 @@
       <div class="flex">
         <div class="div400 group">
             <p><b>Artists</b></p>
-            <p><span v-for="writer in song.Writers" :key="writer">{{ writer.name }}, </span></p>
+            <p> <span v-for="writer in song.Writers || []" :key="writer">
+                <router-link :to="'/artist/' + writer.slug" @click.native="closeSinglePanel()">
+                {{ writer.name }}, 
+                </router-link>
+                </span> </p>
         </div>
         <div class="div400 group">
             <p><b>Album</b></p>
-            <p>{{ song.AlbumTitle }} ({{ song.Year }})</p>
+            <router-link :to="'/album/' + song.CatNum + '-' + albumslug" @click.native="closeSinglePanel()">
+                <p>{{ song.AlbumTitle }} ({{ song.Year }})</p>
+            </router-link>
         </div>
     </div>
   </div>
@@ -25,8 +31,23 @@
 </template>
 
 <script>
+import { computed } from '@vue/reactivity'
+
 export default {
-    props: ['song']
+    name: 'SongInfoPanel',
+    props: ['song'],
+    emits: ['closeSingle'],
+    setup(props) {
+        const albumslug = computed(() => {
+            return props.song.AlbumTitle.toLowerCase().replace(/\s+/g, '-')
+        })
+        return { albumslug }
+    },
+    methods: {
+        closeSinglePanel() {
+            this.$emit('closeSingle')
+        }
+    }
 }
 </script>
 

@@ -37,6 +37,7 @@ const songSchema = new Schema(
     AlbumTitle: { type: String },
     FeatArtist: { type: String },
     Writers: { type: String },
+    WriterSlug: { type: String },
     ISRCCode: { type: String },
     ISWCCode: { type: String },
     BandcampAlbumId: { type: String },

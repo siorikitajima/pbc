@@ -1,12 +1,12 @@
 <template>
-        <div class="artistTop">
-          <img class="cover" :src="'https://pblibrary.s3.us-east-2.amazonaws.com/artists/' + artist.Img" :alt="artist.ArtistName">
+        <div class="artistTop" v-if="artist">
+          <img v-if="artist.Img" class="cover" :src="'https://pblibrary.s3.us-east-2.amazonaws.com/artists/' + artist.Img" :alt="artist.ArtistName">
           <div class="info">
             <p v-if="artist.Type == 'P'">// PB Project //</p>
             <p v-else>// PB Artist //</p>
             <h1>{{ artist.ArtistName }}</h1>
             <p>{{ artist.Bio }}</p>
-            <div class="channels">
+            <div class="channels" v-if="artist">
                 <img :src="require('../../assets/images/actions/Share_Icon_white.svg')" alt="Share">
                 <img :src="require('../../assets/images/singles/Single-Artist_ws.svg')" alt="Website">
                 <img :src="require('../../assets/images/singles/Single-Artist_BC.svg')" alt="Bandcamp">
@@ -21,6 +21,7 @@
 
 <script>
 export default {
+    name: 'SingleArtist',
     props: [ 'artist' ],
 }
 </script>
