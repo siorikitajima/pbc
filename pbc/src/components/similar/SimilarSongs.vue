@@ -45,7 +45,7 @@ import { ref } from '@vue/reactivity'
 export default {
     name: 'SimilarSongs',
     props: [ 'similarList', 'ogSong' ],
-    emits: [ 'closeThis', 'singlePanel' ],
+    emits: [ 'closeThis', 'singlePanel', 'queueAction' ],
     // setup(props) {
     //     const og = ref(props.ogSong)
 

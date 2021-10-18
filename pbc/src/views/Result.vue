@@ -108,9 +108,16 @@ export default {
         getList4Queue(data) {
             let songIds = []
             if(data.type == 'playTen') {
-                for(let s = 0; s < 10; s++) {
-                    let id = this.fltBySearch[s].ID
-                    songIds.push(id)
+                if(this.fltBySearch.length > 9) {
+                    for(let s = 0; s < 10; s++) {
+                        let id = this.fltBySearch[s].ID
+                        songIds.push(id)
+                    }
+                } else {
+                    for(let s = 0; s < this.fltBySearch.length; s++) {
+                        let id = this.fltBySearch[s].ID
+                        songIds.push(id)
+                    }
                 }
                 const data = {type: 'playAll', data: songIds}
                 this.$emit('queueAction', data)

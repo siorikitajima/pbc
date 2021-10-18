@@ -1,7 +1,7 @@
 <template>
   <div class="presetBar">
       <div class="presetWrapper">
-          <div v-for="preset in presets" class="preset" :key="preset.PresetId" @click="sendPresetValue(preset.PresetId)">
+          <div v-for="(preset, index) in presets" class="preset" :key="preset.PresetId" @click="sendPresetValue(index)">
             <img :src="require('../../assets/images/preset/' + preset.Image)" :alt="preset.PresetName">
             <div class="screen">
                 <h3>{{ preset.PresetName }}</h3>
@@ -25,11 +25,11 @@ export default {
     methods: {
         sendPresetValue(id) {
             let val = {
-                rhythm : this.presets[id-1].PBRhythm.split(/\s*\-\s*/g),
-                speed : this.presets[id-1].PBSpeed.split(/\s*\-\s*/g),
-                experimental : this.presets[id-1].PBExperimental.split(/\s*\-\s*/g),
-                mood : this.presets[id-1].PBMood.split(/\s*\-\s*/g),
-                organic : this.presets[id-1].PBOrgnc.split(/\s*\-\s*/g)
+                rhythm : this.presets[id].PBRhythm.split(/\s*\-\s*/g),
+                speed : this.presets[id].PBSpeed.split(/\s*\-\s*/g),
+                experimental : this.presets[id].PBExperimental.split(/\s*\-\s*/g),
+                mood : this.presets[id].PBMood.split(/\s*\-\s*/g),
+                organic : this.presets[id].PBOrgnc.split(/\s*\-\s*/g)
             }
             console.log(val)
             this.$emit('loadPreset', val)

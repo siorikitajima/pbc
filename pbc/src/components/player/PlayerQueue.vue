@@ -3,7 +3,16 @@
       <div class="actions">
            <img :src="require('../../assets/images/global/Close_Icon.svg')" alt="Close" @click="closePanel">
            <p>Queue</p>
-           <img :src="require('../../assets/images/global/share_white.svg')" alt="Share">
+           <img :src="require('../../assets/images/actions/Actions_Icon_white.svg')" alt="Actions"
+            @mouseover="hover = true" @click="hover = !hover">
+            <div class="actionDD" v-if="hover" @mouseover="hover = true" @mouseleave="hover = false">
+                <div>
+                    <img :src="require('../../assets/images/global/share_white.svg')" alt="Share"><p>Share</p>
+                </div>
+                <div @click="deleteAllQueue()">
+                    <img :src="require('../../assets/images/actions/Delete_Icon.svg')" alt="Delete All"><p>Delete All</p>
+                </div>
+            </div>
       </div>
       <div class="queueList">
 
@@ -58,27 +67,25 @@
           </div>
 
         </div>
-        <div v-else>
+        <!-- <div v-else>
             <p>No Song in Queue</p>
-        </div>
+        </div> -->
       </div>
   </div>
 </template>
 
 <script>
-// import { ref } from '@vue/reactivity'
+import { ref } from '@vue/reactivity'
 
 export default {
     name: 'SimilarSongs',
     props: [ 'similarList', 'sqPlaying', 'spQueue', 'sqEnded' ],
     emits: [ 'closeThis', 'queueAction' ],
-    // setup() {
-    //     const spQueue = ref([])
-    //     const sqPlaying = ref('')
-    //     const sqEnded = ref([])
+    setup() {
+        const hover = ref(false)
         
-    //     return { spQueue, sqPlaying, sqEnded }
-    // },
+        return { hover }
+    },
     methods: {
         closePanel() {
             this.$emit('closeThis')
@@ -124,6 +131,11 @@ export default {
         playThisNow(songId) {
             let data = { type: 'play', data: songId }
             this.$emit('queueAction', data)
+        },
+        deleteAllQueue() {
+            let data = { type: 'deleteAll' }
+            this.$emit('queueAction', data)
+            this.hover = false
         }
 
     },
@@ -243,6 +255,8 @@ export default {
     display: flex;
     padding: 0 20px 10px 20px;
     justify-content: space-between;
+    position: relative;
+    z-index: 100;
 }
 .actions p {
     padding-top: 7px;
@@ -256,5 +270,37 @@ export default {
 .actions img:hover {
     opacity: 1;
     transition-duration: 200ms;
+}
+.actionDD {
+    position: absolute;
+    top: 40px;
+    right: 10px;
+    background: #222;
+    border-top: #666 1px solid;
+}
+.actionDD div {
+    width: 130px;
+    height: 40px;
+    padding: 5px 20px;
+    border-bottom: #666 1px solid;
+    background: #222;
+    display: flex;
+    cursor: pointer;
+}
+.actionDD div:hover {
+    background: #111;
+    transition-duration: 200ms;
+}
+.actionDD div img, .actionDD div p {
+    display: block;
+}
+.actionDD div img {
+    width: 28px;
+    height: 28px;
+    margin-top: 7px;
+}
+.actionDD div p {
+    font-size: 1.2em;
+    margin: 2px 10px 0 10px;
 }
 </style>

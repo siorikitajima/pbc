@@ -14,7 +14,7 @@
   </transition>
 
   <div v-if="songs.length">
-      <ThePlayer :song="sqPlayingData" @showPanel="openPanel($event)" />
+      <ThePlayer :song="sqPlayingData" @showPanel="openPanel($event)" @playerHandler="playerHandler($event)" />
   </div>
 
 <teleport to="#singlePanels">
@@ -124,6 +124,23 @@ export default {
         return sqPlayingData[0]
       }  
     },
+    // sqNextData: function() {
+    //     let sqNextData = []
+    //     if(this.sqPlaying.length == 0 && !localStorage.getItem("sqPlaying")) { 
+    //       return this.songs[1]
+    //     } else {
+    //       if(this.sqPlaying.length == 0 && localStorage.getItem("sqPlaying")) {
+    //           this.sqPlaying = JSON.parse(localStorage.getItem("sqPlaying"))
+    //       }
+    //       for(let s = 0; s < this.songs.length; s++) {
+    //         if( this.songs[s].ID == this.spQueue[0] ) {
+    //           sqNextData.push(this.songs[s])
+    //         }
+    //     }
+    //     localStorage.setItem("sqPlaying", JSON.stringify(this.sqPlaying))
+    //     return sqNextData[0]
+    //   }  
+    // },
     sqEndedData: function() {
         let endedData = []
         if(this.sqEnded.length == 0 && !localStorage.getItem("sqEnded")) { 
@@ -229,6 +246,10 @@ export default {
         for (let s = 0; s < reversed.length; s++) {
           this.spQueue.unshift(reversed[s])
         }
+        this.sqEnded.push(this.sqPlaying[0])
+        this.sqPlaying.splice(0, 1)
+        this.sqPlaying.push(this.spQueue[0])
+        this.spQueue.splice(0, 1)
       }
       else if(action == 'addAll') {
         for (let s = 0; s < data.data.length; s++) {
@@ -239,6 +260,65 @@ export default {
         const index = this.sqEnded.indexOf(data.data)
         this.sqEnded.splice(index, 1)
       }
+      else if (action == 'deleteAll') {
+        this.sqEnded.splice(0)
+        localStorage.setItem("sqEnded", JSON.stringify(this.sqEnded))
+        // this.sqPlaying.splice(0)
+        // localStorage.setItem("sqPlaying", JSON.stringify(this.sqPlaying))
+        this.spQueue.splice(0)
+        localStorage.setItem("spQueue", JSON.stringify(this.spQueue))
+      }
+    },
+    playerHandler(data) {
+      if(data.type == 'next') {
+        this.sqEnded.push(this.sqPlaying[0])
+        localStorage.setItem("sqEnded", JSON.stringify(this.sqEnded))
+        this.sqPlaying.splice(0, 1)
+        this.sqPlaying.push(this.spQueue[0])
+        localStorage.setItem("sqPlaying", JSON.stringify(this.sqPlaying))
+        this.spQueue.splice(0, 1)
+        if(this.spQueue.length == 0) {
+          const theNext = this.generateNextSong()
+          console.log(theNext)
+          const theNextId = theNext.ID
+          this.spQueue.push(theNextId)
+        }
+        localStorage.setItem("spQueue", JSON.stringify(this.spQueue))
+
+      } else if(data.type == 'prev') {
+        this.spQueue.unshift(this.sqPlaying[0])
+        localStorage.setItem("spQueue", JSON.stringify(this.spQueue))
+        this.sqPlaying.splice(0, 1)
+        this.sqPlaying.push(this.sqEnded[this.sqEnded.length - 1])
+        localStorage.setItem("sqPlaying", JSON.stringify(this.sqPlaying))
+        this.sqEnded.splice(this.sqEnded.length - 1, 1)
+        localStorage.setItem("sqEnded", JSON.stringify(this.sqEnded))
+      }
+    },
+    generateNextSong() {
+        let gap = 1.5
+        const randomNum = Math.random() * (this.songs.length - 1);
+        let theOG = this.sqPlayingData
+        let nextsong = []
+        let minRhythm = ( theOG.PBRhythm < gap ) ? 0 : theOG.PBRhythm - gap
+        let maxRhythm = ( theOG.PBRhythm > (10 - gap) ) ? 10 : theOG.PBRhythm + gap
+        let minSpeed = ( theOG.PBSpeed < gap ) ? 0 : theOG.PBSpeed - gap
+        let maxSpeed = ( theOG.PBSpeed > (10 - gap) ) ? 10 : theOG.PBSpeed + gap
+        let minExperimental = ( theOG.PBExperimental < gap ) ? 0 : theOG.PBExperimental - gap
+        let maxExperimental = ( theOG.PBExperimental > (10 - gap) ) ? 10 : theOG.PBExperimental + gap
+        let minMood = ( theOG.PBMood < gap ) ? 0 : theOG.PBMood - gap
+        let maxMood = ( theOG.PBMood > (10 - gap) ) ? 10 : theOG.PBMood + gap                 
+        let minOrganic = ( theOG.PBOrganic < gap ) ? 0 : theOG.PBOrganic - gap
+        let maxOrganic = ( theOG.PBOrganic > (10 - gap) ) ? 10 : theOG.PBOrganic + gap
+        for(let s = 0; s < this.songs.length; s++) {
+            if ( this.songs[s].PBRhythm >= minRhythm && this.songs[s].PBRhythm <= maxRhythm && this.songs[s].PBSpeed >= minSpeed && this.songs[s].PBSpeed <= maxSpeed && this.songs[s].PBExperimental >= minExperimental && this.songs[s].PBExperimental <= maxExperimental && this.songs[s].PBMood >= minMood && this.songs[s].PBMood <= maxMood && this.songs[s].PBOrganic >= minOrganic && this.songs[s].PBOrganic <= maxOrganic && this.songs[s].ID !== theOG.ID ) { 
+              nextsong = [this.songs[s]];
+              break;
+            } else { 
+              nextsong = [this.songs[randomNum]];
+            }
+        }
+        return nextsong[0]
     }
   }
 }
