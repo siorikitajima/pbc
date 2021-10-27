@@ -1,4 +1,5 @@
 import { ref } from 'vue'
+import API_URL from '../../src/api-url'
 
 const getAlbums = () => {
     const albums = ref([])
@@ -6,7 +7,7 @@ const getAlbums = () => {
 
     const loadAlbums = async () => {
         try {
-            let data = await fetch('http://localhost:9000/api/albums')
+            let data = await fetch( API_URL + 'albums')
             if(!data.ok) {
                 throw Error ('no data available')
             }

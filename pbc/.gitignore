@@ -2,7 +2,7 @@
 .gitignore
 node_modules
 /dist
-
+api-url*
 
 # local env files
 .env.local

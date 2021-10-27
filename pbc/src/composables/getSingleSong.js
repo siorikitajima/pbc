@@ -1,4 +1,5 @@
 import { ref } from 'vue'
+import API_URL from '../../src/api-url'
 
 const getSingleSong = (id) => {
     const singlesong = ref('')
@@ -6,7 +7,7 @@ const getSingleSong = (id) => {
 
     const singlesongload = async () => {
         try {
-            let data = await fetch('http://localhost:9000/api/singlesong/' + id)
+            let data = await fetch( API_URL + 'singlesong/' + id)
             if(!data.ok) {
                 throw Error ('no data available')
             }

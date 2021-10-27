@@ -1,4 +1,5 @@
 import { ref } from 'vue'
+import API_URL from '../../src/api-url'
 
 const getProject = (slug) => {
     const project = ref([])
@@ -6,7 +7,7 @@ const getProject = (slug) => {
 
     const loadProject = async () => {
         try {
-            let data = await fetch('http://localhost:9000/api/project/' + slug)
+            let data = await fetch( API_URL + 'project/' + slug)
             if(!data.ok) {
                 throw Error ('no data available')
             }

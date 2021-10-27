@@ -1,4 +1,5 @@
 import { ref } from 'vue'
+import API_URL from '../../src/api-url'
 
 const getSearchKeys = () => {
     const searchKeys = ref([])
@@ -6,7 +7,7 @@ const getSearchKeys = () => {
 
     const loadSearchKeys = async () => {
         try {
-            let data = await fetch('http://localhost:9000/api/search')
+            let data = await fetch( API_URL + 'search')
             if(!data.ok) {
                 throw Error ('no data available')
             }

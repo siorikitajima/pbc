@@ -149,7 +149,7 @@ export default {
             this.audio.currentTime = 0;
             // this.audio.src = 'https://pblibrary.s3.us-east-2.amazonaws.com/' + this.song.CatNum + '/' + this.song.ID  + '.mp3';
             this.audio.src = this.songSrc;
-            console.log('Currently Playing: ' + this.songSrc)
+            // console.log('Currently Playing: ' + this.songSrc)
 
             setTimeout(() => {
                 if(this.isTimerPlaying) {

@@ -1,4 +1,5 @@
 import { ref } from 'vue'
+import API_URL from '../../src/api-url'
 
 const getSongwAlbum = (id) => {
     const songAlbum = ref('')
@@ -8,18 +9,18 @@ const getSongwAlbum = (id) => {
 
     const songAlbumload = async () => {
         try {
-            let data = await fetch('http://localhost:9000/api/songs/' + id)
+            let data = await fetch(API_URL + 'songs/' + id)
             if(!data.ok) { throw Error ('no data available') }
             songAlbum.value = await data.json()
             
             let temp = await songAlbum.value.CatNum
-            let adata = await fetch('http://localhost:9000/api/albums/' + temp)
+            let adata = await fetch(API_URL + 'albums/' + temp)
             if(!adata.ok) { throw Error ('no data available') }
             tempAlbum.value = await adata.json()
 
             let writers = await songAlbum.value.Writers.split(", ")
             let imageLinks = []
-            let ardata = await fetch('http://localhost:9000/api/artists')
+            let ardata = await fetch(API_URL + 'artists')
             if(!ardata.ok) { throw Error ('no data available') }
             tempArtists.value = await ardata.json()
 

@@ -263,8 +263,6 @@ export default {
       else if (action == 'deleteAll') {
         this.sqEnded.splice(0)
         localStorage.setItem("sqEnded", JSON.stringify(this.sqEnded))
-        // this.sqPlaying.splice(0)
-        // localStorage.setItem("sqPlaying", JSON.stringify(this.sqPlaying))
         this.spQueue.splice(0)
         localStorage.setItem("spQueue", JSON.stringify(this.spQueue))
       }
@@ -279,7 +277,6 @@ export default {
         this.spQueue.splice(0, 1)
         if(this.spQueue.length == 0) {
           const theNext = this.generateNextSong()
-          console.log(theNext)
           const theNextId = theNext.ID
           this.spQueue.push(theNextId)
         }
@@ -299,7 +296,7 @@ export default {
         let gap = 1.5
         const randomNum = Math.random() * (this.songs.length - 1);
         let theOG = this.sqPlayingData
-        let nextsong = []
+        let nextsongs = [];
         let minRhythm = ( theOG.PBRhythm < gap ) ? 0 : theOG.PBRhythm - gap
         let maxRhythm = ( theOG.PBRhythm > (10 - gap) ) ? 10 : theOG.PBRhythm + gap
         let minSpeed = ( theOG.PBSpeed < gap ) ? 0 : theOG.PBSpeed - gap
@@ -310,15 +307,21 @@ export default {
         let maxMood = ( theOG.PBMood > (10 - gap) ) ? 10 : theOG.PBMood + gap                 
         let minOrganic = ( theOG.PBOrganic < gap ) ? 0 : theOG.PBOrganic - gap
         let maxOrganic = ( theOG.PBOrganic > (10 - gap) ) ? 10 : theOG.PBOrganic + gap
+
         for(let s = 0; s < this.songs.length; s++) {
-            if ( this.songs[s].PBRhythm >= minRhythm && this.songs[s].PBRhythm <= maxRhythm && this.songs[s].PBSpeed >= minSpeed && this.songs[s].PBSpeed <= maxSpeed && this.songs[s].PBExperimental >= minExperimental && this.songs[s].PBExperimental <= maxExperimental && this.songs[s].PBMood >= minMood && this.songs[s].PBMood <= maxMood && this.songs[s].PBOrganic >= minOrganic && this.songs[s].PBOrganic <= maxOrganic && this.songs[s].ID !== theOG.ID ) { 
-              nextsong = [this.songs[s]];
-              break;
-            } else { 
-              nextsong = [this.songs[randomNum]];
+            if ( this.songs[s].PBRhythm >= minRhythm && this.songs[s].PBRhythm <= maxRhythm && this.songs[s].PBSpeed >= minSpeed && this.songs[s].PBSpeed <= maxSpeed && this.songs[s].PBExperimental >= minExperimental && this.songs[s].PBExperimental <= maxExperimental && this.songs[s].PBMood >= minMood && this.songs[s].PBMood <= maxMood && this.songs[s].PBOrganic >= minOrganic && this.songs[s].PBOrganic <= maxOrganic ) { 
+              nextsongs.push(this.songs[s])
             }
         }
-        return nextsong[0]
+
+        nextsongs = nextsongs.filter(item => !this.sqPlaying.includes(item.ID))
+        nextsongs = nextsongs.filter(item => !this.sqEnded.includes(item.ID))
+        
+        if(nextsongs.length == 0) {
+          nextsongs.push(this.songs[randomNum])
+        }
+
+        return nextsongs[0]        
     }
   }
 }

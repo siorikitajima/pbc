@@ -1,4 +1,5 @@
 import { ref } from 'vue'
+import API_URL from '../../src/api-url'
 
 const getPresetKeys = () => {
     const presets = ref([])
@@ -6,7 +7,7 @@ const getPresetKeys = () => {
 
     const loadPresetKeys = async () => {
         try {
-            let data = await fetch('http://localhost:9000/api/preset')
+            let data = await fetch( API_URL + 'preset')
             if(!data.ok) {
                 throw Error ('no data available')
             }
