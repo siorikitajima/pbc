@@ -4,13 +4,15 @@
   <SideNav />
   </teleport>
 
-  <router-view :songs="songs" @panelReq="openPanel($event)" @singlePanel="openSingle($event)" :key="$route.fullPath" @queueAction="updateQueue($event)" />
+<div v-if="songs">
+  <router-view :songs="songs" :song="sqPlayingData" @panelReq="openPanel($event)" @singlePanel="openSingle($event)" :key="$route.fullPath" @queueAction="updateQueue($event)" />
+</div>
 
   <transition name="slideFRBottom">
-      <PlayerQueue v-show="queuePanel" :spQueue="queueSongsData" :sqPlaying="sqPlayingData" :sqEnded="sqEndedData" @closeThis="closeQueue" @queueAction="updateQueue($event)" />
+      <PlayerQueue v-show="queuePanel" :spQueue="queueSongsData" :sqPlaying="sqPlayingData" :sqEnded="sqEndedData" :similarPanel="similarPanel" @closeThis="closeQueue" @queueAction="updateQueue($event)" />
   </transition>
   <transition name="slideFRBottom">
-      <SimilarSongs v-show="similarPanel" :similarList="similarSongList" :ogSong="ogSongData" @closeThis="closeSimilar"  @singlePanel="openSingle($event)" @queueAction="updateQueue($event)" />
+      <SimilarSongs v-show="similarPanel" :similarList="similarSongList" :ogSong="ogSongData" @closeThis="closeSimilar" @singlePanel="openSingle($event)" @queueAction="updateQueue($event)" />
   </transition>
 
   <div v-if="songs.length">
@@ -214,6 +216,9 @@ export default {
         if(!this.spQueue.includes(data.data)) {
           this.spQueue.push(data.data) 
         }
+        // if(data.dist && data.dist == 'similar' && this.queuePanel) {
+        //   console.log('Add from similar song and queue')
+        // }
       }
       else if(action == 'remove') { 
         const index = this.spQueue.indexOf(data.data)
@@ -231,6 +236,14 @@ export default {
         this.sqPlaying.splice(0, 1)
         this.sqPlaying.push(this.spQueue[0])
         this.spQueue.splice(0, 1)
+        if(this.spQueue.length == 0) {
+          const theNext = this.generateNextSong()
+          const theNextId = theNext.ID
+          this.spQueue.push(theNextId)
+        }
+        // if(data.dist && data.dist == 'similar' && this.queuePanel) {
+        //   console.log('Play from similar song and queue')
+        // }
       }
       else if(action == 'skip') {
         const index = this.spQueue.indexOf(data.data)
@@ -242,6 +255,7 @@ export default {
         this.spQueue.splice(0, 1)
       }
       else if(action == 'playAll') {
+        console.log(data)
         const reversed = data.data.reverse()
         for (let s = 0; s < reversed.length; s++) {
           this.spQueue.unshift(reversed[s])
@@ -252,6 +266,7 @@ export default {
         this.spQueue.splice(0, 1)
       }
       else if(action == 'addAll') {
+        console.log(data)
         for (let s = 0; s < data.data.length; s++) {
           this.spQueue.push(data.data[s])
         }
@@ -269,6 +284,11 @@ export default {
     },
     playerHandler(data) {
       if(data.type == 'next') {
+        if(this.spQueue.length == 0) {
+          const theNext = this.generateNextSong()
+          const theNextId = theNext.ID
+          this.spQueue.push(theNextId)
+        }
         this.sqEnded.push(this.sqPlaying[0])
         localStorage.setItem("sqEnded", JSON.stringify(this.sqEnded))
         this.sqPlaying.splice(0, 1)
@@ -283,13 +303,15 @@ export default {
         localStorage.setItem("spQueue", JSON.stringify(this.spQueue))
 
       } else if(data.type == 'prev') {
-        this.spQueue.unshift(this.sqPlaying[0])
-        localStorage.setItem("spQueue", JSON.stringify(this.spQueue))
-        this.sqPlaying.splice(0, 1)
-        this.sqPlaying.push(this.sqEnded[this.sqEnded.length - 1])
-        localStorage.setItem("sqPlaying", JSON.stringify(this.sqPlaying))
-        this.sqEnded.splice(this.sqEnded.length - 1, 1)
-        localStorage.setItem("sqEnded", JSON.stringify(this.sqEnded))
+        if(!this.sqEnded == null || !this.sqEnded.length == 0) {
+          this.spQueue.unshift(this.sqPlaying[0])
+          localStorage.setItem("spQueue", JSON.stringify(this.spQueue))
+          this.sqPlaying.splice(0, 1)
+          this.sqPlaying.push(this.sqEnded[this.sqEnded.length - 1])
+          localStorage.setItem("sqPlaying", JSON.stringify(this.sqPlaying))
+          this.sqEnded.splice(this.sqEnded.length - 1, 1)
+          localStorage.setItem("sqEnded", JSON.stringify(this.sqEnded))
+        }
       }
     },
     generateNextSong() {

@@ -3,7 +3,7 @@
     <div class="resultWrapper" v-bind:class="{ moveToRight: sliderPanel || presetPanel, moveDown: searchPanel }">
         <div v-if="songs.length">
             <ResultHead :songCount="songCount" :resultQuery="resultQuery" @clearVal="clearValue($event)" @queueAction="getList4Queue($event)" />
-            <SongList :fltdsongs="fltBySearch" :dist="'result'" @passThis="passSingle($event)" @openPanel="passPanel($event)" @queueAction="passQueue($event)" />
+            <SongList :fltdsongs="fltBySearch" :song="song" :dist="'result'" @passThis="passSingle($event)" @openPanel="passPanel($event)" @queueAction="passQueue($event)" />
         </div>
         <div v-else><Loading /></div>
     </div>
@@ -41,7 +41,7 @@
 import SongList from '../components/songtable/SongList.vue'
 import Loading from '../components/songtable/Loading.vue'
 import ResultHead from '../components/songtable/ResultHead.vue'
-import { ref } from '@vue/reactivity'
+import { ref, computed } from '@vue/reactivity'
 import Search from '../components/filter/Search.vue'
 import Filters from '../components/filter/Filters.vue'
 import Presets from '../components/filter/Presets.vue'
@@ -50,7 +50,7 @@ export default {
     name: 'Result',
     components: { SongList, ResultHead, 
     Search, Filters, Presets, Loading }, 
-    props: ['songs'],
+    props: ['songs', 'song'],
     emits: ['panelReq', 'singlePanel', 'queueAction'],
     setup() {
         // const { songs, error, load } = getSongs()
@@ -60,12 +60,52 @@ export default {
         const sliderPanel = ref(true)
         const presetPanel = ref(false)
 
+        // const initialValue = computed(()=>{
+        //     if(localStorage.getItem("filterValues")) { 
+        //         console.log(JSON.parse(localStorage.getItem("filterValues")))
+        //         return JSON.parse(localStorage.getItem("filterValues"))
+        //         // this.rhythm.min = values.rhythm.min
+        //         // this.rhythm.max = values.rhythm.max
+        //         // this.speed.min = values.speed.min
+        //         // this.speed.max = values.speed.max
+        //         // this.experimental.min = values.experimental.min
+        //         // this.experimental.max = values.experimental.max
+        //         // this.mood.min = values.mood.min
+        //         // this.mood.max = values.mood.max
+        //         // this.organic.min = values.organic.min
+        //         // this.organic.max = values.organic.max
+        //         // this.allSearch = values.search
+        //     } else {
+        //         const defaultData = {  
+        //             "rhythm": { "min": 0, "max": 10 },
+        //             "speed": { "min": 0, "max": 10 },
+        //             "experimental": { "min": 0, "max": 10 },
+        //             "mood": { "min": 0, "max": 10 },
+        //             "organic": { "min": 0, "max": 10 },
+        //             "search": []
+        //         }
+        //         console.log(defaultData)
+        //         return defaultData
+        //     }
+        // })
+        // const rhythm = ref({ min: this.initialValue.rhythm.min, max: this.initialValue.rhythm.max })
+        // const speed = ref({ min: this.initialValue.speed.min, max: this.initialValue.speed.max })
+        // const experimental = ref({ min: this.initialValue.experimental.min, max: this.initialValue.experimental.max })
+        // const mood = ref({ min: this.initialValue.mood.min, max: this.initialValue.mood.max })
+        // const organic = ref({ min: this.initialValue.organic.min, max: this.initialValue.organic.min })
+
         const rhythm = ref({ min: 0, max: 10 })
         const speed = ref({ min: 0, max: 10 })
         const experimental = ref({ min: 0, max: 10 })
         const mood = ref({ min: 0, max: 10 })
         const organic = ref({ min: 0, max: 10 })
         
+        // const rhythm = ref({ min: null, max: null })
+        // const speed = ref({ min: null, max: null })
+        // const experimental = ref({ min: null, max: null })
+        // const mood = ref({ min: null, max: null })
+        // const organic = ref({ min: null, max: null })
+
         const search = ref('')
         const allSearch = ref([])
 
@@ -74,16 +114,74 @@ export default {
         rhythm, speed, experimental, mood, organic, 
         search, allSearch } 
     },
+    mounted() {
+            const values = JSON.parse(localStorage.getItem("filterValues")) || null
+            if(values !== null) {
+                if( values.rhythm.min !== 0 || values.rhythm.max !== 10 || values.speed.min !== 0 || values.speed.max !== 10 || values.experimental.min !== 0 || values.experimental.max !== 10 || values.mood.min !== 0 || values.mood.max !== 10 || values.organic.min !== 0 || values.organic.max !== 10 || values.search.length !== 0) {
+                    this.rhythm.min = values.rhythm.min
+                    this.rhythm.max = values.rhythm.max
+                    this.speed.min = values.speed.min
+                    this.speed.max = values.speed.max
+                    this.experimental.min = values.experimental.min
+                    this.experimental.max = values.experimental.max
+                    this.mood.min = values.mood.min
+                    this.mood.max = values.mood.max
+                    this.organic.min = values.organic.min
+                    this.organic.max = values.organic.max
+                    this.allSearch = values.search
+                } 
+            }
+    },
     computed: {
         fltBySearch: function() {
             return this.songs.filter((song) => {
+                //// Match to the Slider Value
                 if ( song.PBRhythm >= this.rhythm.min && song.PBRhythm <= this.rhythm.max && song.PBSpeed >= this.speed.min && song.PBSpeed <= this.speed.max && song.PBExperimental >= this.experimental.min && song.PBExperimental <= this.experimental.max && song.PBMood >= this.mood.min && song.PBMood <= this.mood.max && song.PBOrganic >= this.organic.min && song.PBOrganic <= this.organic.max ) {
+                    //// If there is no other item, that's the result
                     if( this.allSearch.length == 0 ) { 
                         return true
                     } else {
+                        const query = {
+                            rhythm: { min: this.rhythm.min, max: this.rhythm.max },
+                            speed: { min: this.speed.min, max: this.speed.max },
+                            experimental: { min: this.experimental.min, max: this.experimental.max },
+                            mood: { min: this.mood.min, max: this.mood.max },
+                            organic: { min: this.organic.min, max: this.organic.max },
+                            search: this.allSearch 
+                        }
+                        localStorage.setItem("filterValues", JSON.stringify(query))
+                        
+                        //// If Search keywords exist
                         for(let s = 0; s < this.allSearch.length; s++ ) {
-                            if ( song.Title.toLowerCase().match(this.allSearch[s].toLowerCase()) || song.ArtistName.toLowerCase().match(this.allSearch[s].toLowerCase())|| song.Writers.toLowerCase().match(this.allSearch[s].toLowerCase())) { return true }
-                            // else { return false }
+                            //// Song is searched by name by itself
+                            if( this.allSearch[s].type == 'song') {
+                                if ( song.Title.toLowerCase().match(this.allSearch[s].key.toLowerCase())) { return true }
+                            }
+                            if( this.allSearch[s].type == 'instrument') {
+                                if ( song.Instruments && song.Instruments.toLowerCase().includes(this.allSearch[s].key.toLowerCase())) { return true }
+                            }
+                            if( this.allSearch[s].type == 'album') {
+                                if ( song.AlbumTitle.toLowerCase().match(this.allSearch[s].key.toLowerCase())) { return true }
+                            }
+                            if( this.allSearch[s].type == 'project') {
+                                if ( song.ArtistName.toLowerCase().match(this.allSearch[s].key.toLowerCase())) { return true }
+                            }
+                            if( this.allSearch[s].type == 'artist') {
+                                if ( song.Writers.toLowerCase().includes(this.allSearch[s].key.toLowerCase())) { return true }
+                            }
+
+                            if( this.allSearch[s].type == 'genre') {
+                                if ( song.Genre && song.Genre.toLowerCase().match(this.allSearch[s].key.toLowerCase()) || song.SubGenreA && song.SubGenreA.toLowerCase().match(this.allSearch[s].key.toLowerCase()) || song.SubGenreB && song.SubGenreB.toLowerCase().match(this.allSearch[s].key.toLowerCase())) { return true }
+                            }
+                            if( this.allSearch[s].type == 'tag') {
+                                if ( song.Tags && song.Tags.toLowerCase().includes(this.allSearch[s].key.toLowerCase())) { return true }
+                            }
+                            if( this.allSearch[s].type == 'mood') {
+                                if ( song.PrimaryMood && song.PrimaryMood.toLowerCase().match(this.allSearch[s].key.toLowerCase()) || song.SecondaryMoods && song.SecondaryMoods.toLowerCase().match(this.allSearch[s].key.toLowerCase())) { return true }
+                            }
+                            if( this.allSearch[s].type == 'search') {
+                                if ( song.Title.toLowerCase().match(this.allSearch[s].key.toLowerCase()) || song.Description && song.Description.toLowerCase().includes(this.allSearch[s].key.toLowerCase())) { return true }
+                            }
                         }
                         return false
                     }
@@ -94,34 +192,117 @@ export default {
             return this.fltBySearch.length;
         },
         resultQuery: function() {
-            return { 
-                rhythm: this.rhythm,
-                speed: this.speed,
-                experimental: this.experimental,
-                mood: this.mood,
-                organic: this.organic,
-                search: this.allSearch
-                }
+            // const values = JSON.parse(localStorage.getItem("filterValues"))
+
+// const initialQuery = {  
+            //         rhythm: { min: 0, max: 10 },
+            //         speed: { min: 0, max: 10 },
+            //         experimental: { min: 0, max: 10 },
+            //         mood: { min: 0, max: 10 },
+            //         organic: { min: 0, max: 10 },
+            //         search: []
+            // }
+            // const currentquery = {
+            //     rhythm: { min: this.rhythm.min, max: this.rhythm.max },
+            //     speed: { min: this.speed.min, max: this.speed.max },
+            //     experimental: { min: this.experimental.min, max: this.experimental.max },
+            //     mood: { min: this.mood.min, max: this.mood.max },
+            //     organic: { min: this.organic.min, max: this.organic.max },
+            //     search: this.allSearch 
+            // }
+
+
+// console.log(values)
+            // if( values.rhythm.min !== 0 || values.rhythm.max !== 10 || values.speed.min !== 0 || values.speed.max !== 10 || values.experimental.min !== 0 || values.experimental.max !== 10 || values.mood.min !== 0 || values.mood.max !== 10 || values.organic.min !== 0 || values.organic.max !== 10 || values.search.length !== 0) {
+            //     this.rhythm.min = values.rhythm.min
+            //     this.rhythm.max = values.rhythm.max
+            //     this.speed.min = values.speed.min
+            //     this.speed.max = values.speed.max
+            //     this.experimental.min = values.experimental.min
+            //     this.experimental.max = values.experimental.max
+            //     this.mood.min = values.mood.min
+            //     this.mood.max = values.mood.max
+            //     this.organic.min = values.organic.min
+            //     this.organic.max = values.organic.max
+            //     this.allSearch = values.search
+            // } 
+
+
+            // else if ( this.rhythm.min == 0 && this.rhythm.max == 10 && this.speed.min == 0 && this.speed.max == 10 && this.experimental.min == 0 && this.experimental.max == 10 && this.mood.min == 0 && values.mood.max == 10 && !values.organic.min == 0 && !values.organic.max == 10 && !values.search.length == 0 )
+            
+            // else {
+            //     this.rhythm.min = initialQuery.rhythm.min
+            //     this.rhythm.max = initialQuery.rhythm.max
+            //     this.speed.min = initialQuery.speed.min
+            //     this.speed.max = initialQuery.speed.max
+            //     this.experimental.min = initialQuery.experimental.min
+            //     this.experimental.max = initialQuery.experimental.max
+            //     this.mood.min = initialQuery.mood.min
+            //     this.mood.max = initialQuery.mood.max
+            //     this.organic.min = initialQuery.organic.min
+            //     this.organic.max = initialQuery.organic.max
+            //     this.allSearch = initialQuery.search
+            // }
+
+            // const query = {
+            //     rhythm: this.rhythm,
+            //     speed: this.speed,
+            //     experimental: this.experimental,
+            //     mood: this.mood,
+            //     organic: this.organic,
+            //     search: this.allSearch 
+            // }
+            const query = {
+                rhythm: { min: this.rhythm.min, max: this.rhythm.max },
+                speed: { min: this.speed.min, max: this.speed.max },
+                experimental: { min: this.experimental.min, max: this.experimental.max },
+                mood: { min: this.mood.min, max: this.mood.max },
+                organic: { min: this.organic.min, max: this.organic.max },
+                search: this.allSearch 
+            }
+            // localStorage.setItem("filterValues", JSON.stringify(query))
+            return query
         }
     },
     methods: {
         getList4Queue(data) {
             let songIds = []
-            if(data.type == 'playTen') {
-                if(this.fltBySearch.length > 9) {
-                    for(let s = 0; s < 10; s++) {
-                        let id = this.fltBySearch[s].ID
-                        songIds.push(id)
-                    }
-                } else {
-                    for(let s = 0; s < this.fltBySearch.length; s++) {
-                        let id = this.fltBySearch[s].ID
-                        songIds.push(id)
-                    }
+            let thisdata
+            // console.log(data)
+            if(data.type == 'playAll') {
+                for(let s = 0; s < this.fltBySearch.length; s++) {
+                    let id = this.fltBySearch[s].ID
+                    songIds.push(id)
                 }
-                const data = {type: 'playAll', data: songIds}
-                this.$emit('queueAction', data)
+                thisdata = {type: 'playAll', data: songIds}
+            } else if (data.type == 'addAll') {
+                for(let s = 0; s < this.fltBySearch.length; s++) {
+                    let id = this.fltBySearch[s].ID
+                    songIds.push(id)
+                }
+                thisdata = {type: 'addAll', data: songIds}
+            } else if (data.type == 'playThem') {
+                // console.log(data)
+                let fromNum = data.from
+                let toNum = data.to
+                // console.log(fromNum, toNum)
+                    for(let s = fromNum; s < toNum; s++) {
+                        let id = this.fltBySearch[s].ID
+                        songIds.push(id)
+                    }
+                thisdata = {type: 'playAll', data: songIds}
+            } else if (data.type == 'addThem') {
+                let fromNum = data.from
+                let toNum = data.to
+                // console.log(fromNum, toNum)
+                for(let s = fromNum; s < toNum; s++) {
+                    let id = this.fltBySearch[s].ID
+                    songIds.push(id)
+                }
+                thisdata = {type: 'addAll', data: songIds}
             }
+            // console.log(thisdata)                
+            this.$emit('queueAction', thisdata)
         },
         passQueue(data) {
             this.$emit('queueAction', data)
@@ -129,15 +310,17 @@ export default {
         passPanel(data) {
             this.$emit('panelReq', data)
         },
-        // panelAndClose(data) {
-        //     this.closeSingles()
-        //     this.$emit('panelReq', data)
-        // },
         passSingle(data) {
             this.$emit('singlePanel', data)
         },
-        updateResult(searchkey) {
-            this.allSearch = searchkey;
+        updateResult(data) {
+            let alreadyHaveIt = false
+            for(let s = 0; s < this.allSearch.length; s++) {
+                if (this.allSearch[s].key.match(data.key)) {
+                    alreadyHaveIt = true
+                }
+            }
+            if(!alreadyHaveIt) {this.allSearch.push(data)}
         },
         toggleSearchPanel() {
             this.searchPanel = !this.searchPanel
@@ -169,7 +352,32 @@ export default {
                 this.organic.min = filterVal.min
                 this.organic.max = filterVal.max
             }
+            const query = {
+                rhythm: this.rhythm,
+                speed: this.speed,
+                experimental: this.experimental,
+                mood: this.mood,
+                organic: this.organic,
+                search: this.allSearch 
+            }
+            localStorage.setItem("filterValues", JSON.stringify(query))
         },
+        // initializeFilter() {
+        //     if(localStorage.getItem("filterValues")) { 
+        //         const values = JSON.parse(localStorage.getItem("filterValues"))
+        //         this.rhythm.min = values.rhythm.min
+        //         this.rhythm.max = values.rhythm.max
+        //         this.speed.min = values.speed.min
+        //         this.speed.max = values.speed.max
+        //         this.experimental.min = values.experimental.min
+        //         this.experimental.max = values.experimental.max
+        //         this.mood.min = values.mood.min
+        //         this.mood.max = values.mood.max
+        //         this.organic.min = values.organic.min
+        //         this.organic.max = values.organic.max
+        //         this.allSearch = values.search
+        //     }
+        // },
         clearValue(type) {
             if (type == 'rhythm') {
                 this.rhythm.min = 0
@@ -194,9 +402,13 @@ export default {
             else {
                 let word = type
                 this.search = ''
-                for(let s = 0; s < this.allSearch.length; s++ ) {
-                    if(this.allSearch[s] == word) {
-                        this.allSearch.splice(s, 1)
+                if(this.allSearch.length == 1) {
+                    this.allSearch = []
+                } else {
+                    for(let s = 0; s < this.allSearch.length; s++ ) {
+                        if(this.allSearch[s] == word) {
+                            this.allSearch.splice(s, 1)
+                        }
                     }
                 }
             }
@@ -383,6 +595,17 @@ export default {
                     this.organic.max = o1New }, 500)
                 }
             }
+            const query = {
+                rhythm: this.rhythm,
+                speed: this.speed,
+                experimental: this.experimental,
+                mood: this.mood,
+                organic: this.organic,
+                search: this.allSearch 
+            }
+            setTimeout(()=>{
+                localStorage.setItem("filterValues", JSON.stringify(query))
+            }, 700)
         },
     }
 }

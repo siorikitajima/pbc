@@ -5,7 +5,7 @@
 
         <h2>// SIMILAR SONGS //</h2>
         <div v-if="similarSongList.length">
-            <SongList :fltdsongs="similarSongList" :dist="'song'" @passThis="passSingle($event)" @openPanel="passPanel($event)" @closeSingle="closeSinglePanel" @queueAction="updateQueue($event)" />
+            <SongList :fltdsongs="similarSongList" :dist="'song'" :song="song" @passThis="passSingle($event)" @openPanel="passPanel($event)" @closeSingle="closeSinglePanel" @queueAction="updateQueue($event)" />
         </div>
         <div v-else><Loading /></div>
   </div>
@@ -25,7 +25,7 @@ export default {
     name: 'SingleSongPage',
     components: { SingleSong, SongInfoPage, SongList, Loading },
     emits: ['panelReq', 'singlePanel', 'closeSingle', 'queueAction'],
-    props: [ 'id', 'title', 'songs' ],
+    props: [ 'id', 'title', 'songs', 'song' ],
     setup(props) {
         const theID = ref(props.id)
         

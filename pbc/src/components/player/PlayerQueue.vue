@@ -1,5 +1,5 @@
 <template>
-  <div class="queuePanel">
+  <div class="queuePanel" :class="{ toTheRight : similarPanel }">
       <div class="actions">
            <img :src="require('../../assets/images/global/Close_Icon.svg')" alt="Close" @click="closePanel">
            <p>Queue</p>
@@ -39,7 +39,7 @@
             <div class="coverSm" @click="playThisFirst(sqPlaying.ID)">
                 <img :src="`https://pblibrary.s3.us-east-2.amazonaws.com/${sqPlaying.CatNum}/cover-thumb.jpg`" :alt="sqPlaying.AlbumTitle">
                 <div class="screen">
-                    <img :src="require('../../assets/images/actions/playSong_light.svg')" alt="Play">
+                    <img :src="require('../../assets/images/global/play-active.svg')" alt="Play">
                 </div>
             </div>
             <div>
@@ -79,7 +79,7 @@ import { ref } from '@vue/reactivity'
 
 export default {
     name: 'SimilarSongs',
-    props: [ 'similarList', 'sqPlaying', 'spQueue', 'sqEnded' ],
+    props: [ 'similarList', 'sqPlaying', 'spQueue', 'sqEnded', 'similarPanel' ],
     emits: [ 'closeThis', 'queueAction' ],
     setup() {
         const hover = ref(false)
@@ -174,6 +174,10 @@ export default {
   color: #FFFFFF88;
   /* z-index: -1; */
 }
+.queuePanel.toTheRight {
+    right: 275px;
+    transition-duration: 100ms;
+}
 .queueList {
   height: calc(100% - 65px);
   width: calc(100% - 40px);
@@ -243,13 +247,21 @@ export default {
     left: 0;
     opacity: 0;
 }
+.coverSm .screen img {
+    width: 30px;
+    height: 30px;
+    padding: 5px;
+}
 .queueSong.playing .coverSm .screen {
-    opacity: 1;
+    opacity: 0.8;
     cursor: none;
 }
 .queueSong:hover .coverSm .screen {
     opacity: 1;
     transition-duration: 200ms;
+}
+.queueSong.playing:hover .coverSm .screen {
+    opacity: 0.8;
 }
 .actions {
     display: flex;

@@ -6,7 +6,7 @@
 
         <h2>// FEATURED TRACKS //</h2>
         <div v-if="featuredTracks.length">
-            <SongList :fltdsongs="featuredTracks.slice(0, 5)" :dist="'project'" @passThis="passSingle($event)" @openPanel="passPanel($event)" @queueAction="updateQueue($event)" />
+            <SongList :fltdsongs="featuredTracks.slice(0, 5)" :song="song" :dist="'project'" @passThis="passSingle($event)" @openPanel="passPanel($event)" @queueAction="updateQueue($event)" />
         </div>
         <div v-else><Loading /></div>
 
@@ -24,13 +24,13 @@
                 <ProjectsAlbums v-if="projectsAlbums" :projectsAlbums="projectsAlbums" />
             </div>
             <div v-if="featuredTracks.length">
-                <SongList :fltdsongs="featuredTracks.slice(5, featuredTracks.length-1)" :dist="'project'" @passThis="passSingle($event)" @openPanel="passPanel($event)" @queueAction="updateQueue($event)" />
+                <SongList :fltdsongs="featuredTracks.slice(5, featuredTracks.length-1)"  :song="song" :dist="'project'" @passThis="passSingle($event)" @openPanel="passPanel($event)" @queueAction="updateQueue($event)" />
             </div>
     </div>    
 
     <div v-else>
             <div v-if="featuredTracks.length">
-                <SongList :fltdsongs="featuredTracks.slice(5, featuredTracks.length-1)" :dist="'project'" @passThis="passSingle($event)" @openPanel="passPanel($event)" @queueAction="updateQueue($event)" />
+                <SongList :fltdsongs="featuredTracks.slice(5, featuredTracks.length-1)" :dist="'project'" :song="song" @passThis="passSingle($event)" @openPanel="passPanel($event)" @queueAction="updateQueue($event)" />
             </div>
     </div>
 
@@ -54,7 +54,7 @@ export default {
     components: { SingleArtist, 
     SongList, RelatedArtists, Loading, ProjectsAlbums },
     emits: ['panelReq', 'singlePanel', 'queueAction'],
-    props: { name: String, songs: Array },
+    props: { name: String, songs: Array, song: Object },
     setup(props) {
         const theName = ref(props.name)
         // const songs = ref(props.songs)

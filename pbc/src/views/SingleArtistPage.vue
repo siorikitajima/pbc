@@ -5,7 +5,7 @@
     </div>
         <h2>// FEATURED TRACKS //</h2>
         <div v-if="featuredTracks.length">
-            <SongList :fltdsongs="featuredTracks.slice(0,5)" :dist="'artist'" @passThis="passSingle($event)" @openPanel="passPanel($event)" @queueAction="updateQueue($event)" />
+            <SongList :fltdsongs="featuredTracks.slice(0,5)" :song="song" :dist="'artist'" @passThis="passSingle($event)" @openPanel="passPanel($event)" @queueAction="updateQueue($event)" />
         </div>
         <div v-else><Loading /></div>
 
@@ -13,7 +13,7 @@
     <RelatedArtists v-if="artist" :artist="artist" />
 
     <div v-if="featuredTracks.length > 5">
-        <SongList :fltdsongs="featuredTracks.slice(5,featuredTracks.length-1)" :dist="'artist'" @passThis="passSingle($event)" @openPanel="passPanel($event)" @queueAction="updateQueue($event)" />
+        <SongList :fltdsongs="featuredTracks.slice(5,featuredTracks.length-1)" :song="song" :dist="'artist'" @passThis="passSingle($event)" @openPanel="passPanel($event)" @queueAction="updateQueue($event)" />
     </div>
     <!-- <div v-else><Loading /></div> -->
   </div>
@@ -33,7 +33,7 @@ export default {
     name: 'SingleArtistPage',
     components: { SingleArtist, SongList, RelatedArtists, Loading },
     emits: ['panelReq', 'singlePanel', 'queueAction'],
-    props: { name: String, songs: Array },
+    props: { name: String, songs: Array, song: Object },
     setup(props) {
         const theName = ref(props.name)
         

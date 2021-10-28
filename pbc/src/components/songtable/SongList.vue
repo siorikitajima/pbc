@@ -11,7 +11,7 @@
         <p>ORG</p>
     </div>
     <div v-for="fltdsong in fltdsongs || []" :key="fltdsong.ID">
-        <ASong :song="fltdsong" :dist="dist" @openThis="passSingle($event)" @showPanel="passPanel($event)" @queueAction="passQueue($event)" /> 
+        <ASong :song="fltdsong" :currentSong="song" :dist="dist" @openThis="passSingle($event)" @showPanel="passPanel($event)" @queueAction="passQueue($event)" /> 
     </div>
 </div>
 </template>
@@ -22,7 +22,7 @@ import ASong from './ASong.vue'
 
 export default {
     name: 'SongList',
-    props: ['fltdsongs', 'dist'],
+    props: ['fltdsongs', 'dist', 'song'],
     components: { ASong },
     emits: ['passThis', 'openPanel', 'queueAction'],
     setup(props) {

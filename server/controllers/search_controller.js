@@ -4,10 +4,14 @@ const Song = require('../models/song_schema');
 const Artist = require('../models/artist_schema');
 const Album = require('../models/album_schema');
 const Preset = require('../models/preset_schema');
+const Instrument = require('../models/instrument_schema');
+const Genre = require('../models/genre_schema');
+const Tag = require('../models/tag_schema');
+const Mood = require('../models/mood_schema');
 
 const readSearchData = (req, res) => {
   let keys = [];
-    Artist.find()
+    Artist.find() //// Artist Names with Type
     .then((artist) => {
         for(let s = 0; s < artist.length; s++) {
             let type;
@@ -22,7 +26,7 @@ const readSearchData = (req, res) => {
                 keys.push(artistkey)
             }
         }
-        Album.find()
+        Album.find() //// Album Names
         .then((album) => {
             for(let al = 0; al < album.length; al++) {
                 const albumkey = {
@@ -31,7 +35,7 @@ const readSearchData = (req, res) => {
                 }
                 keys.push(albumkey)
             }
-            Song.find().sort({Rate: -1})
+            Song.find().sort({Rate: -1}) //// Song Names
             .then((data) => {
                 for(let s = 0; s < data.length; s++) {
                     const songkey = {
@@ -40,7 +44,43 @@ const readSearchData = (req, res) => {
                     }
                     keys.push(songkey)
                 }
-                res.status(200).json(keys);
+                Instrument.find().then((instrument) => {
+                    for(let i = 0; i < instrument.length; i++) {
+                        const instrumentkey = {
+                        "key": instrument[i].Instrument,
+                        "type": 'instrument'
+                        }
+                        keys.push(instrumentkey)
+                    }
+                    Genre.find().then((genre) => {
+                        for(let g = 0; g < genre.length; g++) {
+                            const genrekey = {
+                            "key": genre[g].Genre,
+                            "type": 'genre'
+                            }
+                            keys.push(genrekey)
+                        }
+                        Tag.find().then((tag) => {
+                            for(let t = 0; t < tag.length; t++) {
+                                const tagkey = {
+                                "key": tag[t].Tag,
+                                "type": 'tag'
+                                }
+                                keys.push(tagkey)
+                            }
+                            Mood.find().then((mood) => {
+                                for(let m = 0; m < mood.length; m++) {
+                                    const moodkey = {
+                                    "key": mood[m].Mood,
+                                    "type": 'mood'
+                                    }
+                                    keys.push(moodkey)
+                                }
+                                res.status(200).json(keys);
+                            })
+                        })
+                    })
+                })
             })
         })
     })

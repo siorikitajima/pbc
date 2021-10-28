@@ -13,16 +13,21 @@
     placeholder="Artist, Instrument, Keyword, etc."
     autocomplete="off" 
     @focus="searchPanel = true"
-    @keyup.enter="setKey(tempSearch)"
+    @keyup.enter="setKey({type: 'search', key: tempSearch})"
     >
 
-    <div v-if="filteredKeys.length && searchPanel">
+    <div v-if="filteredKeys.length && searchPanel || tempSearch != ''">
       <ul class="searchKeys">
+        <li class="searchKey" v-if="tempSearch != ''" @click="setKey({type: 'search' ,key: tempSearch})" >
+          <span class="pill" :data-col="'search'">keyword</span>
+          {{tempSearch}}
+        </li>
         <li class="searchKey" 
         v-for="(filteredKey, index) in filteredKeys" 
-        @click="setKey(filteredKey.key)" :key="filteredKey.key + '-' + index">
-          <span class="pill">{{filteredKey.type}}</span>
+        @click="setKey({type: filteredKey.type ,key: filteredKey.key})" :key="filteredKey.key + '-' + index">
+          <span class="pill" :data-col="filteredKey.type">{{filteredKey.type}}</span>
           {{filteredKey.key}}
+          
         </li>
       </ul>
     </div>
@@ -41,19 +46,12 @@ export default {
     setup(props) {
       const { searchKeys, error, loadSearchKeys } = getSearchKeys()
       loadSearchKeys()
-      const searchKey = ref(props.allSearch)
+      const searchKey = ref( props.allSearch )
       const tempSearch = ref( props.search )
       const filteredKeys = ref([])
       const searchPanel = ref(false)
       return { searchKey, searchKeys, error, filteredKeys, searchPanel, tempSearch }
     },
-    // computed: {
-    //   clearingField: function() {
-    //     if(this.clearField == true) {
-    //       this.searchKey = ''
-    //     }
-    //   }
-    // },
     methods: {
       filterKeys() {
         if (this.tempSearch.length == 0) {
@@ -63,14 +61,18 @@ export default {
           return key.key.toLowerCase().match(this.tempSearch.toLowerCase())
         })
       },
-      setKey(key) {
-        if (!this.searchKey.includes(key)) {
-          this.searchKey.push(key)
+      setKey(data) {
+        let alreadyHaveIt = false
+        for(let s = 0; s < this.searchKey.length; s++) {
+          if (this.searchKey[s].key.match(data.key)) {
+            alreadyHaveIt = true
+          }
         }
+        if(!alreadyHaveIt) {this.searchKey.push(data)}
+
         this.tempSearch = ''
-        // this.searchKey = key        
         this.searchPanel = false
-        this.$emit('loadSearch', this.searchKey)
+        this.$emit('loadSearch', data)
       }
     },
     watch: {
@@ -101,44 +103,53 @@ input.searchBox {
   top: 0;
   left: 50%;
   transform: translateX(-50%);
-  /* background: #eee; */
-  /* padding: 20px 0; */
   margin: 20px auto 0 auto;
   z-index: 10;
 }
 
 .searchKeys {
   width: 100vw;
-  height: fit-content;
+  height: calc(100% - 60px);
   padding: 0;
   position: fixed;
   top: 40px;
   left: 0;
   z-index: 2000;
   text-align: center;
+  overflow-y: auto;
 }
 .searchKey {
-  color: #fff;
+  color: #ddd;
   width: 100%;
   display: block;
-  background: #444;
+  background: #222;
   border: none;
   margin: 0 auto;
   padding: 10px 0;
-  border-bottom: #666 1px solid;
+  border-bottom: #444 1px solid;
   cursor: pointer;
   z-index: 300;
 }
 .searchKey:hover {
-  background: #333;
+  background: #111;
   transition-duration: 200ms;
 }
 .searchKey span.pill {
-  background: #0092c5;
   padding: 0 5px;
   border-radius: 5px;
   margin-right: 5px;
+  color: #111;
 }
+.pill[data-col="artist"] {  background: #F94144; }
+.pill[data-col="project"] {  background: #90BE6D; }
+.pill[data-col="album"] {  background: #F3722C; }
+.pill[data-col="song"] {  background: #43AA8B; }
+.pill[data-col="instrument"] {  background: #F8961E; }
+.pill[data-col="genre"] {  background: #577590; }
+.pill[data-col="tag"] {  background: #F9C74F; }
+.pill[data-col="mood"] {  background: #6b5790; }
+.pill[data-col="search"] {  background: #666; }
+
 .fullScreen {
   background: #00000000;
   position: absolute;

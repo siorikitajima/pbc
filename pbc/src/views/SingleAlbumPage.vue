@@ -4,7 +4,7 @@
       <AlbumInfoPage :album="album" />
 
         <div v-if="albumSongList.length">
-            <SongList :fltdsongs="albumSongList" :dist="'song'" @passThis="passSingle($event)" @openPanel="passPanel($event)" @closeSingle="closeSinglePanel" @queueAction="updateQueue($event)" />
+            <SongList :fltdsongs="albumSongList" :song="song" :dist="'song'" @passThis="passSingle($event)" @openPanel="passPanel($event)" @closeSingle="closeSinglePanel" @queueAction="updateQueue($event)" />
         </div>
         <div v-else><Loading /></div>
   </div>
@@ -24,7 +24,7 @@ export default {
     name: 'SingleAlbumPage',
     components: { SongList, Loading, SingleAlbum, AlbumInfoPage },
     emits: ['panelReq', 'singlePanel', 'closeSingle', 'queueAction'],
-    props: { id: String, title: String, songs: Array },
+    props: { id: String, title: String, songs: Array,  song: Object },
     setup(props) {
         const theID = ref(props.id)
 

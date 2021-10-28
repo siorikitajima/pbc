@@ -56,11 +56,9 @@ const readSingleSongData = (req, res) => {
             }
           }
           singleSongData.Writers = writeArray;
-          // console.log(writeArray);
 
         Artist.find({ 'ArtistSlug': slugArtistName, 'Type': 'P' })
           .then((imgdata) => {
-            // console.log(imgdata);
 
             for(let a = 0; a < imgdata.length; a++) {
             pimage = imgdata[a].Img;

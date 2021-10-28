@@ -3,7 +3,10 @@
   <div class="asong">
     <div class="ascover" v-if="song" @click="playThisNow(song.ID)">
         <img :src="'https://pblibrary.s3.us-east-2.amazonaws.com/' + song.CatNum +'/cover-thumb.jpg'" :alt="song.AlbumTitle">
-        <div class="screen">
+        <div class="playing" v-if="currentSong.ID === song.ID">
+            <img :src="require('../../assets/images/global/play-active.svg')" alt="Playing">
+        </div>
+        <div class="screen" v-else>
             <img :src="require('../../assets/images/actions/playSong_light.svg')" alt="Play">
         </div>
     </div>
@@ -50,7 +53,7 @@ import { ref, computed } from '@vue/reactivity'
 
 export default {
     name: 'ASong',
-    props: [ 'song', 'dist' ],
+    props: [ 'song', 'dist', 'currentSong' ],
     emits: ['openThis', 'showPanel', 'queueAction'],
     setup(props) {
         const spQueue = ref([])
@@ -149,7 +152,15 @@ export default {
     left: 0;
     opacity: 0;
 }
-.ascover .screen img {
+.ascover .playing {
+    width: 60px;
+    height: 60px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: #00000066;
+}
+.ascover .screen img, .ascover .playing img {
     width: 40px;
     height: 40px;
     padding: 10px;

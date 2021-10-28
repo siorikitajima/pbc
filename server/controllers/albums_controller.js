@@ -6,7 +6,7 @@ const Artist = require('../models/artist_schema');
 const readAlbumsData = (req, res) => {
    Album.find()
     .then((data) => {
-
+      //// Adding Slug name for the title
       let updatedData = [];
       for(let a = 0; a < data.length; a++) {
         let dataO = data[a].toObject();
@@ -16,7 +16,6 @@ const readAlbumsData = (req, res) => {
         Object.assign(dataO, slugdata)
         updatedData.push(dataO)
       }
-
       res.status(200).json(updatedData);
     })
     .catch((err) => {
@@ -29,6 +28,7 @@ const readAlbumData = (req, res) => {
   let id = req.params.id;
   Album.find({ 'AlbumID' : id })
    .then((data) => {
+    //// Adding Slug name for the project + visual artist
     let tempAlbum = data[0].toObject();
     let slugProject = tempAlbum.Project.toLowerCase().replace(/\s+/g, '-');
     let coverArt = tempAlbum.AlbumArt.toLowerCase().replace(/\s+/g, '-');
