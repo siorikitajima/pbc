@@ -4,7 +4,7 @@
   <SideNav />
   </teleport>
 
-<div v-if="songs">
+<div v-if="songs.length">
   <router-view :songs="songs" :song="sqPlayingData" @panelReq="openPanel($event)" @singlePanel="openSingle($event)" :key="$route.fullPath" @queueAction="updateQueue($event)" />
 </div>
 

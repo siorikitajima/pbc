@@ -45,6 +45,7 @@ import { ref, computed } from '@vue/reactivity'
 import Search from '../components/filter/Search.vue'
 import Filters from '../components/filter/Filters.vue'
 import Presets from '../components/filter/Presets.vue'
+import { onMounted } from 'vue'
 
 export default {
     name: 'Result',
@@ -59,7 +60,7 @@ export default {
         const searchPanel = ref(false)
         const sliderPanel = ref(true)
         const presetPanel = ref(false)
-
+        const componentLoaded = ref(false)
         // const initialValue = computed(()=>{
         //     if(localStorage.getItem("filterValues")) { 
         //         console.log(JSON.parse(localStorage.getItem("filterValues")))
@@ -94,11 +95,11 @@ export default {
         // const mood = ref({ min: this.initialValue.mood.min, max: this.initialValue.mood.max })
         // const organic = ref({ min: this.initialValue.organic.min, max: this.initialValue.organic.min })
 
-        const rhythm = ref({ min: 0, max: 10 })
-        const speed = ref({ min: 0, max: 10 })
-        const experimental = ref({ min: 0, max: 10 })
-        const mood = ref({ min: 0, max: 10 })
-        const organic = ref({ min: 0, max: 10 })
+        // const rhythm = ref({ min: 0, max: 10 })
+        // const speed = ref({ min: 0, max: 10 })
+        // const experimental = ref({ min: 0, max: 10 })
+        // const mood = ref({ min: 0, max: 10 })
+        // const organic = ref({ min: 0, max: 10 })
         
         // const rhythm = ref({ min: null, max: null })
         // const speed = ref({ min: null, max: null })
@@ -106,34 +107,86 @@ export default {
         // const mood = ref({ min: null, max: null })
         // const organic = ref({ min: null, max: null })
 
+        const rhythm = ref({ min: [], max: [] })
+        const speed = ref({ min: [], max: [] })
+        const experimental = ref({ min: [], max: [] })
+        const mood = ref({ min: [], max: [] })
+        const organic = ref({ min: [], max: [] })
         const search = ref('')
         const allSearch = ref([])
 
+        onMounted(()=> {
+        const values = JSON.parse(localStorage.getItem("filterValues"))
+            if(values !== null) {
+                if( values.rhythm.min !== 0 || values.rhythm.max !== 10 || values.speed.min !== 0 || values.speed.max !== 10 || values.experimental.min !== 0 || values.experimental.max !== 10 || values.mood.min !== 0 || values.mood.max !== 10 || values.organic.min !== 0 || values.organic.max !== 10 || values.search.length !== 0) {
+                    rhythm.value.min = values.rhythm.min
+                    rhythm.value.max = values.rhythm.max
+                    speed.value.min = values.speed.min
+                    speed.value.max = values.speed.max
+                    experimental.value.min = values.experimental.min
+                    experimental.value.max = values.experimental.max
+                    mood.value.min = values.mood.min
+                    mood.value.max = values.mood.max
+                    organic.value.min = values.organic.min
+                    organic.value.max = values.organic.max
+                    allSearch.value = values.search
+                } 
+            } else {
+                    rhythm.value.min = 0
+                    rhythm.value.max = 10
+                    speed.value.min = 0
+                    speed.value.max = 10
+                    experimental.value.min = 0
+                    experimental.value.max = 10
+                    mood.value.min = 0
+                    mood.value.max = 10
+                    organic.value.min = 0
+                    organic.value.max = 10
+                    allSearch.value = []
+            }
+            componentLoaded.value = true
+        })
+
         return { 
-        searchPanel, sliderPanel, presetPanel, 
+        searchPanel, sliderPanel, presetPanel, componentLoaded,
         rhythm, speed, experimental, mood, organic, 
         search, allSearch } 
     },
-    mounted() {
-            const values = JSON.parse(localStorage.getItem("filterValues")) || null
-            if(values !== null) {
-                if( values.rhythm.min !== 0 || values.rhythm.max !== 10 || values.speed.min !== 0 || values.speed.max !== 10 || values.experimental.min !== 0 || values.experimental.max !== 10 || values.mood.min !== 0 || values.mood.max !== 10 || values.organic.min !== 0 || values.organic.max !== 10 || values.search.length !== 0) {
-                    this.rhythm.min = values.rhythm.min
-                    this.rhythm.max = values.rhythm.max
-                    this.speed.min = values.speed.min
-                    this.speed.max = values.speed.max
-                    this.experimental.min = values.experimental.min
-                    this.experimental.max = values.experimental.max
-                    this.mood.min = values.mood.min
-                    this.mood.max = values.mood.max
-                    this.organic.min = values.organic.min
-                    this.organic.max = values.organic.max
-                    this.allSearch = values.search
-                } 
-            }
-    },
+    // mounted() {
+    //         const values = JSON.parse(localStorage.getItem("filterValues"))
+    //         if(values !== null) {
+    //             if( values.rhythm.min !== 0 || values.rhythm.max !== 10 || values.speed.min !== 0 || values.speed.max !== 10 || values.experimental.min !== 0 || values.experimental.max !== 10 || values.mood.min !== 0 || values.mood.max !== 10 || values.organic.min !== 0 || values.organic.max !== 10 || values.search.length !== 0) {
+    //                 this.rhythm.min = values.rhythm.min
+    //                 this.rhythm.max = values.rhythm.max
+    //                 this.speed.min = values.speed.min
+    //                 this.speed.max = values.speed.max
+    //                 this.experimental.min = values.experimental.min
+    //                 this.experimental.max = values.experimental.max
+    //                 this.mood.min = values.mood.min
+    //                 this.mood.max = values.mood.max
+    //                 this.organic.min = values.organic.min
+    //                 this.organic.max = values.organic.max
+    //                 this.allSearch = values.search
+    //             } 
+    //         } else {
+    //                 this.rhythm.min = 0
+    //                 this.rhythm.max = 10
+    //                 this.speed.min = 0
+    //                 this.speed.max = 10
+    //                 this.experimental.min = 0
+    //                 this.experimental.max = 10
+    //                 this.mood.min = 0
+    //                 this.mood.max = 10
+    //                 this.organic.min = 0
+    //                 this.organic.max = 10
+    //                 this.allSearch = []
+    //         }
+    //         this.componentLoaded = true
+    // },
     computed: {
         fltBySearch: function() {
+            if( !this.componentLoaded || !this.songs ) {
+                return null } else {
             return this.songs.filter((song) => {
                 //// Match to the Slider Value
                 if ( song.PBRhythm >= this.rhythm.min && song.PBRhythm <= this.rhythm.max && song.PBSpeed >= this.speed.min && song.PBSpeed <= this.speed.max && song.PBExperimental >= this.experimental.min && song.PBExperimental <= this.experimental.max && song.PBMood >= this.mood.min && song.PBMood <= this.mood.max && song.PBOrganic >= this.organic.min && song.PBOrganic <= this.organic.max ) {
@@ -187,9 +240,13 @@ export default {
                     }
                 }
             })
+            }
         },
         songCount: function() {
+            if( !this.componentLoaded || !this.songs ) {
+                return null } else {
             return this.fltBySearch.length;
+                }
         },
         resultQuery: function() {
             // const values = JSON.parse(localStorage.getItem("filterValues"))
