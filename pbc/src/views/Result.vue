@@ -727,16 +727,22 @@ export default {
     background: #ffffff;
     z-index: 3000;
 }
-.closeIcon {
-    width: 50px;
-    height: 50px;
+.closeIcon, .nextIcon, .prevIcon {
+    width: 40px;
+    height: 40px;
     position: fixed;
-    top: 50px;
-    right: 50px;
+    top: 40px;
+    right: 100px;
     opacity: 0.3;
     cursor: pointer;
 }
-.closeIcon:hover {
+.prevIcon {
+    right: 160px;
+}
+.nextIcon {
+    right: 40px;
+}
+.closeIcon:hover, .nextIcon:hover, .prevIcon:hover {
     opacity: 1;
     transition-duration: 200ms;
 }

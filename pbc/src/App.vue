@@ -24,8 +24,15 @@
     <div v-if="singlePanels" class="singlePageCoutainer">
         <SingleSong v-if="singleSongPanel" :song="tempSongData" :panel="true" @passPanel="openPanel($event)" @closeSingle="closeSinglePanel" @queueAction="updateQueue($event)" />
         <SongInfoPanel v-if="singleSongPanel" :song="tempSongData" @closeSingle="closeSinglePanel" />
+
+        <div class="prevIcon" @click="prevSingle(tempSongData)">
+            <img :src="require('./assets/images/global/Prev_Icon_dark.svg')" alt="Close">
+        </div>
         <div class="closeIcon" @click="closeSingles">
             <img :src="require('./assets/images/global/Close_Icon_dark.svg')" alt="Close">
+        </div>
+        <div class="nextIcon" @click="nextSingle(tempSongData)">
+            <img :src="require('./assets/images/global/Next_Icon_dark.svg')" alt="Close">
         </div>
     </div>
 </teleport>
@@ -193,17 +200,50 @@ export default {
       this.singlePanels = false
     },
     async openSingle(data) {
-    let singleType = data.type
-    if(singleType == 'song') {
+    // let singleType = data.type
+    // if(singleType == 'song') {
       const { singlesong, singlesongload } = getSingleSong(data.data.ID)
       await singlesongload()
         this.tempSongData = await singlesong
         this.singleSongPanel = true
-    }
+    // }
     if(!this.singlePanels) {
         this.singlePanels = true
     }
     },
+
+    //// Internal Functions for bunny to test & check database
+    async nextSingle(data) {
+    let currentID = data.ID
+    let currentIndex = this.songs.findIndex(function(song) {
+      return song.ID == currentID
+    });
+    let nextIndex = (currentIndex == (this.songs.length - 1)) ? 0 : Number(currentIndex + 1)
+    let nextID = this.songs[nextIndex].ID;
+    console.log(currentID, currentIndex, nextIndex, nextID)
+
+    const { singlesong, singlesongload } = getSingleSong(nextID)
+    await singlesongload()
+      this.tempSongData = await singlesong
+      this.singleSongPanel = false
+      this.singleSongPanel = true
+    },
+    async prevSingle(data) {
+    let currentID = data.ID
+    let currentIndex = this.songs.findIndex(function(song) {
+      return song.ID == currentID
+    });
+    let prevIndex = (currentIndex == 0) ? this.songs.length - 1 : Number(currentIndex - 1)
+    let prevID = this.songs[prevIndex].ID;
+    console.log(currentID, currentIndex, prevIndex, prevID)
+
+    const { singlesong, singlesongload } = getSingleSong(prevID)
+    await singlesongload()
+      this.tempSongData = await singlesong
+      this.singleSongPanel = false
+      this.singleSongPanel = true
+    },
+
     closeSingles() {
         if(this.singleSongPanel) {
             this.singleSongPanel = false
