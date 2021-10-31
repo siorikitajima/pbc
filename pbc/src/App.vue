@@ -219,8 +219,12 @@ export default {
       return song.ID == currentID
     });
     let nextIndex = (currentIndex == (this.songs.length - 1)) ? 0 : Number(currentIndex + 1)
-    let nextID = this.songs[nextIndex].ID;
-    console.log(currentID, currentIndex, nextIndex, nextID)
+    let nextID = this.songs[nextIndex].ID
+    let nextRate = this.songs[nextIndex].Rate
+    console.log('||||||||||||||||||||||', '\n', '||Cuurent Song || ', '\n', 
+    'ID: ', currentID, '/ Index: ', currentIndex, '\n',
+    '|| Next Song || ', '\n', 
+    'ID: ', nextID, '/ Index: ', nextIndex, '/ Rating: ', nextRate)
 
     const { singlesong, singlesongload } = getSingleSong(nextID)
     await singlesongload()
@@ -235,7 +239,11 @@ export default {
     });
     let prevIndex = (currentIndex == 0) ? this.songs.length - 1 : Number(currentIndex - 1)
     let prevID = this.songs[prevIndex].ID;
-    console.log(currentID, currentIndex, prevIndex, prevID)
+    let prevRate = this.songs[prevIndex].Rate
+    console.log('||||||||||||||||||||||', '\n', '||Cuurent Song || ', '\n', 
+    'ID: ', currentID, '/ Index: ', currentIndex, '\n',
+    '|| Prev Song || ', '\n', 
+    'ID: ', prevID, '/ Index: ', prevIndex, '/ Rating: ', prevRate)
 
     const { singlesong, singlesongload } = getSingleSong(prevID)
     await singlesongload()
