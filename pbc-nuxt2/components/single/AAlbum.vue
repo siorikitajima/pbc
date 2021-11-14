@@ -57,4 +57,12 @@ export default {
     background: linear-gradient(0deg, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0) 40%, rgba(0,0,0,0) 100%);
     transition-duration: 200ms;
 }
+
+@media (max-width: 600px) {
+    .albumBox {
+    width: 120px;
+    height: 120px;
+    margin: 10px;
+    }
+}
 </style>

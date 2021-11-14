@@ -56,9 +56,12 @@ button.large {
     margin: 0;
 }
 
+
+@media (hover: hover) {
 button.small:hover {
     background: #0092C5;
     transition-duration: 200ms;
+}
 }
 
 .slideFRLeft-enter-active,
@@ -104,37 +107,50 @@ h2.sectTitle {
 .actions img, .channels img {
     width: 32px;
     height: 32px;
-    margin: 0 10px 0 0;
+    margin: 0 10px 5px 0;
     cursor: pointer;
     display: inline-block;
     opacity: 0.7;
 }
+
+@media (hover: hover) {
 .actions img:hover, .channels img:hover {
     opacity: 1;
     transition-duration: 200ms;
 }
+}
 .actions img {
-    margin: 0 16px 0 0;
+    margin: 0 14px 0 0;
 }
 .actions button.small {
     display: inline-block;
-    position: absolute;
-    top: 2px;
-    margin-left: 5px;
-    margin: 10px 16px 0 0;
+    position: relative;
+    top: -11px;
+    margin: 20px 0 0 0;
 }
 
 /* See More icon next to song name */
-.asname img {
-    width: 20px;
-    height: 20px;
-    margin: -10px 0 -5px 10px;
-    opacity: 0;
+/* .asname {
+    position: relative;
 }
+.asname img {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    padding: 0 20px;
+    border-radius: 25px;
+    top: 0;
+    left: 0;
+    background: #f4f4f4cc;
+    opacity: 0;
+    margin: 0;
+}
+@media (hover: hover) {
 .asname:hover img {
     opacity: 1;
     transition-duration: 200ms;
 } 
+} */
 
 /* Artist Blocks */
 
@@ -177,9 +193,12 @@ h2.sectTitle {
     left: 0;
     background: #00000088;
 }
+
+@media (hover: hover) {
 .relArtist:hover .screen {
     background: #00000033;
     transition-duration: 200ms;
+}
 }
 
 
@@ -245,11 +264,14 @@ h2.sectTitle {
 .name4Share button {
     cursor: pointer;
 }
+
+@media (hover: hover) {
 .name4Share button:hover {
     background: #0092c5;
     transition-duration: 200ms;
 }
-.sharePanelScreen {
+}
+.sharePanelScreen, .panelScreen {
     width: 100%;
     height: 100%;
     margin: 0;
@@ -257,4 +279,40 @@ h2.sectTitle {
     position: fixed;
     top: 0; left: 0;
     background: #00000033;
+    z-index: 1000;
+}
+
+ul.mobileActions {
+    position: fixed;
+    left: 0;
+    bottom: 40px;
+    list-style: none;
+    width: 100%;
+    z-index: 2000;
+    padding: 0;
+}
+ul.mobileActions li {
+    background: #ddd;
+    border-bottom: #aaa 1px solid;
+    padding: 10px 10px;
+    display: flex;
+    justify-content: center;
+}
+ul.mobileActions li p {
+    margin-top: 6px;
+    color: #222;
+}
+ul.mobileActions li.actionHead p {
+    margin-top: 6px;
+    color: #888;
+}
+ul.mobileActions li.actionHead {
+    background: #333;
+}
+ul.mobileActions li img, ul.mobileActions li p {
+    display: block;
+}
+ul.mobileActions li img {
+    width: 32px;
+    margin-right: 10px;
 }

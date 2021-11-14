@@ -163,7 +163,7 @@ export default {
 <style scoped>
 .queuePanel {
   width: 320px;
-  height: calc(100% - 180px);
+  height: calc(100% - 150px);
   position: fixed;
   padding: 10px 0 0 0;
   top: 110px;
@@ -224,9 +224,12 @@ export default {
     width: 28px;
     height: 28px;
 }
+
 .queueSong:hover .song-actions {
     opacity: 1;
 }
+
+
 .coverSm {
     width: 40px;
     height: 40px;
@@ -258,6 +261,7 @@ export default {
     opacity: 0.8;
     cursor: none;
 }
+@media (hover: hover) {
 .queueSong:hover .coverSm .screen {
     opacity: 1;
     transition-duration: 200ms;
@@ -265,12 +269,14 @@ export default {
 .queueSong.playing:hover .coverSm .screen {
     opacity: 0.8;
 }
+}
 .actions {
     display: flex;
     padding: 0 20px 10px 20px;
     justify-content: space-between;
     position: relative;
     z-index: 100;
+    margin: 0;
 }
 .actions p {
     padding-top: 7px;
@@ -281,9 +287,11 @@ export default {
     cursor: pointer;
     margin: 0;
 }
+@media (hover: hover) {
 .actions img:hover {
     opacity: 1;
     transition-duration: 200ms;
+}
 }
 .actionDD {
     position: absolute;
@@ -301,9 +309,11 @@ export default {
     display: flex;
     cursor: pointer;
 }
+@media (hover: hover) {
 .actionDD div:hover {
     background: #111;
     transition-duration: 200ms;
+}
 }
 .actionDD div img, .actionDD div p {
     display: block;
@@ -316,6 +326,14 @@ export default {
 .actionDD div p {
     font-size: 1.2em;
     margin: 2px 10px 0 10px;
+}
+
+@media (max-width: 800px) {
+    .queuePanel {
+        width: 320px;
+        height: calc(100% - 80px);
+        top: 40px;
+    }
 }
 
 </style>

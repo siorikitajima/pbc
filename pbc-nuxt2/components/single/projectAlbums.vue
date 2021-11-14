@@ -34,6 +34,7 @@ export default {
 <style scoped>
 .projectsAlbums {
     width: 800px;
+    max-width: 100%;
     margin: 0 auto;
     padding: 0 0 20px 0;
     display: flex;
@@ -70,5 +71,4 @@ export default {
     left: 0;
     background: linear-gradient(0deg, rgba(221,221,221,1) 0%, rgba(221,221,221,1) 10%, rgba(221,221,221,0) 100%);
 }
-
 </style>

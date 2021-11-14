@@ -48,12 +48,40 @@ export default {
     margin: 0 auto;
     font-size: 0.8em;
     display: flex;
-    justify-content: space-between;
+    justify-content: left;
 }
 .tableHeader p {
     display: block;
+    text-align: center;
+    width: 42px;
+}
+.tableHeader p:nth-of-type(1) {
+    width: 200px;
+    margin-left: 65px;
+}
+.tableHeader p:nth-of-type(2) {
+    width: 140px;
+}
+.tableHeader p:nth-of-type(3) {
+    width: 180px;
+    text-align: left;
 }
 .tableWrapper {
     margin-bottom: 60px;
+}
+@media (hover: none) {
+    .tableHeader p[data-v-6e8afc8f]:nth-of-type(3) {
+        width: 120px;
+    }
+}
+@media (max-width: 900px) {
+.tableHeader {
+    height: 5px;
+    padding: 0 5px;
+    max-width: 90%;
+}
+.tableHeader p {
+    display: none;
+}
 }
 </style>

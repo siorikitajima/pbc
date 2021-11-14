@@ -53,4 +53,18 @@ h2 {
 h2.first {
     margin: 80px auto 20px auto;
 }
+@media(max-width:800px) {
+    .albumList {
+        width: fit-content;
+        max-width: 100%;
+        margin: 0 auto;
+        justify-content: center;
+    }
+}
+
+@media(max-width:600px) {
+    .albumList {
+        margin: 30px auto 140px auto;
+    }
+}
 </style>

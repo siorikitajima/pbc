@@ -43,7 +43,7 @@ export default {
   left: 0;
   background: #b4acafcc;
   border-right: #44444444 1px solid;
-  z-index: -1;
+  /* z-index: 100; */
   overflow-y: scroll;
 }
 .preset {

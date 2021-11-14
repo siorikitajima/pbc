@@ -51,6 +51,7 @@ export default {
 <style scoped>
 .wrapper {
     width: 800px;
+    max-width: 100%;
     height: 100%;
     margin: 0 auto;
 }
@@ -82,6 +83,7 @@ export default {
 }
 .div800 {
     width: 765px;
+    max-width: calc(100% - 20px);
     margin: 0 10px 20px 10px; 
     text-align: center;
 }
@@ -154,5 +156,11 @@ ul li b {
 }
 ul li span {
     font-size: 0.8em;
+}
+@media(max-width:800px) {
+    .flex {
+        display: block;
+        text-align: center;
+    }
 }
 </style>

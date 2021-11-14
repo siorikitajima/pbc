@@ -12,7 +12,9 @@
                 <img :src="'https://pblibrary.s3.us-east-2.amazonaws.com/' + simOG[0].CatNum +'/cover-thumb.jpg'" :alt="simOG[0].AlbumTitle">
           </div>
           <div class="asname" @click="$store.dispatch('OpenSingSonP', simOG[0].ID)">
-            <p><b>{{ simOG[0].Title }}</b><img src="~/assets/images/table/eye_white.svg" alt="See More"></p>
+            <p><b>{{ simOG[0].Title }}</b>
+            <!-- <img src="~/assets/images/table/eye_white.svg" alt="See More"> -->
+            </p>
             <p>by {{ simOG[0].ArtistName }}</p>
           </div>
       </div>
@@ -26,7 +28,9 @@
                 </div>
             </div>
             <div class="asname" @click="$store.dispatch('OpenSingSonP', song.ID)">
-                <p><b>{{ song.Title }}</b><img src="~/assets/images/table/eye.svg" alt="See More"></p>
+                <p><b>{{ song.Title }}</b>
+                <!-- <img src="~/assets/images/table/eye.svg" alt="See More"> -->
+                </p>
                 <p>by {{ song.ArtistName }}</p>
             </div>
             <div class="song-actions">
@@ -115,7 +119,7 @@ export default {
 <style scoped>
 .similarPanel {
   width: 280px;
-  height: calc(100% - 200px);
+  height: calc(100% - 160px);
   position: fixed;
   padding: 10px 0 40px 0;
   top: 90px;
@@ -161,8 +165,10 @@ export default {
     width: 28px;
     height: 28px;
 }
+@media (hover: hover) {
 .similarSong:hover .song-actions, .rPanelHead:hover .song-actions {
     opacity: 1;
+}
 }
 .rPanelHead {
     width: calc(100% - 40px);
@@ -192,6 +198,7 @@ export default {
     left: 0;
     opacity: 0;
 }
+@media (hover: hover) {
 .similarSong:hover .coverSm .screen {
     opacity: 1;
     transition-duration: 200ms;
@@ -200,10 +207,12 @@ export default {
     opacity: 1;
     transition-duration: 200ms;
 }
+}
 .actions {
     display: flex;
     padding: 0 20px 10px 20px;
     justify-content: space-between;
+    margin: 0;
 }
 .actions p {
     padding-top: 7px;
@@ -214,6 +223,7 @@ export default {
     cursor: pointer;
     margin: 0;
 }
+@media (hover: hover) {
 .actions img:hover {
     opacity: 1;
     transition-duration: 200ms;
@@ -225,5 +235,12 @@ export default {
 .rPanelHead .asname:hover {
     color: #FFF;
     transition-duration: 200ms;
+}
+}
+@media (max-width: 800px) {
+    .similarPanel {
+        height: calc(100% - 110px);
+        top: 40px;
+    }
 }
 </style>

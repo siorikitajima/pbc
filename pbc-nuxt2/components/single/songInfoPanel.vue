@@ -1,5 +1,5 @@
 <template>
-<div>
+<div class="songInfoPanel">
     <div class="flex">
         <div class="div400 group">
             <p><b>Instruments</b></p>
@@ -89,5 +89,20 @@ b.underlined:hover {
     color: #0092c5;
     border-bottom: #0092c5 solid 1px;
     transition-duration: 200ms;
+}
+@media(max-width: 800px) {
+    .flex {
+    display: block;
+    }
+    .songInfoPanel {
+        display: block;
+        width: 500px;
+        margin: 10px auto;
+        text-align: left;
+        max-width: calc(100% - 20px);
+    }
+    .div400.group {
+        max-width: calc(100% - 40px);
+    }
 }
 </style>

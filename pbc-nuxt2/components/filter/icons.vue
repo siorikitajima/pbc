@@ -45,18 +45,21 @@ export default {
   border: #666 1px solid;
   border-radius: 50%;
   background: #fff;
+  z-index: 9000;
 }
 
 .navIcons.active {
     background: #666;
     border-radius: 50%;
 }
-.navIcons:hover {
-    background: #ddd;
-    transition-duration: 200ms;
-}
-.navIcons.active:hover {
-    background: #444;
-    transition-duration: 200ms;
+@media (hover: hover) {
+    .navIcons:hover {
+        background: #ddd;
+        transition-duration: 200ms;
+    }
+    .navIcons.active:hover {
+        background: #444;
+        transition-duration: 200ms;
+    }
 }
 </style>

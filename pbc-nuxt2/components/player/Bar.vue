@@ -1,4 +1,5 @@
 <template>
+<div>
   <div class="thePlayer" v-if="sqPData">
     <div class="controller">
         <img :src="require('~/assets/images/player/Previous_btn.svg')" alt="Previous" @click="prevTrack">
@@ -22,18 +23,81 @@
     <client-only>
     <div class="icons" v-if="sqPData">
         <img :src="require('~/assets/images/actions/SimilarSong_Icon_white.svg')" alt="Similar Songs" @click="$store.dispatch('OpenSimSong', sqPData.ID)">
-        <img :src="require('~/assets/images/actions/CustomWork_white.svg')" alt="Custom Work">
-        <img :src="require('~/assets/images/actions/Share_Icon_white.svg')" alt="Share" @click="shareURL()">
         <NuxtLink :to="'/song/' + sqPData.ID + '-' + slug(sqPData.Title)">
         <img :src="require('~/assets/images/actions/seeSong_Icon_white.svg')" alt="Track">
         </NuxtLink>
         <NuxtLink :to="'/project/' + slug(sqPData.ArtistName)">
         <img :src="require('~/assets/images/actions/seeArtist_Icon_white.svg')" alt="Artist">
         </NuxtLink>
-        <img :src="require('~/assets/images/actions/PlayList_Icon.svg')" alt="Playlist" @click="$store.commit('TOGGLE_QUEUE')">
+        <img :src="require('~/assets/images/actions/CustomWork_white.svg')" alt="Custom Work">
+        <img :src="require('~/assets/images/actions/Share_Icon_white.svg')" alt="Share" @click="shareURL()">
+        <img class="actionBtn" :src="require('~/assets/images/actions/Actions_Icon_white.svg')" alt="Actions" @click="openAction()">
+        <img :src="require('~/assets/images/actions/PlayList_Icon.svg')" class="queueBtn" alt="Playlist" @click="$store.commit('TOGGLE_QUEUE')">
     </div>
     </client-only>
-  </div>
+</div>
+  <div class="thePlayer mobilePlayer" v-if="sqPData">
+    <div class="mobileController">
+        <div class="controller">
+            <img :src="require('~/assets/images/player/Previous_btn.svg')" alt="Previous" @click="prevTrack">
+            <img v-if="isTimerPlaying" :src="require('~/assets/images/player/Pause_btn.svg')" alt="Play" @click="play">
+            <img v-else :src="require('~/assets/images/player/Play_btn.svg')" alt="Pause" @click="play">
+            <img :src="require('~/assets/images/player/Next_btn.svg')" alt="Next" @click="nextTrack">
+        </div>
+        <div class="icons" v-if="sqPData">
+            <img class="actionBtn" :src="require('~/assets/images/actions/Actions_Icon_white.svg')" alt="Actions" @click="openAction()">
+            <img :src="require('~/assets/images/actions/PlayList_Icon.svg')" class="queueBtn" alt="Playlist" @click="$store.commit('TOGGLE_QUEUE')">
+        </div>
+    </div>
+
+    <div class="info">
+        <div class="mobilesonginfo">
+            <p>{{ sqPData.Title }} <span> by {{ sqPData.ArtistName }}</span></p>
+            <div class="progress__time">{{ currentTime }} / {{ duration }}</div>
+        </div>
+        <div class="progress_bar_flex">
+            <div class="duration progress__bar" ref="progress" @click="clickProgress">
+                <div class="progress__current" :style="{ width : barWidth }"></div>
+            </div>
+        </div>
+    </div>
+</div>
+        <div class="panelScreen" v-show="mobileAction" @click="closeAction()"></div>
+        <ul class="mobileActions" v-show="mobileAction" @click="closeAction()">
+            <li class="actionHead">
+                <img :src="'https://pblibrary.s3.us-east-2.amazonaws.com/' + sqPData.CatNum +'/cover-thumb.jpg'" :alt="sqPData.AlbumTitle">
+                <p>{{sqPData.Title}}</p>
+            </li>
+            <li @click="$store.dispatch('OpenSimSong', sqPData.ID)">
+                <img :src="require('~/assets/images/actions/SimilarSong_Icon_dark.svg')" alt="Similar Songs">
+                <p>Similar Songs</p>
+            </li>
+            <NuxtLink :to="'/song/' + sqPData.ID + '-' + slug(sqPData.Title)">
+            <li>
+                <img :src="require('~/assets/images/actions/seeSong_Icon_dark.svg')" alt="Track Page">
+                <p>See Song Page</p>
+            </li>
+            </NuxtLink>
+            <NuxtLink :to="'/project/' + slug(sqPData.ArtistName)">
+            <li @click="$store.commit('PLAY_THIS', sqPData.ID)">
+                <img :src="require('~/assets/images/actions/seeArtist_Icon_dark.svg')" alt="Artist Page">
+                <p>See Artist Page</p>
+            </li>
+            </NuxtLink>
+            <li  @click="shareURL()">
+                <img :src="require('~/assets/images/actions/Share_Icon_dark.svg')" alt="Share">
+                <p>Share</p>
+            </li>
+            <li>
+                <img :src="require('~/assets/images/actions/CustomWork_dark.svg')" alt="Custom Work">
+                <p>Custom Work</p>
+            </li>
+            <li>
+                <img :src="require('~/assets/images/actions/CustomWork_dark.svg')" alt="License">
+                <p>License</p>
+            </li>
+        </ul>
+</div>
 </template>
 
 <script>
@@ -49,7 +113,8 @@ export default {
             barWidth: null,
             duration: null,
             currentTime: null,
-            isTimerPlaying: null
+            isTimerPlaying: null,
+            mobileAction: false
         }
     },
     computed: {
@@ -155,6 +220,12 @@ export default {
         shareURL() {
             let url = 'https://' + window.location.hostname + '/song/' + this.sqPData.ID + '-' + this.slug(this.sqPData.Title)
                 this.$store.dispatch('CopyURL', url)
+            },
+        openAction() {
+            this.mobileAction = true
+            },
+        closeAction() {
+            this.mobileAction = false
             }
     },
     mounted() {
@@ -279,5 +350,61 @@ export default {
 .thePlayer .icons{
     width: fit-content;
     flex-shrink: 0;
+}
+
+img.actionBtn {
+    display: none;
+}
+.mobilePlayer {
+        display: none;
+    }
+
+@media (hover: none) {
+    .thePlayer .icons img {
+        display: none;
+    }
+    .thePlayer .icons img.actionBtn, .thePlayer .icons img.queueBtn {
+    display: inline-block;
+    }
+}
+
+@media (max-width: 700px) {
+    .thePlayer .cover {
+        display: none;
+    }
+}
+
+@media (max-width: 600px) {
+    .thePlayer {
+        display: none;
+    }
+    .mobilePlayer {
+        display: block;
+        height: 80px;
+    }
+    .mobilePlayer .info {
+        margin: 0;
+        width: 100%;
+    }
+    .mobileController, .mobilesonginfo {
+        display: flex;
+        justify-content: space-between;
+    }
+    .duration {
+        width: 100%;
+        margin: 5px 0 0 0;
+    }
+    ul.mobileActions {
+        bottom: 83px;
+    }
+    .thePlayer .controller {
+        border-right: none;
+    }
+}
+
+@media (max-width: 450px) {
+    .progress__time {
+        display: none;
+    }
 }
 </style>

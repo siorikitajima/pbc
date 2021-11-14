@@ -87,7 +87,7 @@ export default {
   left: 0;
   background: #f2f2f2aa;
   border-bottom: #44444444 1px solid;
-  z-index: -1;
+  /* z-index: -1; */
 }
 
 input.searchBox {

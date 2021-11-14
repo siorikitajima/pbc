@@ -168,9 +168,19 @@ export default {
     methods: {
         leftPanel(data) {
             if (data.type == 'filter') {
+                if ( !this.sliderPanel && this.presetPanel ) {
+                    this.presetPanel = false
+                    setTimeout(() => this.sliderPanel = true , 100)
+                } else {
                 this.sliderPanel = !this.sliderPanel
+                }
             } else if (data.type == 'preset') {
-                this.presetPanel = !this.presetPanel
+                if ( !this.presetPanel && this.sliderPanel ) {
+                    this.sliderPanel = false
+                    setTimeout(() => this.presetPanel = true , 100)
+                } else {
+                    this.presetPanel = !this.presetPanel
+                }
             } else if (data.type == 'search') {
                 this.searchPanel = !this.searchPanel
             }
@@ -303,6 +313,7 @@ export default {
         },
         updateFilter(val) { //// Don't know why this doesn't work as a separate method. Need to come back
             this.presetPanel = false
+            this.sliderPanel = true
             
             //// Rhythm
             let r0New = Number(val.rhythm[0])
@@ -509,7 +520,18 @@ export default {
     position: fixed;
     overflow-y: scroll;
     transition-duration: 200ms;
+    z-index: 0;
 }
+
+@media (max-width: 1200px) {
+.resultWrapper {
+    margin-top: 60px;
+    padding: 0 0 20px 0;
+    height: calc(100% - 100px);
+}
+}
+
+@media (min-width: 1200px) {
 .resultWrapper.moveToRight {
     width: calc(100% - 280px);
     left: 280px;
@@ -518,5 +540,6 @@ export default {
 .resultWrapper.moveDown {
     height: calc(100% - 120px);
     top: 80px;
+}
 }
 </style>

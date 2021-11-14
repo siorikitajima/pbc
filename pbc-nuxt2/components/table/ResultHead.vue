@@ -1,7 +1,11 @@
 <template>
+<div>
   <div class="resultHead">
       <div class="resultIcon">
-          <p class="trackCount"><b>{{ songCount }}</b><br/><span> Tracks</span></p>
+          <div>
+            <p class="trackCount"><b>{{ songCount }}</b>
+            <span> Tracks</span></p>
+          </div>
         <div class="screen">
             <div v-if="songCount > 10">
                 <input type="number" min="1" :max="songTo-1" v-model="songFrom"/>
@@ -12,13 +16,14 @@
                 <img :src="require('~/assets/images/actions/addToQueue_light.svg')" alt="Add to Queue" @click="addThem()">
             </div>
             <div v-else>
-                <p class="trackCount dark"><b>{{ songCount }}</b><span> Tracks</span></p>
+                <p class="trackCount dark"><b>{{ songCount }}</b>
+                <span> Tracks</span></p>
                 <img :src="require('~/assets/images/actions/playSong_light.svg')" alt="Play" @click="playAll()">
                 <img :src="require('~/assets/images/actions/addToQueue_light.svg')" alt="Add to Queue" @click="addAll()">
             </div>
         </div>
-
       </div>
+
       <div class="resultQuery">
           <p>
           <span @click="clearValue('rhythm')" :class="{ active: rthActive}">RTM <b>{{ rthValue }}</b></span>
@@ -26,12 +31,36 @@
           <span @click="clearValue('experimental')" :class="{ active: expActive}">EXP <b>{{ expValue }}</b></span>
           <span @click="clearValue('mood')" :class="{ active: modActive}">MOD <b>{{ modValue }}</b></span>
           <span @click="clearValue('organic')" :class="{ active: orgActive}">ORG <b>{{ orgValue }}</b></span>
-          </p>
-          <p>
+          <!-- </p>
+          <p> -->
+        <br class="linebreak" />
           <span v-for="searchKey in searchKeys" :key="searchKey.key" class="searchWords" @click="clearValue( searchKey )" :data-col="searchKey.type">{{ searchKey.key }}</span>
           </p>
       </div>
+    <div class="mobileActions">
+        <img class="actionBtn" :src="require('~/assets/images/actions/Actions_Icon.svg')" alt="Actions" @click="openAction()">
+    </div>
   </div>
+
+    <div class="panelScreen" v-show="mobileAction" @click="closeAction()"></div>
+    <ul class="mobileActions" v-show="mobileAction" @click="closeAction()">
+        <li class="actionHead">
+            <p>RTM <b>{{ rthValue }}</b>, SPD <b>{{ spdValue }}</b>, EXP <b>{{ expValue }}</b>, MOD <b>{{ modValue }}</b>, ORG <b>{{ orgValue }}</b>, <span v-for="searchKey in searchKeys" :key="searchKey.key">{{ searchKey.key }}, </span></p>
+        </li>
+        <li @click="playThem()">
+            <img :src="require('~/assets/images/actions/playSong_dark.svg')" alt="Play Track">
+            <p>Play #{{songFrom}} - #{{songTo}}</p>
+        </li>
+        <li @click="addThem()">
+            <img :src="require('~/assets/images/actions/addToQueue_dark.svg')" alt="Add to Queue">
+            <p>Add #{{songFrom}} - #{{songTo}} to Queue</p>
+        </li>
+        <li @click="shareURL()">
+            <img :src="require('~/assets/images/actions/Share_Icon_dark.svg')" alt="Share">
+            <p>Share the Result</p>
+        </li>
+    </ul>
+</div>
 </template>
 
 <script>
@@ -42,7 +71,8 @@ export default {
     data() {
         return {
             songFrom: 1,
-            songTo: 10
+            songTo: 10,
+            mobileAction: false
         }
     },
     computed: {
@@ -113,6 +143,12 @@ export default {
                 to: this.songCount
              }
             this.$emit('queueAction', data)
+        },
+        openAction() {
+            this.mobileAction = true
+        },
+        closeAction() {
+            this.mobileAction = false
         }
     }
 }
@@ -121,9 +157,11 @@ export default {
 <style scoped>
 .resultHead {
     width: 800px;
+    max-width: 90%;
     margin: 20px auto 10px auto;
     display: flex;
     justify-content: left;
+    position: relative;
 }
 .resultIcon {
     width: 60px;
@@ -169,10 +207,13 @@ export default {
     padding: 10px;
     cursor: pointer;
 }
-.resultIcon:hover .screen {
+
+@media (hover: hover) {
+    .resultIcon:hover .screen {
     width: max-content;
     opacity: 1;
     transition-duration: 200ms;
+}
 }
 .resultActions {
     margin-top: 5px;
@@ -243,6 +284,15 @@ export default {
     background: #666; 
     border: #666 1px solid;}
 
+div.mobileActions {
+    position: absolute;
+    top: 10px;
+    right: 8px;
+    height: 32px;
+    width: 32px;
+}
+
+@media (hover: hover) {
 .resultQuery p span.active:hover::after, .resultQuery p span.searchWords:hover::after {
     content: 'CLEAR';
     position: absolute;
@@ -260,5 +310,53 @@ export default {
 }
 .resultQuery p span.searchWords:hover::after {
     content: 'DELETE';
+}
+
+div.mobileActions {
+    display: none;
+}
+
+}
+@media (max-width: 900px) {
+    div.mobileActions {
+        right: 24px;
+    }
+}
+@media (max-width: 760px) {
+    br.linebreak {
+        display: none;
+    }
+    .resultQuery {
+        width: calc(100% - 120px);
+    }
+}
+@media (max-width: 600px) {
+    .resultHead {
+        display: block;
+    }
+    .resultIcon .screen {
+        display: none;
+    }
+    .resultIcon {
+        width: max-content;
+        height: unset;
+        padding: 0 0 10px 0;
+        background: unset;
+    }
+    .resultIcon .trackCount {
+        color: #222;
+        font-size: 1.4em;
+    }
+    .resultQuery {
+        width: 100%;
+    }
+    div.mobileActions {
+        top: 0;
+    }
+}
+@media (max-width: 400px) {
+    div.mobileActions {
+        right: 0;
+    }
 }
 </style>

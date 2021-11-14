@@ -40,7 +40,7 @@ export default {
         set (value) { this.$emit('update:maxValue', value) },
       },
     minSpace() {
-        let leftSpace = (24 * this.minValue) + 'px'
+        let leftSpace = (24 * this.minValue - 3) + 'px'
         return { "width": leftSpace }
       },
     maxSpace() {
@@ -83,15 +83,16 @@ export default {
 .range-slider input[type=range] {
   position: absolute;
   left: 0;
-  bottom: 0;
+  bottom: -5px;
 }
 
 .fading {
     position: absolute;
-    bottom: 0;
+    bottom: -5px;
     height: 38px;
     background: #f2f2f2aa;
     pointer-events: none;
+    z-index: 0;
 }
 
 .fading.min {

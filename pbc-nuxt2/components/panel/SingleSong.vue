@@ -59,6 +59,7 @@ export default {
 .singlePageCoutainer {
     width: fit-content;
     height: fit-content;
+    max-width: calc(100% - 120px);
     background: #fff;
     position: fixed;
     top: 20px;
@@ -82,5 +83,32 @@ export default {
 }
 .panelNav.nextIcon {
     right: 40px;
+}
+
+@media(max-width: 800px) {
+    .singlePageCoutainer {
+        width: calc(100% - 20px);
+        height: calc(100% - 20px);
+        max-width: unset;
+        padding: 10px;
+        top: 0;
+        right: 0;
+        border-radius: 0;
+        overflow-y: auto;
+        text-align: center;
+    }
+    .panelNav {
+        top: 10px;
+        position: absolute;
+    }
+    .panelNav.prevIcon {
+        right: calc(50% + 45px);
+    }
+    .panelNav.closeIcon {
+        right: calc(50% - 15px);
+    }
+    .panelNav.nextIcon {
+        right: calc(50% - 75px);
+    }
 }
 </style>

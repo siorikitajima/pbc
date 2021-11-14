@@ -12,21 +12,21 @@
             <img :src="require('../../assets/images/actions/playSong_dark.svg')" alt="Play Track" @click="$store.commit('PLAY_THIS', song.ID)">
             <img :src="require('../../assets/images/actions/addToQueue_dark.svg')" alt="Add to Queue" @click="$store.commit('ADD_QUEUE', song.ID)">
             <img :src="require('../../assets/images/actions/SimilarSong_Icon_dark.svg')" alt="Similar Songs" @click="$store.dispatch('OpenSimSong', song.ID)">
-            <img :src="require('../../assets/images/actions/CustomWork_dark.svg')" alt="Custom Work">
-            <img :src="require('../../assets/images/actions/Share_Icon_dark.svg')" alt="Share" @click="shareURL()">
             <NuxtLink :to="'/song/' + song.ID + '-' + slug(song.Title)">
             <img :src="require('../../assets/images/actions/seeSong_Icon_dark.svg')" alt="Track Page" @click="$store.commit('CLOSE_SING_SONG')">
             </NuxtLink>
             <NuxtLink :to="'/project/' + slug(song.ArtistName)">
             <img :src="require('../../assets/images/actions/seeArtist_Icon_dark.svg')" alt="Artist Page" @click="$store.commit('CLOSE_SING_SONG')">  
             </NuxtLink>
+            <img :src="require('../../assets/images/actions/Share_Icon_dark.svg')" alt="Share" @click="shareURL()">
+            <img :src="require('../../assets/images/actions/CustomWork_dark.svg')" alt="Custom Work">
             <button class="small">LICENSE</button> 
           </div>
           <p>{{ song.Description }}</p>
 
         </div>
     </div>
-    <div class="flex">
+    <div class="flex singleScreen">
         <client-only>
         <ul class="div260">
             <li><b>Rhythm</b>{{ song.PBRhythm }}<span>/10</span></li>
@@ -43,6 +43,26 @@
         <ul class="div260">
             <li><b>Organic</b>{{ song.PBOrganic }}<span>/10</span></li>
             <li><b>Density</b>5<span>/10</span></li>
+            <li><b>Stems</b>{{ song.Stems }}</li>
+            <li><b>ISRC</b>{{ song.ISRCCode }}</li>
+        </ul>
+        </client-only>
+    </div>
+    <div class="flex singleMobile">
+        <client-only>
+        <ul class="div260 left">
+            <li><b>Rhythm</b>{{ song.PBRhythm }}<span>/10</span></li>
+            <li><b>Speed</b>{{ song.PBSpeed }}<span>/10</span></li>
+            <li><b>Experimental</b>{{ song.PBExperimental }}<span>/10</span></li>
+            <li><b>Mood</b>{{ song.PBMood }}<span>/10</span></li>
+            <li><b>Organic</b>{{ song.PBOrganic }}<span>/10</span></li>
+            <li><b>Density</b>5<span>/10</span></li>
+        </ul>
+        <ul class="div260 right">
+            <li><b>Flow</b>{{ song.ShapeArc }}</li>
+            <li><b>Duration</b>{{ length }}</li>
+            <li><b>Key</b>{{ song.MusicKey }}</li>
+            <li><b>BPM</b>{{ song.BPM }}</li>
             <li><b>Stems</b>{{ song.Stems }}</li>
             <li><b>ISRC</b>{{ song.ISRCCode }}</li>
         </ul>
@@ -79,6 +99,7 @@ h2 {
 .wrapper {
     width: 800px;
     height: 100%;
+    max-width: 100%;
     margin: 0 auto;
 }
 .flex {
@@ -179,5 +200,59 @@ ul li span {
 img.flow {
     height: 40px;
     width: 160px;
+}
+.flex.singleMobile {
+        display: none;
+    }
+@media(max-width: 800px) {
+    .flex {
+    display: block;
+    justify-content:center
+}
+.wrapper {
+    width: 100%;
+    max-width: 100%;
+    height: fit-content;
+    margin-top: 50px;
+}
+    .div260 {
+        margin: 0 auto 20px auto;
+        max-width: calc(50% - 15px);
+    }
+    .div520 {
+    width: calc(100% - 20px);
+    margin: 0 10px;
+    text-align: center;
+    }
+    .flex.singleMobile {
+        display: flex;
+        justify-content: center;
+        width: fit-content;
+        max-width: calc(100% - 20px);
+        margin: 10px auto;
+        text-align: left;
+        /* gap: 10px; */
+    }
+
+    .flex.singleScreen {
+        display: none;
+    }
+    .flex.singleMobile .div260.left li {
+        background: #DDD;
+    }
+    .flex.singleMobile .div260.right li {
+        background: #f2f2f2;
+    }
+}
+@media(max-width: 600px) {
+    .flex.singleMobile {
+        display: block;
+        max-width: unset;
+        width: 100%;
+    }
+    .flex.singleMobile .div260 {
+        max-width: unset;
+        width: calc(100% - 20px);
+    }    
 }
 </style>

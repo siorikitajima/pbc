@@ -74,4 +74,11 @@ export default {
     background: #00000022;
     transition-duration: 200ms;
 }
+@media (max-width: 600px) {
+    .artistBox {
+    width: 140px;
+    height: 80px;
+    margin: 8px;
+    }
+}
 </style>

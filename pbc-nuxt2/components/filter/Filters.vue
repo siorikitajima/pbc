@@ -38,7 +38,7 @@ export default {
   left: 0;
   background: #e7eceeee;
   border-right: #44444444 1px solid;
-  z-index: -1;
+  /* z-index: -1; */
 }
 
 </style>

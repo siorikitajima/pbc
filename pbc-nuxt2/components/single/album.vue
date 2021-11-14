@@ -71,6 +71,7 @@ h2 {
 }
 .wrapper {
     width: 800px;
+    max-width: 100%;
     height: 100%;
     margin: 0 auto;
 }
@@ -89,5 +90,14 @@ h2 {
 .actions {
     border-top: #ddd 1px solid;
     border-bottom: #ddd 1px solid;
+}
+@media(max-width:800px) {
+    .flex {
+        display: block;
+        text-align: center;
+    }
+    .div400 {
+        margin: 10px auto;
+    }
 }
 </style>

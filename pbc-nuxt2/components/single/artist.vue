@@ -70,6 +70,19 @@ export default {
     max-width: 800px;
     margin: 0 auto;
 }
-
+@media (max-width: 600px) {
+.artistTop img.cover {
+    min-width: 100%;
+    width: auto;
+    height: 100%;
+}
+.artistTop .info {
+    width: calc(100% - 20px);
+    padding: 20px 10px;
+}
+.artistTop {
+    height: 400px;
+}
+}
 
 </style>

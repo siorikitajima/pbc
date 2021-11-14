@@ -71,6 +71,7 @@ export default {
 <style scoped>
 .wrapper {
     width: 800px;
+    max-width: 100%;
     height: 100%;
     margin: 0 auto;
 }
@@ -154,5 +155,15 @@ export default {
     border-top: #ddd 1px solid;
     border-bottom: #ddd 1px solid;
     margin: 10px 0 0 0;
+}
+
+@media(max-width: 800px) {
+    .flex {
+    display: block;
+    }
+    .div400 {
+        width: calc(100% - 30px);
+        margin: 0 auto;
+    }
 }
 </style>
