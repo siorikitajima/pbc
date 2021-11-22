@@ -29,9 +29,11 @@
         <NuxtLink :to="'/project/' + slug(sqPData.ArtistName)">
         <img :src="require('~/assets/images/actions/seeArtist_Icon_white.svg')" alt="Artist">
         </NuxtLink>
-        <img :src="require('~/assets/images/actions/CustomWork_white.svg')" alt="Custom Work">
         <img :src="require('~/assets/images/actions/Share_Icon_white.svg')" alt="Share" @click="shareURL()">
-        <img class="actionBtn" :src="require('~/assets/images/actions/Actions_Icon_white.svg')" alt="Actions" @click="openAction()">
+        <NuxtLink :to="{ path: '/requests', query: { song: sqPData.ID }}">
+        <img :src="require('~/assets/images/actions/inquery_white.svg')" alt="Inquery">
+        </NuxtLink>
+        <img class="actionBtn" :src="require('~/assets/images/actions/Actions_Icon_white.svg')" alt="Actions" @click="toggleAction()">
         <img :src="require('~/assets/images/actions/PlayList_Icon.svg')" class="queueBtn" alt="Playlist" @click="$store.commit('TOGGLE_QUEUE')">
     </div>
     </client-only>
@@ -45,7 +47,7 @@
             <img :src="require('~/assets/images/player/Next_btn.svg')" alt="Next" @click="nextTrack">
         </div>
         <div class="icons" v-if="sqPData">
-            <img class="actionBtn" :src="require('~/assets/images/actions/Actions_Icon_white.svg')" alt="Actions" @click="openAction()">
+            <img class="actionBtn" :src="require('~/assets/images/actions/Actions_Icon_white.svg')" alt="Actions" @click="toggleAction()">
             <img :src="require('~/assets/images/actions/PlayList_Icon.svg')" class="queueBtn" alt="Playlist" @click="$store.commit('TOGGLE_QUEUE')">
         </div>
     </div>
@@ -88,10 +90,12 @@
                 <img :src="require('~/assets/images/actions/Share_Icon_dark.svg')" alt="Share">
                 <p>Share</p>
             </li>
+            <NuxtLink :to="{ path: '/requests', query: { song: sqPData.ID }}">
             <li>
-                <img :src="require('~/assets/images/actions/CustomWork_dark.svg')" alt="Custom Work">
+                <img :src="require('~/assets/images/actions/inquery_dark.svg')" alt="Inquery">
                 <p>Custom Work</p>
             </li>
+            </NuxtLink>
             <li>
                 <img :src="require('~/assets/images/actions/CustomWork_dark.svg')" alt="License">
                 <p>License</p>
@@ -113,12 +117,12 @@ export default {
             barWidth: null,
             duration: null,
             currentTime: null,
-            isTimerPlaying: null,
+            // isTimerPlaying: null,
             mobileAction: false
         }
     },
     computed: {
-        ...mapState(['songs', 'sqQueue', 'sqPlaying', 'sqEnded', 'alsoPlay' ]),
+        ...mapState(['songs', 'sqQueue', 'sqPlaying', 'sqEnded', 'alsoPlay', 'isTimerPlaying' ]),
         ...mapGetters({
             sqPData: 'PLAYING_DATA',
             sqQData: 'QUEUE_DATA',
@@ -133,10 +137,12 @@ export default {
         play() {
             if (this.audio.paused) {
                 this.audio.play();
-                this.isTimerPlaying = true;
+                this.$store.commit('IS_PLAYING_ON')
+                // this.isTimerPlaying = true;
             } else {
                 this.audio.pause();
-                this.isTimerPlaying = false;
+                this.$store.commit('IS_PLAYING_OFF')
+                // this.isTimerPlaying = false;
             }
         },
         generateTime() {
@@ -179,7 +185,7 @@ export default {
             this.audio.play();
         },
         clickProgress(e) {
-            this.isTimerPlaying = true;
+            // this.isTimerPlaying = true;
             this.audio.pause();
             this.updateBar(e.pageX);
         },
@@ -197,6 +203,7 @@ export default {
             setTimeout(() => {
                 if(!this.isTimerPlaying) {
                 this.audio.play();
+                this.$store.commit('IS_PLAYING_ON')
                 } else {
                 this.audio.pause();
                 this.audio.play();
@@ -226,7 +233,10 @@ export default {
             },
         closeAction() {
             this.mobileAction = false
-            }
+            },
+        toggleAction() {
+            this.mobileAction = !this.mobileAction
+        }
     },
     mounted() {
         let vm = this;
@@ -240,7 +250,7 @@ export default {
         };
         this.audio.onended = function() {
         vm.nextTrack();
-        this.isTimerPlaying = true;
+        // this.isTimerPlaying = true;
         };
 
         if(this.sqQueue.length == 0 && !localStorage.getItem("sqQueue")) { 
@@ -292,6 +302,7 @@ export default {
     justify-content:space-between;
     color: #ffffff88;
     font-size: 0.9em;
+    z-index: 5000;
 }
 .thePlayer .controller {
     width: 160px;
@@ -402,7 +413,7 @@ img.actionBtn {
     }
 }
 
-@media (max-width: 450px) {
+@media (max-width: 600px) {
     .progress__time {
         display: none;
     }

@@ -88,4 +88,11 @@ export default {
     font-weight: normal;
     font-size: 1em;
 }
+@media (max-width: 600px) {
+    .presetBar {
+    width: calc(100% - 40px);
+    max-width: none;
+    padding: 80px 20px 120px 20px;
+    }
+}
 </style>

@@ -223,6 +223,11 @@ export default {
     cursor: pointer;
     margin: 0;
 }
+@media (hover: none) {
+    .song-actions {
+    opacity: 1;
+}
+}
 @media (hover: hover) {
 .actions img:hover {
     opacity: 1;
@@ -241,6 +246,16 @@ export default {
     .similarPanel {
         height: calc(100% - 110px);
         top: 40px;
+    }
+}
+@media (max-width: 600px) {
+    .similarPanel {
+    width: 100%;
+    max-width: none;
+    top: 0;
+    padding: 10px 0 0 0;
+    height: calc(100% - 110px);
+    z-index: 1000;
     }
 }
 </style>

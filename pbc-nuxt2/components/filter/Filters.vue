@@ -40,5 +40,13 @@ export default {
   border-right: #44444444 1px solid;
   /* z-index: -1; */
 }
-
+@media (max-width: 600px) {
+    .filterBar {
+    width: calc(100% - 40px);
+    max-width: none;
+    padding: 80px 20px 20px 20px;
+    height: calc(100% - 198px);
+    overflow-y: auto;
+    }
+}
 </style>

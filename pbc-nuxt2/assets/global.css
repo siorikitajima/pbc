@@ -1,5 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 
+html {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    top: 0; bottom: 0; left: 0; right: 0;
+}
 body {
     background: #fff;
     color: #666;
@@ -27,17 +34,28 @@ a {
     text-decoration: none;
 }
 
-input {
+input, select, textarea {
     font-family: 'Raleway', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     height: 20px;
     padding: 5px;
-    width: 300px;
+    width: 290px;
     border: none;
     border-bottom: #666 1px solid;
     background: none;
     cursor: pointer;
+    font-size: 16px;
+}
+
+input.checkbox {
+    width: 20px;
+    height: 20px;
+    margin: 0 20px 0 0;
+    background: unset;
+}
+textarea {
+    height: 100px;
 }
 
 button {
@@ -49,13 +67,16 @@ button {
     border-radius: 5px;
     border: none;
     margin: 0 16px 16px 0;
+    font-family: 'Raleway', sans-serif;
 }
 button.large {
     font-size: 1em;
     padding: 10px 20px;
     margin: 0;
 }
-
+button.exlarge {
+    width: 300px;
+}
 
 @media (hover: hover) {
 button.small:hover {
@@ -257,6 +278,7 @@ h2.sectTitle {
     color: #111;
     text-align: center;
     border-radius: 5px;
+    z-index: 9500;
 }
 .name4Share input, .name4Share button {
     margin-top: 20px;
@@ -308,6 +330,8 @@ ul.mobileActions li.actionHead p {
 }
 ul.mobileActions li.actionHead {
     background: #333;
+    text-align: center;
+    border-bottom: #555 1px solid;
 }
 ul.mobileActions li img, ul.mobileActions li p {
     display: block;
@@ -316,3 +340,65 @@ ul.mobileActions li img {
     width: 32px;
     margin-right: 10px;
 }
+
+.bodytext, .theforms {
+    width: 800px;
+    max-width: 90vw;
+    margin: 0 auto;
+    line-height: 1.4em;
+}
+.theforms {
+    margin: 0 auto;
+    font-size: 1.1em;
+    display: flex;
+    justify-content: space-between;
+}
+.theforms label {
+    width: fit-content;
+}
+.theforms button {
+    margin: 10px 0 100px 0;
+}
+.theforms select {
+    height: fit-content;
+    /* width: fit-content; */
+    color: #666;
+}
+hr {
+    width: 100%;
+    margin: 30px auto;
+}
+span.agreement {
+    font-size: 0.8em;
+}
+span.agreement a {
+    color: #0092c5;
+    border-bottom: 1px #0092c5 solid;
+}
+
+@media (max-width: 600px) {
+    .theforms {
+        display: block;
+        margin: 10px auto;
+    }
+    .theforms label, .theforms input, .theforms select, .theforms textarea, .theforms p, .theforms button {
+        display: block;
+        margin: 10px auto;
+        width: calc(100% - 10px);
+    }
+    .theforms button {
+        margin: 10px auto 130px auto;
+        display: block;
+    }
+    .theforms p {
+        text-align: center;
+    }
+    ul.mobileActions {
+        bottom: 80px;
+    }
+}
+/* @media (max-width: 400px) {
+    .theforms:last-of-type {
+        margin: 10px auto 130px auto;
+    }
+} */

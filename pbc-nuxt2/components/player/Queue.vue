@@ -4,9 +4,8 @@
       <div class="actions">
            <img :src="require('~/assets/images/global/Close_Icon.svg')" alt="Close" @click="togglePanel">
            <p>Queue</p>
-           <img :src="require('~/assets/images/actions/Actions_Icon_white.svg')" alt="Actions"
-            @mouseover="hover = true" @click="hover = !hover">
-            <div class="actionDD" v-if="hover" @mouseover="hover = true" @mouseleave="hover = false">
+           <img :src="require('~/assets/images/actions/Actions_Icon_white.svg')" alt="Actions" @click="hover = !hover">
+            <div class="actionDD" v-if="hover" @mouseover="hover = true" @mouseleave="hover = false" >
                 <div @click="openShareP()">
                     <img :src="require('~/assets/images/global/share_white.svg')" alt="Share"><p>Share</p>
                 </div>
@@ -335,5 +334,15 @@ export default {
         top: 40px;
     }
 }
-
+@media (max-width: 600px) {
+    .queuePanel {
+    width: 100%;
+    max-width: none;
+    top: 0;
+    padding: 10px 0 0 0;
+    height: calc(100% - 100px);
+    z-index: 1000;
+    border-radius: 0;
+    }
+}
 </style>

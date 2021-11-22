@@ -47,6 +47,10 @@
         <li class="actionHead">
             <p>RTM <b>{{ rthValue }}</b>, SPD <b>{{ spdValue }}</b>, EXP <b>{{ expValue }}</b>, MOD <b>{{ modValue }}</b>, ORG <b>{{ orgValue }}</b>, <span v-for="searchKey in searchKeys" :key="searchKey.key">{{ searchKey.key }}, </span></p>
         </li>
+        <li class="actionHead" @click="rangesldr">
+            <p>Song Range <b>#{{ songFrom }}</b> - <b>#{{ songTo }}</b></p>
+            <img :src="require('~/assets/images/global/edit-icon_dark.svg')" alt="Edit">
+        </li>
         <li @click="playThem()">
             <img :src="require('~/assets/images/actions/playSong_dark.svg')" alt="Play Track">
             <p>Play #{{songFrom}} - #{{songTo}}</p>
@@ -60,6 +64,23 @@
             <p>Share the Result</p>
         </li>
     </ul>
+
+    <div class="mobileSldr" v-if="rngsldr">
+        <div class='range-slider'>
+            <div class="sliderTitle">
+                <div><b>Select Songs</b></div>
+                <div>#{{songFrom}} - #{{songTo}}</div>
+            </div>
+            <input type="range" min="0" :max="songCount" step="1" v-model="songFrom" @change="changed = true">
+            <input type="range" min="0" :max="songCount" step="1" v-model="songTo" @change="changed = true">
+        </div>
+        <div class="setIcon panelNav" @click="rangesldr(), openAction()" v-if="changed">
+            <img :src="require('~/assets/images/global/Set_Icon_blue.svg')" alt="Close">
+        </div>
+        <div class="closeIcon panelNav" @click="rangesldr(), openAction()" v-else>
+            <img :src="require('~/assets/images/global/Close_Icon_dark.svg')" alt="Close">
+        </div>
+    </div>
 </div>
 </template>
 
@@ -72,7 +93,9 @@ export default {
         return {
             songFrom: 1,
             songTo: 10,
-            mobileAction: false
+            mobileAction: false,
+            rngsldr: false,
+            changed: false
         }
     },
     computed: {
@@ -149,6 +172,9 @@ export default {
         },
         closeAction() {
             this.mobileAction = false
+        },
+        rangesldr() {
+            this.rngsldr = !this.rngsldr
         }
     }
 }
@@ -223,6 +249,7 @@ export default {
 .trackCount {
     color: #fff;
     margin-top: 10px;
+    font-size: 1.1em;
 }
 .trackCount.dark {
     font-size: 1.2em;
@@ -287,9 +314,37 @@ export default {
 div.mobileActions {
     position: absolute;
     top: 10px;
-    right: 8px;
+    right: 20px;
     height: 32px;
     width: 32px;
+    opacity: 0.7;
+}
+div.mobileSldr {
+    width: calc(100% - 20px);
+    background:#333;
+    height: fit-content;
+    position: fixed;
+    bottom: 40px;
+    padding: 30px 10px;
+    left: 0;
+    z-index: 2200;
+}
+
+.range-slider {
+    margin: 10px auto 30px auto;
+}
+
+.range-slider input {
+    background: #222;
+}
+.panelNav {
+    width: 32px;
+    height: 32px;
+    position: fixed;
+}
+.panelNav.closeIcon, .panelNav.setIcon {
+    bottom: 150px;
+    right: 20px;
 }
 
 @media (hover: hover) {
@@ -319,7 +374,7 @@ div.mobileActions {
 }
 @media (max-width: 900px) {
     div.mobileActions {
-        right: 24px;
+        right: 16px;
     }
 }
 @media (max-width: 760px) {
@@ -353,10 +408,22 @@ div.mobileActions {
     div.mobileActions {
         top: 0;
     }
+    div.mobileSldr {
+        bottom: 100px;
+    }
+    .panelNav.closeIcon, .panelNav.setIcon {
+        bottom: 210px;
+    }
 }
-@media (max-width: 400px) {
+@media (max-width: 600px) {
+    .panelNav.closeIcon, .panelNav.setIcon {
+        bottom: 220px;
+        right: 10px;
+    }
+}
+/* @media (max-width: 400px) {
     div.mobileActions {
         right: 0;
     }
-}
+} */
 </style>

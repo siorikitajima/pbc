@@ -160,5 +160,9 @@ input[type=range]::-webkit-slider-thumb {
   cursor: pointer;
   -webkit-appearance: none;
 }
-
+@media (max-width: 600px) {
+    .range-slider {
+    margin: 0 auto 30px auto; 
+    }
+}
 </style>

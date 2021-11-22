@@ -11,7 +11,7 @@
         </div>
     </div>
     <div class="asname" @click="$store.dispatch('OpenSingSonP', song.ID)">
-        <p><b>{{ song.Title }} </b> // <i>{{ length }}</i>
+        <p><b>{{ song.Title }} </b>
         <!-- <img src="~/assets/images/table/eye.svg" alt="See More"> -->
         </p>
         <p>by {{ song.ArtistName }}</p>
@@ -19,10 +19,13 @@
     <div class="asflow">
         <img :src="require('~/assets/images/table/' + song.ShapeArc + '.png')" :alt="song.ShapeArc">
     </div>
+    <client-only>
     <div class="askey">
         <b>Key </b>{{ song.MusicKey }}<br/>
-        <b>BPM </b>{{ song.BPM }}
+        <b>BPM </b>{{ song.BPM }}<br/>
+        <b>DUR </b>{{ length }}
     </div>
+    </client-only>
     <ul class="asvalues">
         <li class="rtm">{{ song.PBRhythm }}</li>
         <li class="spd">{{ song.PBSpeed }}</li>
@@ -37,11 +40,13 @@
         <NuxtLink :to="'/song/' + song.ID + '-' + slug(song.Title)">
         <img :src="require('~/assets/images/actions/seeSong_Icon_dark.svg')" alt="Track Page" >
         </NuxtLink>
-        <NuxtLink :to="'/project/' + slug(song.ArtistName)" v-if="showProjectLink">
+        <NuxtLink :to="'/project/' + slug(song.ArtistName)" v-if="showProjectLink && dist !== 'project'" >
         <img :src="require('~/assets/images/actions/seeArtist_Icon_dark.svg')" alt="Artist Page">  
         </NuxtLink>
         <img :src="require('~/assets/images/actions/Share_Icon_dark.svg')" alt="Share" @click="shareURL()">
-        <img :src="require('~/assets/images/actions/CustomWork_dark.svg')" alt="Custom Work">
+        <NuxtLink :to="{ path: '/requests', query: { song: song.ID }}">
+        <img :src="require('~/assets/images/actions/inquery_dark.svg')" alt="Inquery">
+        </NuxtLink>
         <button class="small">LICENSE</button> 
     </div>
     <div class="actions mobile">
@@ -66,14 +71,14 @@
                 <img :src="require('~/assets/images/actions/SimilarSong_Icon_dark.svg')" alt="Similar Songs">
                 <p>Similar Songs</p>
             </li>
-            <NuxtLink :to="'/song/' + song.ID + '-' + slug(song.Title)">
+            <NuxtLink :to="'/song/' + song.ID + '-' + slug(song.Title)" >
             <li>
                 <img :src="require('~/assets/images/actions/seeSong_Icon_dark.svg')" alt="Track Page">
                 <p>See Song Page</p>
             </li>
             </NuxtLink>
-            <NuxtLink :to="'/project/' + slug(song.ArtistName)" v-if="showProjectLink">
-            <li @click="$store.commit('PLAY_THIS', song.ID)">
+            <NuxtLink :to="'/project/' + slug(song.ArtistName)"  v-if="dist !== 'project'" >
+            <li @click="$store.commit('PLAY_THIS', song.ID)" v-if="dist !== 'project'" >
                 <img :src="require('~/assets/images/actions/seeArtist_Icon_dark.svg')" alt="Artist Page">
                 <p>See Artist Page</p>
             </li>
@@ -82,10 +87,12 @@
                 <img :src="require('~/assets/images/actions/Share_Icon_dark.svg')" alt="Share">
                 <p>Share</p>
             </li>
+            <NuxtLink :to="{ path: '/requests', query: { song: song.ID }}">
             <li>
-                <img :src="require('~/assets/images/actions/CustomWork_dark.svg')" alt="Custom Work">
+                <img :src="require('~/assets/images/actions/inquery_dark.svg')" alt="Inquery">
                 <p>Custom Work</p>
             </li>
+            </NuxtLink>
             <li>
                 <img :src="require('~/assets/images/actions/CustomWork_dark.svg')" alt="License">
                 <p>License</p>
@@ -211,7 +218,6 @@ export default {
     width: inherit;
     height: fit-content;
     flex-shrink: 2;
-    margin-top: 10px;
 }
 .asvalues {
     /* display: block; */
@@ -253,7 +259,7 @@ export default {
     margin: 0;
     height: fit-content;
     width: fit-content;
-    padding: 10px;
+    padding: 5px 0 0 0;
     display: none;
     margin: auto 10px;
 }
@@ -270,10 +276,12 @@ export default {
     }
 .actions.mobile .actionBtn {
     position: absolute;
-    left: 0;
+    right: 0;
     top: 0;
 }
-
+.actions.mobile img.actionBtn {
+    margin: 0;
+}
 
 @media (hover: hover) and (min-width: 900px) {
     .asname:hover {
@@ -298,8 +306,19 @@ export default {
         display: block;
     }
     /* .asflow, .askey, .asvalues {
-        display: none;
+       display: none;
     } */
+}
+
+@media (hover: none) {
+    .asong {
+        justify-content:left;
+        position: relative;
+    }
+    .asvalues {
+        position: absolute;
+        right: 80px;
+    }
 }
 @media (max-width: 900px) {
     .askey {
@@ -311,7 +330,7 @@ export default {
     }
     .actions.mobile {
         position: absolute;
-        right: 20px;
+        right: 0;
         flex-shrink: 0;
     }
     .asvalues {

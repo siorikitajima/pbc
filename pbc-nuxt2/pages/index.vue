@@ -163,6 +163,13 @@ export default {
                 search: this.allSearch 
             }
             return query
+        },
+        isMobile() {
+            console.log('window.innerWidth: ' + window.innerWidth)
+            if (window.innerWidth <= 768) {
+            return true
+            } 
+            return false
         }
     },
     methods: {
@@ -174,6 +181,9 @@ export default {
                 } else {
                 this.sliderPanel = !this.sliderPanel
                 }
+                if(this.isMobile && this.searchPanel) {
+                    this.searchPanel = false
+                }
             } else if (data.type == 'preset') {
                 if ( !this.presetPanel && this.sliderPanel ) {
                     this.sliderPanel = false
@@ -181,8 +191,17 @@ export default {
                 } else {
                     this.presetPanel = !this.presetPanel
                 }
+                if(this.isMobile && this.searchPanel) {
+                    this.searchPanel = false
+                }
             } else if (data.type == 'search') {
                 this.searchPanel = !this.searchPanel
+                if(this.isMobile && this.sliderPanel) {
+                    this.sliderPanel = false
+                }
+                if(this.isMobile && this.presetPanel) {
+                    this.presetPanel = false
+                }
             }
         },
         getList4Queue(data) {
@@ -235,15 +254,28 @@ export default {
                 }
             }
             if(!alreadyHaveIt) {this.allSearch.push(data)}
+            if(this.searchPanel) {this.searchPanel = false}
         },
         toggleSearchPanel() {
             this.searchPanel = !this.searchPanel
+            // if(this.sliderPanel) {
+            //     this.sliderPanel = false
+            // }
+            // if(this.presetPanel) {
+            //     this.presetPanel = false
+            // }
         },
         toggleSliderPanel() {
             this.sliderPanel = !this.sliderPanel
+            // if(this.searchPanel) {
+            //     this.searchPanel = false
+            // }
         },
         togglePresetPanel() {
             this.presetPanel = !this.presetPanel
+            // if(this.searchPanel) {
+            //     this.searchPanel = false
+            // }
         },
         filterResult(filterVal) {
             if (filterVal.type == 'rhythm') {

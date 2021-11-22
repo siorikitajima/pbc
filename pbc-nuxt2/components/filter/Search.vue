@@ -15,7 +15,7 @@
     @keyup.enter="setKey({type: 'search', key: tempSearch})"
     >
 
-    <div v-if="filteredKeys.length > 0 && searchPanel || tempSearch != ''">
+    <div v-if="filteredKeys.length > 0 && searchPanel">
       <ul class="searchKeys">
         <li class="searchKey" v-if="tempSearch != ''" @click="setKey({type: 'search' ,key: tempSearch})" >
           <span class="pill" :data-col="'search'">keyword</span>
@@ -26,7 +26,6 @@
         @click="setKey({type: filteredKey.type ,key: filteredKey.key})" :key="filteredKey.key + '-' + index">
           <span class="pill" :data-col="filteredKey.type">{{filteredKey.type}}</span>
           {{filteredKey.key}}
-          
         </li>
       </ul>
     </div>
@@ -64,7 +63,6 @@ export default {
           }
         }
         if(!alreadyHaveIt) {this.searchKey.push(data)}
-
         this.tempSearch = ''
         this.searchPanel = false
         this.$emit('loadSearch', data)
@@ -149,6 +147,21 @@ input.searchBox {
   background: #00000000;
   position: absolute;
   top: 0; bottom: 0; left: 0; right: 0;
-  z-index: 0;
+  z-index: 1;
+}
+@media (max-width: 800px) {
+  .searchBar {
+    padding: 60px 0 0;
+    background: #f2f2f2;
+    z-index: 0;
+  }
+  input.searchBox {
+  top: 60px;
+  }
+  .searchKeys {
+  width: 100%;
+  height: calc(100% - 226px);
+  top: 110px;
+  }
 }
 </style>

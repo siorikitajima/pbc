@@ -27,7 +27,10 @@ export const state = () => ({
     singSonData: [],
 
     copyURL: false,
-    playlist: []
+    sentPanel: false,
+    playlist: [],
+
+    isTimerPlaying: false
 });
 
 export const mutations = {
@@ -54,7 +57,7 @@ export const mutations = {
             return qID == id })
         if(!exist) {
         state.sqQueue.push(id)
-        }
+        } 
     },
     TOGGLE_QUEUE: (state) => {
         state.queuePanel = !state.queuePanel
@@ -131,20 +134,28 @@ export const mutations = {
     PLAY_ALL: (state, ids) => {
         const reversed = ids.reverse()
         for (let s = 0; s < reversed.length; s++) {
-            state.sqQueue.unshift(reversed[s])
+            let exist = state.sqQueue.some(qID => {
+                return qID == reversed[s] })
+            if(!exist) {
+                state.sqQueue.unshift(reversed[s])
+            }
           }
           state.sqEnded.push(state.sqPlaying[0])
           state.sqPlaying.splice(0, 1)
           state.sqPlaying.push(state.sqQueue[0])
           state.sqQueue.splice(0, 1)
           state.alsoPlay++
+        ids = reversed.reverse()
     },
     ADD_ALL: (state, ids) => {
         for (let s = 0; s < ids.length; s++) {
-            state.sqQueue.push(ids[s])
-          }
+            let exist = state.sqQueue.some(qID => {
+                return qID == ids[s] })
+            if(!exist) {
+                state.sqQueue.push(ids[s])
+            }
+        }
     },
-
     RMV_Q: (state, id) => {
         let index = state.sqQueue.indexOf(id)
         state.sqQueue.splice(index, 1)
@@ -171,6 +182,18 @@ export const mutations = {
     },
     URL_FLASH_OFF: (state) => {
         state.copyURL = false
+    },
+    SENT_FLASH_ON: (state) => {
+        state.sentPanel = true
+    },
+    SENT_FLASH_OFF: (state) => {
+        state.sentPanel = false
+    },
+    IS_PLAYING_ON: (state) => {
+        state.isTimerPlaying = true
+    },
+    IS_PLAYING_OFF: (state) => {
+        state.isTimerPlaying = false
     }
 }
 
@@ -253,11 +276,17 @@ export const actions = {
         '|| Next Song || ', '\n', 
         'ID: ', nextID, '/ Index: ', nextIndex, '/ Rating: ', nextRate)
     },
-    async CopyURL({ commit }, url) {
+    CopyURL({ commit }, url) {
         navigator.clipboard.writeText(url);
         commit('URL_FLASH_ON')
         setTimeout(() => {
             commit('URL_FLASH_OFF')
+        }, 1000)
+    },
+    sentPanel({ commit }) {
+        commit('SENT_FLASH_ON')
+        setTimeout(() => {
+            commit('SENT_FLASH_OFF')
         }, 1000)
     }
 }

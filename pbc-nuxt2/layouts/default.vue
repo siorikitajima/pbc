@@ -20,6 +20,7 @@
 
     <PanelSingleSong />
     <PanelCopied />
+    <PanelSent />
   </div>
 </template>
 
@@ -31,10 +32,11 @@ import PlayerQueue from "~/components/player/Queue"
 import PlayerSimilar from "~/components/player/Similar"
 import PanelSingleSong from "~/components/panel/SingleSong"
 import PanelCopied from "~/components/panel/Copied"
+import PanelSent from "~/components/panel/Sent"
 
 export default {
   components: {
-    GlobalCliNav, GlobalCliLeftNav, PlayerBar, PlayerQueue, PlayerSimilar, PanelSingleSong, PanelCopied
+    GlobalCliNav, GlobalCliLeftNav, PlayerBar, PlayerQueue, PlayerSimilar, PanelSingleSong, PanelCopied, PanelSent
   }
 }
 </script>

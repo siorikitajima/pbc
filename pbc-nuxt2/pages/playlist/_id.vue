@@ -1,7 +1,7 @@
 <template>
   <div class="pagewrapper">
-    <div v-if="playlist">
-        <SinglePlaylist :playlist="playlist" />
+    <div v-if="playlistInfo">
+        <SinglePlaylist :playlist="playlistInfo" />
     </div>
 
         <div v-if="playlistData.length">
@@ -20,12 +20,12 @@ export default {
     name: 'Playlist',
     head() {
         return {
-        title: 'Playlist #' + this.theId[0] + ' ' + this.playlist.PlaylistName + ' || PatternBased Catalog',
+        title: 'Playlist #' + this.theId[0] + ' ' + this.playlistInfo.PlaylistName + ' || PatternBased Catalog',
         meta: [
         {
             hid: 'og:title',
             name: 'og:title',
-            content: 'Playlist #' + this.theId[0] + ' ' + this.playlist.PlaylistName + ' || PatternBased Catalog'
+            content: 'Playlist #' + this.theId[0] + ' ' + this.playlistInfo.PlaylistName + ' || PatternBased Catalog'
         },
         {
             hid: 'og:url',
@@ -37,13 +37,20 @@ export default {
     },
     params: [ 'id' ],
     async asyncData({ params, store }) {
-        let theId = params.id.split('-');
-        let playlistUrl = baseURL + '/playlist/' + theId[0]
+        let theId = params.id
+        let parts, theNum
+        if(theId.includes('-')) {
+            parts = params.id.split('-');
+            theNum = parts[0]
+        } else {
+            theNum = theId
+        }
+        let playlistUrl = baseURL + '/playlist/' + theNum
         let pLdata = await axios.get(playlistUrl)
         let singplaylist = await pLdata.data.Songs
-        let playlist = await pLdata.data
+        let playlistInfo = await pLdata.data
         store.commit('SET_PLAYLIST', singplaylist)
-        return { singplaylist, theId, playlist }
+        return { singplaylist, theId, playlistInfo }
     },
     computed: {
         ...mapState( ['songs'] ),

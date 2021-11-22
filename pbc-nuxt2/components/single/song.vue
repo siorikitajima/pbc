@@ -12,14 +12,16 @@
             <img :src="require('../../assets/images/actions/playSong_dark.svg')" alt="Play Track" @click="$store.commit('PLAY_THIS', song.ID)">
             <img :src="require('../../assets/images/actions/addToQueue_dark.svg')" alt="Add to Queue" @click="$store.commit('ADD_QUEUE', song.ID)">
             <img :src="require('../../assets/images/actions/SimilarSong_Icon_dark.svg')" alt="Similar Songs" @click="$store.dispatch('OpenSimSong', song.ID)">
-            <NuxtLink :to="'/song/' + song.ID + '-' + slug(song.Title)">
+            <NuxtLink v-if="panel" :to="'/song/' + song.ID + '-' + slug(song.Title)">
             <img :src="require('../../assets/images/actions/seeSong_Icon_dark.svg')" alt="Track Page" @click="$store.commit('CLOSE_SING_SONG')">
             </NuxtLink>
             <NuxtLink :to="'/project/' + slug(song.ArtistName)">
             <img :src="require('../../assets/images/actions/seeArtist_Icon_dark.svg')" alt="Artist Page" @click="$store.commit('CLOSE_SING_SONG')">  
             </NuxtLink>
             <img :src="require('../../assets/images/actions/Share_Icon_dark.svg')" alt="Share" @click="shareURL()">
-            <img :src="require('../../assets/images/actions/CustomWork_dark.svg')" alt="Custom Work">
+            <NuxtLink :to="{ path: '/requests', query: { song: song.ID }}">
+            <img :src="require('../../assets/images/actions/inquery_dark.svg')" alt="Inquery" @click="$store.commit('CLOSE_SING_SONG')">
+            </NuxtLink>
             <button class="small">LICENSE</button> 
           </div>
           <p>{{ song.Description }}</p>

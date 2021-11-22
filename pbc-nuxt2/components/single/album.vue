@@ -11,10 +11,10 @@
           <div class="actions">
             <img :src="require('~/assets/images/actions/playSong_dark.svg')" alt="Play All" @click="playAll(album.AlbumID, album.Tracks)">
             <img :src="require('~/assets/images/actions/addToQueue_dark.svg')" alt="Add All to Queue" @click="addAll(album.AlbumID, album.Tracks)">
-            <img :src="require('~/assets/images/actions/Share_Icon_dark.svg')" alt="Share" @click="shareURL()">
             <NuxtLink :to="'/project/' + album.ArtistSlug" >
             <img :src="require('~/assets/images/actions/seeArtist_Icon_dark.svg')" alt="Artist Page">  
             </NuxtLink>
+            <img :src="require('~/assets/images/actions/Share_Icon_dark.svg')" alt="Share" @click="shareURL()">
           </div>
           <p>{{ album.Description }}</p>
         </div>

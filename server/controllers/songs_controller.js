@@ -75,8 +75,25 @@ const readSingleSongData = (req, res) => {
     });
 };
 
+const readSongNames = (req, res) => {
+  Song.find().sort({Rate: -1})
+    .then((data) => {
+      let songNames = [];
+      for(let s = 0; s < data.length; s++) {
+        let asong = { Title: data[s].Title, ID: data[s].ID, CatNum: data[s].CatNum, ArtistName: data[s].ArtistName };
+        songNames.push(asong)
+      }
+      res.status(200).json(songNames);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).json(err);
+    });
+};
+
 module.exports = {
   readSongsData,
   readSongData,
-  readSingleSongData
+  readSingleSongData,
+  readSongNames
 };

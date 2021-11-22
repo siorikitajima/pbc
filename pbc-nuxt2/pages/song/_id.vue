@@ -25,12 +25,12 @@ export default {
         {
             hid: 'description',
             name: 'description',
-            content: this.singlesong.Title + 'by ' + this.singlesong.ArtistName + '. ' + this.singlesong.Description
+            content: this.singlesong.Title + ' by ' + this.singlesong.ArtistName + '. ' + this.singlesong.Description
         },
         {
             hid: 'og:description',
             name: 'og:description',
-            content: this.singlesong.Title + 'by ' + this.singlesong.ArtistName + '. ' + this.singlesong.Description
+            content: this.singlesong.Title + ' by ' + this.singlesong.ArtistName + '. ' + this.singlesong.Description
         },
         {
             hid: 'og:title',

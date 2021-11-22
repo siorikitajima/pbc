@@ -13,19 +13,19 @@
         <div class="sideNav" v-show="sideNavOpen">
             <client-only>
             <ul>
+                <NuxtLink to="/">
+                    <li>Catalog Search</li>
+                </NuxtLink>
                 <NuxtLink to="/artists">
-                <li>Projects and Artists</li>
+                    <li>Projects and Artists</li>
                 </NuxtLink>
                 <NuxtLink to="/albums">
-                <li>Albums and Collections</li>
+                    <li>Albums and Collections</li>
                 </NuxtLink>
-                <NuxtLink to="/">
-                <li>Catalog Search</li>
-                </NuxtLink>
-                <li>Request Suggestions</li>
-                <li>Request Composing</li>
                 <li>About PB Catalog</li>
-                <li>Contact Us</li>
+                <NuxtLink to="/requests">
+                    <li>Request Work</li>
+                </NuxtLink>
             </ul>
             </client-only>
         </div>
@@ -80,5 +80,11 @@ export default {
 .sideNav ul li:hover {
     background: linear-gradient(90deg, rgba(51,51,51,1) 0%, rgba(68,68,68,1) 50%, rgba(51,51,51,1) 100%);
     transition-duration: 200ms;
+}
+@media (max-width: 600px) {
+    .sideNav {
+    width: calc(100% - 40px);
+    max-width: none;
+    }
 }
 </style>
