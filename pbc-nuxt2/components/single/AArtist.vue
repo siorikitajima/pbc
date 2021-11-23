@@ -52,6 +52,7 @@ export default {
     transform: translate(-50%, -50%);
 }
 .artistBox h3 {
+    font-weight: normal;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -76,9 +77,9 @@ export default {
 }
 @media (max-width: 600px) {
     .artistBox {
-    width: 140px;
+    width: 150px;
     height: 80px;
-    margin: 8px;
+    margin: 5px;
     }
 }
 </style>

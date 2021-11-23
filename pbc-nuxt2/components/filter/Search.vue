@@ -8,14 +8,16 @@
     <input 
     class="searchBox"
     type="text" 
-    v-model="tempSearch" 
+    :value="tempSearch" 
     placeholder="Artist, Instrument, Keyword, etc."
     autocomplete="off" 
     @focus="searchPanel = true"
     @keyup.enter="setKey({type: 'search', key: tempSearch})"
+    @input="e => tempSearch = e.target.value"
+    autofocus
     >
 
-    <div v-if="filteredKeys.length > 0 && searchPanel">
+    <div v-if="filteredKeys.length > 0 && searchPanel || tempSearch != ''">
       <ul class="searchKeys">
         <li class="searchKey" v-if="tempSearch != ''" @click="setKey({type: 'search' ,key: tempSearch})" >
           <span class="pill" :data-col="'search'">keyword</span>
@@ -97,7 +99,7 @@ input.searchBox {
   left: 50%;
   transform: translateX(-50%);
   margin: 20px auto 0 auto;
-  z-index: 10;
+  z-index: 100;
 }
 
 .searchKeys {

@@ -18,14 +18,14 @@ export default {
 
 <style scoped>
 .albumBox {
-    width: 160px;
-    height: 160px;
+    width: 180px;
+    height: 180px;
     border-radius: 5px;
     position: relative;
     overflow: hidden;
     text-align: center;
     color: #fff;
-    margin: 20px;
+    margin: 10px;
 }
 .albumBox img {
     position: absolute;
@@ -35,6 +35,7 @@ export default {
     transform: translate(-50%, -50%);
 }
 .albumBox h3 {
+    font-weight: normal;
     position: absolute;
     bottom: 20px;
     left: 50%;
@@ -60,8 +61,8 @@ export default {
 
 @media (max-width: 600px) {
     .albumBox {
-    width: 120px;
-    height: 120px;
+    width: 140px;
+    height: 140px;
     margin: 10px;
     }
 }
