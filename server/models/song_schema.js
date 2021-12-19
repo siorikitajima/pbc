@@ -19,6 +19,7 @@ const songSchema = new Schema(
     PBMood: { type: Number },
     PBExperimental: { type: Number },
     PBOrganic: { type: Number },
+    PBDensity: { type: Number },
     Stems: { type: String },
     Description: { type: String },
     Genre: { type: String },
