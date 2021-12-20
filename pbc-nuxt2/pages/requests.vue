@@ -10,7 +10,7 @@
 
     <div class="theforms">
         <label for="type">How can we help?</label>
-        <select name="type" id="type" v-model="inquery" @change="dimSong()">
+        <select ref="type" name="type" id="type" v-model="inquery" @change="dimSong()">
             <option style="font-family: 'Raleway', sans-serif;" disabled selected>--- Select Request Type ---</option>
             <option style="font-family: 'Raleway', sans-serif;" value="suggestion">Suggestions</option>
             <option style="font-family: 'Raleway', sans-serif;" value="stems">Stems</option>
@@ -40,13 +40,13 @@
 
     <div class="main">
         <FormsSuggestion v-if="inquery == 'suggestion'"/>
-        <FormsStems v-if="inquery == 'stems'" :song="songName" />
+        <FormsStems v-if="inquery == 'stems'" :song="songName" :orderNum="orderNum" />
         <FormsComposing v-if="inquery == 'compose'"/>
         <FormsLength v-if="inquery == 'length'" :song="songName" />
         <FormsRemix v-if="inquery == 'remix'" :song="songName" />
         <FormsFullcatalog v-if="inquery == 'fullcatalog'" />
         <FormsCustomLicense v-if="inquery == 'customlicense'" />
-        <FormsOthers v-if="inquery == 'other'" />
+        <FormsOthers v-if="inquery == 'other'" :orderNum="orderNum" />
     </div>
     
 </div>
@@ -85,6 +85,7 @@ export default {
         return {
             inquery: '',
             songName: '',
+            orderNum: '',
             shownNames: [],
             inquery4Song: true,
             searchPanel: false
@@ -123,6 +124,18 @@ export default {
             const thetitle = thesong[0].Title
             this.songName = thetitle
             this.inquery4Song = false
+        }
+        if(this.$route.query.type) {
+            this.inquery = this.$route.query.type
+            for ( var i = 0, len = this.$refs.type.options.length; i < len; i++ ) {
+            let opt = this.$refs.type.options[i];
+            if ( opt.value === this.$route.query.type ) {
+                opt.setAttribute('selected', 'selected'); 
+                break;
+            }}
+        }
+        if(this.$route.query.order) {
+            this.orderNum = this.$route.query.order
         }
     }
 }

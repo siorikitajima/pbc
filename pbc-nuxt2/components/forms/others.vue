@@ -17,6 +17,10 @@
         <input type="text" id="company" name="company">
     </div>
     <div class="theforms">
+        <label for="invoice">Order# <span class="agreement">(If you've already purchased license(s))</span></label>
+        <input type="text" id="invoice" name="invoice" v-model="order">
+    </div>
+    <div class="theforms">
         <label for="message">Message*</label>
         <textarea type="text" id="message" name="message" required />
     </div>
@@ -35,6 +39,12 @@ import baseURL from '~/assets/api-url.js'
 
 export default {
     name: 'FormOthers',
+    props: ['orderNum'],
+    data(props) {
+        return {
+            order: props.orderNum
+        }
+    },
     methods: {
         async submitForm(event) {
             const {name, email, company, message, term} = Object.fromEntries(new FormData(event.target))

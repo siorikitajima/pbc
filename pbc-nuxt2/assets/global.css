@@ -75,11 +75,12 @@ button.large {
     margin: 0;
 }
 button.exlarge {
+    font-size: 1em;
     width: 300px;
 }
 
 @media (hover: hover) {
-button.small:hover {
+button.small:hover, button:hover {
     background: #0092C5;
     transition-duration: 200ms;
 }
@@ -233,6 +234,7 @@ h2.sectTitle {
     width: fit-content;
     position: fixed;
     top: 0;
+    z-index: 100;
   }
   
   #navRight { right: 0; }
@@ -247,6 +249,23 @@ h2.sectTitle {
   #navMiddle img {
     height: auto;
     width: 180px;
+  }
+  .cornerNavs div.num {
+      display: inline;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      color: #FFF;
+      text-align: center;
+      position: fixed;
+      top: 16px;
+      right: 83px;
+      font-size: 0.8em;
+      line-height: 1.1em;
+      font-weight: bold;
+  }
+  .cornerNavs div.blue {
+      color: #333;
   }
   
   .cornerNavs a {

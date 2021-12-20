@@ -11,7 +11,8 @@
         <p>ORG</p>
     </div>
     <div v-for="fltdsong in fltdsongs || []" :key="fltdsong.ID">
-        <TableASong :song="fltdsong" :dist="dist" @openThis="passSingle($event)" @showPanel="passPanel($event)" @queueAction="passQueue($event)" /> 
+        <TableASong :song="fltdsong" :dist="dist" />
+        <!-- @openThis="passSingle($event)" @showPanel="passPanel($event)" @queueAction="passQueue($event)" />  -->
     </div>
 </div>
 </template>
@@ -20,21 +21,21 @@
 export default {
     name: 'SongList',
     props: ['fltdsongs', 'dist', 'song'],
-    emits: ['passThis', 'openPanel', 'queueAction'],
+    // emits: ['passThis', 'openPanel', 'queueAction'],
     setup(props) {
         const dist = ref(props.dist)
         return { dist }
-    },
-    methods: {
-        passSingle(data) {
-            this.$emit('passThis', data)
-        },
-        passPanel(data) {
-            this.$emit('openPanel', data)
-        },
-        passQueue(data) {
-            this.$emit('queueAction', data)
-        }
+    // },
+    // methods: {
+    //     passSingle(data) {
+    //         this.$emit('passThis', data)
+    //     },
+    //     passPanel(data) {
+    //         this.$emit('openPanel', data)
+    //     },
+    //     passQueue(data) {
+    //         this.$emit('queueAction', data)
+    //     }
     }
 }
 </script>

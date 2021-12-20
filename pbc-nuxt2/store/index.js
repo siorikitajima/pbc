@@ -4,13 +4,15 @@ import baseURL from '~/assets/api-url.js'
 let songsUrl = baseURL + `/songs`
 let albumsUrl = baseURL + '/albums'
 let artistsUrl = baseURL + '/artists'
+let licenseUrl = baseURL + '/license'
 
 export const state = () => ({
     songs: [],
     albums: [],
     artists: [],
     ogSongID: '',
-    tempSongData: '',
+    tempSongIDs: [],
+    // rangeSlider: false,
 
     similarPanel: false,
     simSongGap: 1.5,
@@ -22,15 +24,34 @@ export const state = () => ({
     sqPlaying: [],
     sqEnded: [],
     alsoPlay: 0,
+    playerBar: true,
 
     singleSongPanel: false,
     singSonData: [],
 
-    copyURL: false,
-    sentPanel: false,
+    flashPanel: false,
+    flashText: '',
+    
     playlist: [],
 
-    isTimerPlaying: false
+    isTimerPlaying: false,
+
+    rhythm : { min: 0, max: 10 },
+    speed : { min: 0, max: 10 },
+    experimental : { min: 0, max: 10 },
+    mood : { min: 0, max: 10 },
+    organic : { min: 0, max: 10 },
+    density : { min: 0, max: 10 },
+    search : '',
+    allSearch : [],
+
+    licensePanel: false,
+    licenseData: { id: '', category: '', type: '', subType: '' },
+    licenseSong: [],
+    itemInCart: false,
+    licenseDB: [],
+    cart: [],
+    cartPanel: false
 });
 
 export const mutations = {
@@ -177,23 +198,179 @@ export const mutations = {
     CLOSE_SING_SONG: (state) => {
         state.singleSongPanel = false
     },
-    URL_FLASH_ON: (state) => {
-        state.copyURL = true
+    FLASH_ON: (state, text) => {
+        state.flashPanel = true
+        state.flashText = text
     },
-    URL_FLASH_OFF: (state) => {
-        state.copyURL = false
-    },
-    SENT_FLASH_ON: (state) => {
-        state.sentPanel = true
-    },
-    SENT_FLASH_OFF: (state) => {
-        state.sentPanel = false
+    FLASH_OFF: (state) => {
+        state.flashPanel = false
+        state.flashText = ''
     },
     IS_PLAYING_ON: (state) => {
         state.isTimerPlaying = true
     },
     IS_PLAYING_OFF: (state) => {
         state.isTimerPlaying = false
+    },
+    SET_RHY_MIN: (state, value) => {
+        state.rhythm.min = value
+    },
+    SET_RHY_MAX: (state, value) => {
+        state.rhythm.max = value
+    },
+    SET_RHY: (state, { min, max }) => {
+        state.rhythm.min = min
+        state.rhythm.max = max
+    },
+    SET_SPD_MIN: (state, value) => {
+        state.speed.min = value
+    },
+    SET_SPD_MAX: (state, value) => {
+        state.speed.max = value
+    },
+    SET_SPD: (state, { min, max }) => {
+        state.speed.min = min
+        state.speed.max = max
+    },
+    SET_EXP_MIN: (state, value) => {
+        state.experimental.min = value
+    },
+    SET_EXP_MAX: (state, value) => {
+        state.experimental.max = value
+    },
+    SET_EXP: (state, { min, max }) => {
+        state.experimental.min = min
+        state.experimental.max = max
+    },
+    SET_MOD_MIN: (state, value) => {
+        state.mood.min = value
+    },
+    SET_MOD_MAX: (state, value) => {
+        state.mood.max = value
+    },
+    SET_MOD: (state, { min, max }) => {
+        state.mood.min = min
+        state.mood.max = max
+    },
+    SET_ORG_MIN: (state, value) => {
+        state.organic.min = value
+    },
+    SET_ORG_MAX: (state, value) => {
+        state.organic.max = value
+    },
+    SET_ORG: (state, { min, max }) => {
+        state.organic.min = min
+        state.organic.max = max
+    },
+    SET_DNS_MIN: (state, value) => {
+        state.density.min = value
+    },
+    SET_DNS_MAX: (state, value) => {
+        state.density.max = value
+    },
+    SET_DNS: (state, { min, max }) => {
+        state.density.min = min
+        state.density.max = max
+    },
+    SET_SEARCH: (state, value) => {
+        state.search = value
+    },
+    SET_ALL_SEARCH: (state, value) => {
+        state.allSearch = value
+    },
+    ADD_ALL_SEARCH: (state, value) => {
+        state.allSearch.push(value)
+    },
+    SPLICE_ALL_SEARCH: (state, { id, num }) => {
+        state.allSearch.splice( id, num )
+    },
+    SET_PRESETS_OG(state, { rhyMin, rhyMax, spdMin, spdMax, expMin, expMax, modMin, modMax, orgMin, orgMax }) {
+        state.rhythm.min = rhyMin
+        state.rhythm.max = rhyMax
+        state.speed.min = spdMin
+        state.speed.max = spdMax
+        state.experimental.min = expMin
+        state.experimental.max = expMax
+        state.mood.min = modMin
+        state.mood.max = modMax
+        state.organic.min = orgMin
+        state.organic.max = orgMax
+    },
+    SET_SONG_IDS(state, ids) {
+        state.tempSongIDs = ids
+    },
+    // OPEN_RANGE_SLIDER(state) {
+    //     state.rangeSlider = true
+    // },
+    // CLOSE_RANGE_SLIDER(state) {
+    //     state.rangeSlider = false
+    // },
+    HIDE_PLAYER(state) {
+        state.playerBar = false
+    },
+    SHOW_PLAYER(state) {
+        state.playerBar = true
+    },
+    OPEN_LICENSE_PANEL(state, id) {
+        state.licensePanel = true
+        state.licenseData.id = id
+    },
+    CLOSE_LICENSE_PANEL(state) {
+        state.licensePanel = false
+        state.licenseData.category = ''
+        state.licenseData.type = ''
+        state.licenseData.subType = ''
+        state.licenseSong = []
+    },
+    // UPDATE_LICENSE_ID(state, id) {
+    //     state.licenseData.id = id
+    // },
+    UPDATE_LICENSE_CATEGORY(state, type) {
+        state.licenseData.category = type
+    },
+    UPDATE_LICENSE_TYPE(state, type) {
+        state.licenseData.type = type
+    },
+    UPDATE_LICENSE_SUBTYPE(state, type) {
+        state.licenseData.subType = type
+    },
+    UPDATE_LICENSE_ALL(state) {
+        state.licenseData.category = ''
+        state.licenseData.type = ''
+        state.licenseData.subType = ''
+    },
+    UPDATE_LICENSE_SONG(state, song) {
+        state.licenseSong = song
+    },
+    CART_HAS_ITEM(state) {
+        state.itemInCart = true
+    },
+    CART_HAS_NONE(state) {
+        state.itemInCart = false
+    },
+    ADD_TO_CART(state, data) {
+        state.cart.push(data)
+    },
+    DELETE_FROM_CART(state, index) {
+        state.cart.splice(index, 1)
+    },
+    EMPTY_CART(state) {
+        state.cart = []
+    },
+    SET_CART(state, data) {
+        state.cart = data
+    },
+    SET_LICENSE_DB(state, data) {
+        state.licenseDB = data
+    },
+    OPEN_CART(state) {
+        state.cartPanel = true
+    },
+    CLOSE_CART(state) {
+        state.cartPanel = false
+    },
+    TOGGLE_CART(state) {
+        state.cartPanel = !state.cartPanel
     }
 }
 
@@ -209,7 +386,7 @@ export const actions = {
         const artdata = artresponse.data;
         commit("SET_ARTISTS", artdata);
     },
-    async PlayNext({ commit, state, getters}) {
+    async PlayNext({ commit, state, getters }) {
         if(state.sqQueue.length == 0) {
             let newID = await getters.GENERATE_NEXT_SONG(state.sqPlaying[0])
             commit('PLAY_GENERATED', newID.ID)
@@ -217,20 +394,38 @@ export const actions = {
             commit('PLAY_NEXT')
         }
     },
+    async OpenLicenseP({ commit, state, getters }, id) {
+        const response = await axios.get(licenseUrl);
+        const data = response.data;
+        commit("SET_LICENSE_DB", data);
+        if(state.singleSongPanel) {
+            commit('CLOSE_SING_SONG')
+        }
+        commit('CLOSE_LICENSE_PANEL')
+        let song = await getters.GET_SONG(id)
+        // const data = song.data;
+        setTimeout(() => {
+            commit('UPDATE_LICENSE_SONG', song)
+            commit('OPEN_LICENSE_PANEL', id)
+        }, 500)
+    },
+    
     /// This actuion is currently used in Single Song Page, but should be merged to 'OpenSingSonP'
-    async OpenSimSong({ commit, state, getters }, id) { 
-        let og = await getters.GET_SONG(id)
-        let data = await getters.SIM_SON_PANEL_DATA(id)
+    async OpenSimSong({ commit, state, getters }, id) {
         if(state.singleSongPanel) {
             commit('CLOSE_SING_SONG')
         }
         if(state.similarPanel) {
             commit('CLOSE_SIMSON')
+            let og = await getters.GET_SONG(id)
+            let data = await getters.SIM_SON_PANEL_DATA(id)
             setTimeout(() => {
                 commit('SET_SIMOGP', og)
                 commit('OPEN_SIMSON', data)
-            }, 100)
+            }, 500)
         } else {
+            let og = await getters.GET_SONG(id)
+            let data = await getters.SIM_SON_PANEL_DATA(id)
             commit('SET_SIMOGP', og)
             commit('OPEN_SIMSON', data)
         }
@@ -278,17 +473,48 @@ export const actions = {
     },
     CopyURL({ commit }, url) {
         navigator.clipboard.writeText(url);
-        commit('URL_FLASH_ON')
+        commit('FLASH_ON', 'URL COPIED')
         setTimeout(() => {
-            commit('URL_FLASH_OFF')
+            commit('FLASH_OFF')
         }, 1000)
     },
     sentPanel({ commit }) {
-        commit('SENT_FLASH_ON')
+        commit('FLASH_ON', 'REQUEST SENT')
         setTimeout(() => {
-            commit('SENT_FLASH_OFF')
+            commit('FLASH_OFF')
         }, 1000)
+    },
+    cartPanel({ commit }) {
+        commit('FLASH_ON', 'ADDED TO CART')
+        setTimeout(() => {
+            commit('FLASH_OFF')
+        }, 1000)
+    },
+    orderPanel({ commit }) {
+        commit('FLASH_ON', 'THANK YOU!')
+        setTimeout(() => {
+            commit('FLASH_OFF')
+        }, 1000)
+    },
+    addedQPanel({ commit }, num) {
+        commit('FLASH_ON', num + ' SONGS ADDED TO QUEUE')
+        setTimeout(() => {
+            commit('FLASH_OFF')
+        }, 1000)
+    },
+    deleteFromCart({ state, commit }, id) {
+        let index = state.cart.findIndex(function(item) {
+            return item.songID == id
+          });
+        commit('DELETE_FROM_CART', index)
     }
+    // setPresets({ commit }, { rhy, spd, exp, mod, org }) {
+    //     commit('SET_PRESET_RHY', rhy)
+    //     commit('SET_PRESET_SPD', spd)
+    //     commit('SET_PRESET_EXP', exp)
+    //     commit('SET_PRESET_MOD', mod)
+    //     commit('SET_PRESET_ORG', org)
+    // }
 }
 
 export const getters = {
@@ -387,6 +613,17 @@ export const getters = {
     },
     SLUG: () => (title) => {
         return title.toLowerCase().replace(/\s+/g, '-')
+    },
+    COVER_IMG: () => (CatNum, SongID) => {
+        if (CatNum == 'PB26') {
+            return 'https://pblibrary.s3.us-east-2.amazonaws.com/PB26/' + SongID +'.jpg'
+        } else if (CatNum == 'PB36') {
+            return 'https://pblibrary.s3.us-east-2.amazonaws.com/PB36/' + SongID +'.jpg'
+        } else if (CatNum == 'PB37') {
+            return 'https://pblibrary.s3.us-east-2.amazonaws.com/PB37/' + SongID +'.jpg'
+        } else {
+            return 'https://pblibrary.s3.us-east-2.amazonaws.com/' + CatNum +'/cover-thumb.jpg'
+        }
     },
     GENERATE_NEXT_SONG: (state) => (id) => {
         let len = state.songs.length;

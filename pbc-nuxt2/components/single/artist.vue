@@ -7,6 +7,8 @@
         <h1>{{ artist.ArtistName }}</h1>
         <p>{{ artist.Bio }}</p>
         <div class="channels" v-if="artist">
+            <img :src="require('~/assets/images/actions/playSong_white.svg')" alt="Play All" @click="playAll()">
+            <img :src="require('~/assets/images/actions/addToQueue_white.svg')" alt="Add All to Queue" @click="addAll()">
             <img :src="require('~/assets/images/actions/Share_Icon_white.svg')" alt="Share" @click="shareURL()">
             <img :src="require('~/assets/images/singles/Single-Artist_ws.svg')" alt="Website">
             <img :src="require('~/assets/images/singles/Single-Artist_BC.svg')" alt="Bandcamp">
@@ -16,15 +18,56 @@
             <img :src="require('~/assets/images/singles/Single-Artist_SP.svg')" alt="Spotify">   
         </div>
         </div>
+
+        <GlobalRangeSlider v-if="rangeSlider" :songCount="ids.length" :type="actionType" @setRange="setRange($event)" @close="rangeSlider=false" />
+
     </div>
 </template>
 
 <script>
+import GlobalRangeSlider from "~/components/global/rangeSlider"
+
 export default {
     name: 'SingleArtist',
-    props: [ 'artist' ],
+    props: [ 'artist', 'ids' ],
+    components: { GlobalRangeSlider },
+    data(){
+        return {
+            actionType: '',
+            rangeSlider: false
+        }
+    },
     methods: {
-    shareURL() {
+        playAll() {
+            if(this.ids.length < 10) {
+                this.$store.commit('PLAY_ALL', this.ids)
+            } else {
+                this.actionType = 'PLAY'
+                this.rangeSlider = true
+            }
+        },
+        addAll() {
+            if(this.ids.length < 10) {
+                this.$store.commit('ADD_ALL', this.ids)
+            } else {
+                this.actionType = 'ADD TO QUEUE'
+                this.rangeSlider = true
+            }
+        },
+        setRange(data) {
+            if(data.type == 'PLAY') {
+                let rangeIDs = this.ids.slice(data.from, data.to)
+                this.$store.commit('PLAY_ALL', rangeIDs)
+            } else {
+                let rangeIDs = this.ids.slice(data.from, data.to)
+                let leng = Number(data.to - data.from)
+                this.$store.commit('ADD_ALL', rangeIDs)
+                setTimeout(() => {
+                    this.$store.dispatch('addedQPanel', leng)
+                }, 1000)
+            }
+        },
+        shareURL() {
             let url = window.location.href
             this.$store.dispatch('CopyURL', url)
         }

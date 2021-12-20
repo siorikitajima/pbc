@@ -2,7 +2,7 @@
 <div>
   <div class="asong">
     <div class="ascover" v-if="song" @click="$store.commit('PLAY_THIS', song.ID)">
-        <img :src="'https://pblibrary.s3.us-east-2.amazonaws.com/' + song.CatNum +'/cover-thumb.jpg'" :alt="song.AlbumTitle">
+        <img :src="coverImg(song.CatNum, song.ID)" :alt="song.AlbumTitle">
         <div class="playing" v-if="sqPlaying[0] === song.ID">
             <img :src="require('~/assets/images/global/play-active.svg')" alt="Playing">
         </div>
@@ -47,7 +47,7 @@
         <NuxtLink :to="{ path: '/requests', query: { song: song.ID }}">
         <img :src="require('~/assets/images/actions/inquery_dark.svg')" alt="Inquery">
         </NuxtLink>
-        <button class="small">LICENSE</button> 
+        <button class="small" @click="licenseThis(song.ID)">LICENSE</button> 
     </div>
     <div class="actions mobile">
         <img class="actionBtn" :src="require('~/assets/images/actions/Actions_Icon.svg')" alt="Actions" @click="openAction()">
@@ -93,7 +93,7 @@
                 <p>Custom Work</p>
             </li>
             </NuxtLink>
-            <li>
+            <li @click="licenseThis(song.ID)">
                 <img :src="require('~/assets/images/actions/CustomWork_dark.svg')" alt="License">
                 <p>License</p>
             </li>
@@ -115,7 +115,8 @@ export default {
     computed: {
         ...mapState(['sqPlaying']),
         ...mapGetters({
-            slug: 'SLUG'
+            slug: 'SLUG',
+            coverImg: 'COVER_IMG',
         }),
         length() {
             return this.song ? this.song.Length.slice(2) : ''
@@ -135,7 +136,11 @@ export default {
         },
     closeAction() {
         this.mobileAction = false
-        }
+        },
+    licenseThis(id) {
+        this.$store.dispatch('OpenLicenseP', id)
+        // this.$store.commit('OPEN_LICENSE_PANEL', id)
+    }
     }
 }
 </script>

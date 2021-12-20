@@ -1,7 +1,7 @@
 <template>
 <div>
-    <div v-if="copyURL" class="copiedPageCoutainer" >
-        <h3>URL COPIED</h3>
+    <div v-if="flashPanel" class="copiedPageCoutainer" >
+        <h3>{{ flashText }}</h3>
     </div>
 </div>
 </template>
@@ -10,9 +10,9 @@
 import { mapState } from 'vuex'
 
 export default {
-    name: 'CopiedPanel',
+    name: 'PanelFlash',
     computed: {
-        ...mapState(['copyURL'])
+        ...mapState(['flashPanel', 'flashText'])
     }
 }
 </script>
@@ -31,6 +31,6 @@ export default {
     z-index: 3000;
 }
 .copiedPageCoutainer h3 {
-    color: #ddd;
+    color: #eee;
 }
 </style>

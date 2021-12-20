@@ -1,18 +1,18 @@
 <template>
 <div>
     <div class="resultWrapper" v-bind:class="{ moveToRight: sliderPanel || presetPanel, moveDown: searchPanel }">
-        <div v-if="songs.length">
-            <TableResultHead :songCount="songCount" :resultQuery="resultQuery" @clearVal="clearValue($event)" @queueAction="getList4Queue($event)" />
-            <TableSongList :fltdsongs="fltBySearch" :song="sqPData" :dist="'result'" @passThis="passSingle($event)" @openPanel="passPanel($event)" @queueAction="passQueue($event)" />
+        <div v-if="fltBySearch">
+            <TableResultHead :songCount="songCount" v-if="componentLoaded" :ids="tempSongIDs" />
+            <TableSongList :fltdsongs="fltBySearch" :song="sqPData" :dist="'result'" />
         </div>
-        <div v-else><Loading /></div>
+        <div v-else><TableLoading /></div>
     </div>
 
 <transition name="slideFRTop">
-    <FilterFilters v-show="sliderPanel" @loadSlider="filterResult($event)" :rhythm="rhythm" :speed="speed" :experimental="experimental" :mood="mood" :organic="organic" />
+    <FilterFilters v-show="sliderPanel" :songCount="songCount" @leftPanel="leftPanel" />
 </transition>
 <transition name="slideFRTop">
-    <FilterPresets v-show="presetPanel" :presets="presets" @loadPreset="updateFilter($event)" />
+    <FilterPresets v-show="presetPanel" :presets="presets"  @loadPreset="updateFilter()" />
 </transition>
 <transition name="slideFRLeft">
     <FilterSearch @loadSearch="updateResult($event)" v-show="searchPanel" :search="search" :allSearch="allSearch" :searchKeys="searchKeys" />
@@ -47,33 +47,44 @@ export default {
             sliderPanel: false,
             presetPanel: false,
             searchPanel: false,
-            componentLoaded: false,
-
-            rhythm : { min: 0, max: 10 },
-            speed : { min: 0, max: 10 },
-            experimental : { min: 0, max: 10 },
-            mood : { min: 0, max: 10 },
-            organic : { min: 0, max: 10 },
-            search : '',
-            allSearch : []
+            componentLoaded: false
         }
     },
     mounted() {
-        const values = JSON.parse(localStorage.getItem("filterValues"))
-        if(values !== null) {
-            if( values.rhythm.min !== 0 || values.rhythm.max !== 10 || values.speed.min !== 0 || values.speed.max !== 10 || values.experimental.min !== 0 || values.experimental.max !== 10 || values.mood.min !== 0 || values.mood.max !== 10 || values.organic.min !== 0 || values.organic.max !== 10 || values.search.length !== 0) {
-                this.rhythm.min = values.rhythm.min
-                this.rhythm.max = values.rhythm.max
-                this.speed.min = values.speed.min
-                this.speed.max = values.speed.max
-                this.experimental.min = values.experimental.min
-                this.experimental.max = values.experimental.max
-                this.mood.min = values.mood.min
-                this.mood.max = values.mood.max
-                this.organic.min = values.organic.min
-                this.organic.max = values.organic.max
-                this.allSearch = values.search
-            } 
+        if(this.$route.query.rth) {
+            let rth = this.$route.query.rth.split('-')
+            let spd = this.$route.query.spd.split('-')
+            let exp = this.$route.query.exp.split('-')
+            let mod = this.$route.query.mod.split('-')
+            let org = this.$route.query.org.split('-')
+            if(this.$route.query.keys) {
+                let keys = this.$route.query.keys
+                let keysTemp = keys.includes(',') ? keys.split(',') : [keys]
+                let keysData = []
+                for(let k = 0; k < keysTemp.length; k++) {
+                    let akey = keysTemp[k].split('@')
+                    let obj = { type: akey[0], key: akey[1] }
+                    keysData.push(obj)
+                }
+                this.$store.commit('SET_ALL_SEARCH', keysData)
+            }
+            this.$store.commit('SET_RHY', { min: rth[0], max: rth[1] })
+            this.$store.commit('SET_SPD', { min: spd[0], max: spd[1] })
+            this.$store.commit('SET_EXP', { min: exp[0], max: exp[1] })
+            this.$store.commit('SET_MOD', { min: mod[0], max: mod[1] })
+            this.$store.commit('SET_ORG', { min: org[0], max: org[1] })
+        } else {
+            const values = JSON.parse(localStorage.getItem("filterValues"))
+            if(values !== null) {
+                if( values.rhythm.min !== 0 || values.rhythm.max !== 10 || values.speed.min !== 0 || values.speed.max !== 10 || values.experimental.min !== 0 || values.experimental.max !== 10 || values.mood.min !== 0 || values.mood.max !== 10 || values.organic.min !== 0 || values.organic.max !== 10 || values.search.length !== 0) {
+                    this.$store.commit('SET_RHY', { min: values.rhythm.min, max: values.rhythm.max })
+                    this.$store.commit('SET_SPD', { min: values.speed.min, max: values.speed.max })
+                    this.$store.commit('SET_EXP', { min: values.experimental.min, max: values.experimental.max })
+                    this.$store.commit('SET_MOD', { min: values.mood.min, max: values.mood.max })
+                    this.$store.commit('SET_ORG', { min: values.organic.min, max: values.organic.max })
+                    this.$store.commit('SET_ALL_SEARCH', values.search)
+                } 
+            }
         }
         this.componentLoaded = true
         //// Debug Log
@@ -88,7 +99,7 @@ export default {
         console.log('Filter Value on Mounted:', query)
     },
     computed: {
-        ...mapState(['songs', 'sqPData']),
+        ...mapState(['songs', 'sqPData', 'rhythm', 'speed', 'experimental', 'mood', 'organic', 'search', 'allSearch', 'tempSongIDs']),
         fltBySearch() {
             if( !this.componentLoaded || !this.songs ) {
                 return null } else {
@@ -153,17 +164,6 @@ export default {
             return this.fltBySearch.length;
                 }
         },
-        resultQuery: function() {
-            const query = {
-                rhythm: { min: this.rhythm.min, max: this.rhythm.max },
-                speed: { min: this.speed.min, max: this.speed.max },
-                experimental: { min: this.experimental.min, max: this.experimental.max },
-                mood: { min: this.mood.min, max: this.mood.max },
-                organic: { min: this.organic.min, max: this.organic.max },
-                search: this.allSearch 
-            }
-            return query
-        },
         isMobile() {
             console.log('window.innerWidth: ' + window.innerWidth)
             if (window.innerWidth <= 768) {
@@ -179,7 +179,7 @@ export default {
                     this.presetPanel = false
                     setTimeout(() => this.sliderPanel = true , 100)
                 } else {
-                this.sliderPanel = !this.sliderPanel
+                    this.sliderPanel = !this.sliderPanel
                 }
                 if(this.isMobile && this.searchPanel) {
                     this.searchPanel = false
@@ -205,46 +205,21 @@ export default {
             }
         },
         getList4Queue(data) {
-            let songIds = []
-
-            if(data.type == 'playAll') {
+            if(data.type == 'playThem') {
+                let songIds = []
                 for(let s = 0; s < this.fltBySearch.length; s++) {
                     let id = this.fltBySearch[s].ID
                     songIds.push(id)
                 }
-                this.$store.commit('PLAY_ALL', songIds)
-            } else if (data.type == 'addAll') {
-                for(let s = 0; s < this.fltBySearch.length; s++) {
-                    let id = this.fltBySearch[s].ID
-                    songIds.push(id)
-                }
-                this.$store.commit('ADD_ALL', songIds)
-            } else if (data.type == 'playThem') {
-                let fromNum = data.from
-                let toNum = data.to
-                    for(let s = fromNum; s < toNum; s++) {
-                        let id = this.fltBySearch[s].ID
-                        songIds.push(id)
-                    }
                 this.$store.commit('PLAY_ALL', songIds)
             } else if (data.type == 'addThem') {
-                let fromNum = data.from
-                let toNum = data.to
-                for(let s = fromNum; s < toNum; s++) {
+                let songIds = []
+                for(let s = 0; s < this.fltBySearch.length; s++) {
                     let id = this.fltBySearch[s].ID
                     songIds.push(id)
                 }
                 this.$store.commit('ADD_ALL', songIds)
-            }
-        },
-        passQueue(data) {
-            this.$emit('queueAction', data)
-        },
-        passPanel(data) {
-            this.$emit('panelReq', data)
-        },
-        passSingle(data) {
-            this.$emit('singlePanel', data)
+            } 
         },
         updateResult(data) {
             let alreadyHaveIt = false
@@ -253,290 +228,32 @@ export default {
                     alreadyHaveIt = true
                 }
             }
-            if(!alreadyHaveIt) {this.allSearch.push(data)}
+            if(!alreadyHaveIt) {
+                this.$store.commit('ADD_ALL_SEARCH', data)
+                }
             if(this.searchPanel) {this.searchPanel = false}
         },
-        toggleSearchPanel() {
-            this.searchPanel = !this.searchPanel
-            // if(this.sliderPanel) {
-            //     this.sliderPanel = false
-            // }
-            // if(this.presetPanel) {
-            //     this.presetPanel = false
-            // }
-        },
-        toggleSliderPanel() {
-            this.sliderPanel = !this.sliderPanel
-            // if(this.searchPanel) {
-            //     this.searchPanel = false
-            // }
-        },
-        togglePresetPanel() {
-            this.presetPanel = !this.presetPanel
-            // if(this.searchPanel) {
-            //     this.searchPanel = false
-            // }
-        },
-        filterResult(filterVal) {
-            if (filterVal.type == 'rhythm') {
-                this.rhythm.min = filterVal.min
-                this.rhythm.max = filterVal.max
-            }
-            if (filterVal.type == 'speed') {
-                this.speed.min = filterVal.min
-                this.speed.max = filterVal.max
-            }
-            if (filterVal.type == 'experimental') {
-                this.experimental.min = filterVal.min
-                this.experimental.max = filterVal.max
-            }
-            if (filterVal.type == 'mood') {
-                this.mood.min = filterVal.min
-                this.mood.max = filterVal.max
-            }
-            if (filterVal.type == 'organic') {
-                this.organic.min = filterVal.min
-                this.organic.max = filterVal.max
-            }
-            const query = {
-                rhythm: this.rhythm,
-                speed: this.speed,
-                experimental: this.experimental,
-                mood: this.mood,
-                organic: this.organic,
-                search: this.allSearch 
-            }
-            localStorage.setItem("filterValues", JSON.stringify(query))
-        },
-        clearValue(type) {
-            if (type == 'rhythm') {
-                this.rhythm.min = 0
-                this.rhythm.max = 10
-            }
-            else if (type == 'speed') {
-                this.speed.min = 0
-                this.speed.max = 10
-            }
-            else if (type == 'experimental') {
-                this.experimental.min = 0
-                this.experimental.max = 10
-            }
-            else if (type == 'mood') {
-                this.mood.min = 0
-                this.mood.max = 10
-            }
-            else if (type == 'organic') {
-                this.organic.min = 0
-                this.organic.max = 10
-            }
-            else {
-                let word = type
-                this.search = ''
-                if(this.allSearch.length == 1) {
-                    this.allSearch = []
-                } else {
-                    for(let s = 0; s < this.allSearch.length; s++ ) {
-                        if(this.allSearch[s] == word) {
-                            this.allSearch.splice(s, 1)
-                        }
-                    }
-                }
-            }
-        },
-        updateFilter(val) { //// Don't know why this doesn't work as a separate method. Need to come back
+        // toggleSearchPanel() {
+        //     this.searchPanel = !this.searchPanel
+        // },
+        // toggleSliderPanel() {
+        //     this.sliderPanel = !this.sliderPanel
+        // },
+        // togglePresetPanel() {
+        //     this.presetPanel = !this.presetPanel
+        // },
+        updateFilter() {
             this.presetPanel = false
             this.sliderPanel = true
-            
-            //// Rhythm
-            let r0New = Number(val.rhythm[0])
-            let r1New = Number(val.rhythm[1])
-            this.rhythm.min = Number(this.rhythm.min)
-            this.rhythm.max = Number(this.rhythm.max)
-            if( r0New !== this.rhythm.min ) {
-                if( r0New < this.rhythm.min ) {
-                    let rSteps = ( this.rhythm.min - r0New ) / 0.25
-                    let numSteps = 400 / rSteps
-                    let rAdd = setInterval(()=> { this.rhythm.min = Number(this.rhythm.min - 0.25)}, numSteps)
-                    setTimeout(() => { clearInterval(rAdd)
-                    this.rhythm.min = r0New }, 500)
-                } else {
-                    let rSteps = ( r0New - this.rhythm.min ) / 0.25
-                    let numSteps = 400 / rSteps
-                    let rAdd = setInterval(()=> { this.rhythm.min = Number(this.rhythm.min + 0.25)}, numSteps)
-                    setTimeout(() => { clearInterval(rAdd)
-                    this.rhythm.min = r0New }, 500)
-                }
+        }
+    },
+    watch: {
+        fltBySearch(newV, oldV) {
+            let ids = []
+            for (let s = 0; s < this.fltBySearch.length; s++ ) {
+                ids.push(this.fltBySearch[s].ID)
             }
-            if( r1New !== this.rhythm.max ) {
-                if( r1New < this.rhythm.max ) {
-                    let rSteps = ( this.rhythm.max - r1New ) / 0.25
-                    let numSteps = 400 / rSteps
-                    let rAdd = setInterval(()=> { this.rhythm.max = Number( this.rhythm.max - 0.25 )}, numSteps )
-                    setTimeout(() => { clearInterval(rAdd)
-                    this.rhythm.max = r1New }, 500)
-                } else {
-                    let rSteps = ( r1New - this.rhythm.max ) / 0.25
-                    let numSteps = 400 / rSteps
-                    let rAdd = setInterval(()=> { this.rhythm.max = Number( this.rhythm.max + 0.25 )}, numSteps )
-                    setTimeout(() => { clearInterval(rAdd)
-                    this.rhythm.max = r1New }, 500)
-                }
-            }
-
-            //// Speed
-            let s0New = Number(val.speed[0])
-            let s1New = Number(val.speed[1])
-            this.speed.min = Number(this.speed.min)
-            this.speed.max = Number(this.speed.max)
-            if( s0New !== this.speed.min ) {
-                if( s0New < this.speed.min ) {
-                    let rSteps = ( this.speed.min - s0New ) / 0.25
-                    let numSteps = 400 / rSteps
-                    let rAdd = setInterval(()=> { this.speed.min = Number(this.speed.min - 0.25)}, numSteps)
-                    setTimeout(() => { clearInterval(rAdd)
-                    this.speed.min = s0New }, 500)
-                } else {
-                    let rSteps = ( s0New - this.speed.min ) / 0.25
-                    let numSteps = 400 / rSteps
-                    let rAdd = setInterval(()=> { this.speed.min = Number(this.speed.min + 0.25)}, numSteps)
-                    setTimeout(() => { clearInterval(rAdd)
-                    this.speed.min = s0New }, 500)
-                }
-            }
-            if( s1New !== this.speed.max ) {
-                if( s1New < this.speed.max ) {
-                    let rSteps = ( this.speed.max - s1New ) / 0.25
-                    let numSteps = 400 / rSteps
-                    let rAdd = setInterval(()=> { this.speed.max = Number( this.speed.max - 0.25 )}, numSteps )
-                    setTimeout(() => { clearInterval(rAdd)
-                    this.speed.max = s1New }, 500)
-                } else {
-                    let rSteps = ( s1New - this.speed.max ) / 0.25
-                    let numSteps = 400 / rSteps
-                    let rAdd = setInterval(()=> { this.speed.max = Number( this.speed.max + 0.25 )}, numSteps )
-                    setTimeout(() => { clearInterval(rAdd)
-                    this.speed.max = s1New }, 500)
-                }
-            }
-
-            //// Experimental
-            let e0New = Number(val.experimental[0])
-            let e1New = Number(val.experimental[1])
-            this.experimental.min = Number(this.experimental.min)
-            this.experimental.max = Number(this.experimental.max)
-            if( e0New !== this.experimental.min ) {
-                if( e0New < this.experimental.min ) {
-                    let rSteps = ( this.experimental.min - e0New ) / 0.25
-                    let numSteps = 400 / rSteps
-                    let rAdd = setInterval(()=> { this.experimental.min = Number(this.experimental.min - 0.25)}, numSteps)
-                    setTimeout(() => { clearInterval(rAdd)
-                    this.experimental.min = e0New }, 500)
-                } else {
-                    let rSteps = ( e0New - this.experimental.min ) / 0.25
-                    let numSteps = 400 / rSteps
-                    let rAdd = setInterval(()=> { this.experimental.min = Number(this.experimental.min + 0.25)}, numSteps)
-                    setTimeout(() => { clearInterval(rAdd)
-                    this.experimental.min = e0New }, 500)
-                }
-            }
-            if( e1New !== this.experimental.max ) {
-                if( e1New < this.experimental.max ) {
-                    let rSteps = ( this.experimental.max - e1New ) / 0.25
-                    let numSteps = 400 / rSteps
-                    let rAdd = setInterval(()=> { this.experimental.max = Number( this.experimental.max - 0.25 )}, numSteps )
-                    setTimeout(() => { clearInterval(rAdd)
-                    this.experimental.max = e1New }, 500)
-                } else {
-                    let rSteps = ( e1New - this.experimental.max ) / 0.25
-                    let numSteps = 400 / rSteps
-                    let rAdd = setInterval(()=> { this.experimental.max = Number( this.experimental.max + 0.25 )}, numSteps )
-                    setTimeout(() => { clearInterval(rAdd)
-                    this.experimental.max = e1New }, 500)
-                }
-            }
-            
-            //// Mood
-            let m0New = Number(val.mood[0])
-            let m1New = Number(val.mood[1])
-            this.mood.min = Number(this.mood.min)
-            this.mood.max = Number(this.mood.max)
-            if( m0New !== this.mood.min ) {
-                if( m0New < this.mood.min ) {
-                    let rSteps = ( this.mood.min - m0New ) / 0.25
-                    let numSteps = 400 / rSteps
-                    let rAdd = setInterval(()=> { this.mood.min = Number(this.mood.min - 0.25)}, numSteps)
-                    setTimeout(() => { clearInterval(rAdd)
-                    this.mood.min = m0New }, 500)
-                } else {
-                    let rSteps = ( m0New - this.mood.min ) / 0.25
-                    let numSteps = 400 / rSteps
-                    let rAdd = setInterval(()=> { this.mood.min = Number(this.mood.min + 0.25)}, numSteps)
-                    setTimeout(() => { clearInterval(rAdd)
-                    this.mood.min = m0New }, 500)
-                }
-            }
-            if( m1New !== this.mood.max ) {
-                if( m1New < this.mood.max ) {
-                    let rSteps = ( this.mood.max - m1New ) / 0.25
-                    let numSteps = 400 / rSteps
-                    let rAdd = setInterval(()=> { this.mood.max = Number( this.mood.max - 0.25 )}, numSteps )
-                    setTimeout(() => { clearInterval(rAdd)
-                    this.mood.max = m1New }, 500)
-                } else {
-                    let rSteps = ( m1New - this.mood.max ) / 0.25
-                    let numSteps = 400 / rSteps
-                    let rAdd = setInterval(()=> { this.mood.max = Number( this.mood.max + 0.25 )}, numSteps )
-                    setTimeout(() => { clearInterval(rAdd)
-                    this.mood.max = m1New }, 500)
-                }
-            }
-
-            //// Organic
-            let o0New = Number(val.organic[0])
-            let o1New = Number(val.organic[1])
-            this.organic.min = Number(this.organic.min)
-            this.organic.max = Number(this.organic.max)
-            if( o0New !== this.organic.min ) {
-                if( o0New < this.organic.min ) {
-                    let rSteps = ( this.organic.min - o0New ) / 0.25
-                    let numSteps = 400 / rSteps
-                    let rAdd = setInterval(()=> { this.organic.min = Number(this.organic.min - 0.25)}, numSteps)
-                    setTimeout(() => { clearInterval(rAdd)
-                    this.organic.min = o0New }, 500)
-                } else {
-                    let rSteps = ( o0New - this.organic.min ) / 0.25
-                    let numSteps = 400 / rSteps
-                    let rAdd = setInterval(()=> { this.organic.min = Number(this.organic.min + 0.25)}, numSteps)
-                    setTimeout(() => { clearInterval(rAdd)
-                    this.organic.min = o0New }, 500)
-                }
-            }
-            if( o1New !== this.organic.max ) {
-                if( o1New < this.organic.max ) {
-                    let rSteps = ( this.organic.max - o1New ) / 0.25
-                    let numSteps = 400 / rSteps
-                    let rAdd = setInterval(()=> { this.organic.max = Number( this.organic.max - 0.25 )}, numSteps )
-                    setTimeout(() => { clearInterval(rAdd)
-                    this.organic.max = o1New }, 500)
-                } else {
-                    let rSteps = ( o1New - this.organic.max ) / 0.25
-                    let numSteps = 400 / rSteps
-                    let rAdd = setInterval(()=> { this.organic.max = Number( this.organic.max + 0.25 )}, numSteps )
-                    setTimeout(() => { clearInterval(rAdd)
-                    this.organic.max = o1New }, 500)
-                }
-            }
-            const query = {
-                rhythm: this.rhythm,
-                speed: this.speed,
-                experimental: this.experimental,
-                mood: this.mood,
-                organic: this.organic,
-                search: this.allSearch 
-            }
-            setTimeout(()=>{
-                localStorage.setItem("filterValues", JSON.stringify(query))
-            }, 700)
+            this.$store.commit('SET_SONG_IDS', ids)
         }
     }
 }
@@ -572,6 +289,12 @@ export default {
 .resultWrapper.moveDown {
     height: calc(100% - 120px);
     top: 80px;
+}
+}
+@media (max-width: 600px) {
+.resultWrapper {
+    padding: 0 0 60px 0;
+    height: calc(100% - 120px);
 }
 }
 </style>

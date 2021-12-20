@@ -1,7 +1,7 @@
 <template>
   <div class="pagewrapper">
     <div v-if="singproj">
-        <SingleArtist :artist="singproj" />
+        <SingleArtist :artist="singproj" :ids="songIDs" />
     </div>
 
         <h2 class="sectTitle">// FEATURED TRACKS //</h2>
@@ -102,6 +102,15 @@ export default {
         return this.$store.state.albums.filter((album) => {
             return album.Project === this.singproj.ArtistName 
         })
+        },
+        songIDs() {
+            let songIDs = []
+            let leng = this.featuredTracks.length
+            for (let t = 0; t < leng; t++) {
+                let id = this.featuredTracks[t].ID
+                songIDs.push(id)
+            }
+            return songIDs
         }
     }
 }

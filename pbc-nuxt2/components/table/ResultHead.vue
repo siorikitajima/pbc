@@ -6,7 +6,9 @@
             <p class="trackCount"><b>{{ songCount }}</b>
             <span> Tracks</span></p>
           </div>
-        <div class="screen">
+          <!-- <GlobalRangeSelector class="rangeSelector" :songCount="songCount" :ids="ids" /> -->
+          <GlobalRangeSlider v-if="rangeSlider" :songCount="songCount" :type="actionType" @setRange="setRange($event)" @close="rangeSlider=false" />
+        <!-- <div class="rangeSelector">
             <div v-if="songCount > 10">
                 <input type="number" min="1" :max="songTo-1" v-model="songFrom"/>
                 <p class="trackCount dark"><span> - </span></p>
@@ -21,22 +23,28 @@
                 <img :src="require('~/assets/images/actions/playSong_light.svg')" alt="Play" @click="playAll()">
                 <img :src="require('~/assets/images/actions/addToQueue_light.svg')" alt="Add to Queue" @click="addAll()">
             </div>
-        </div>
+        </div> -->
       </div>
 
       <div class="resultQuery">
           <p>
-          <span @click="clearValue('rhythm')" :class="{ active: rthActive}">RTM <b>{{ rthValue }}</b></span>
-          <span @click="clearValue('speed')" :class="{ active: spdActive}">SPD <b>{{ spdValue }}</b></span>
-          <span @click="clearValue('experimental')" :class="{ active: expActive}">EXP <b>{{ expValue }}</b></span>
-          <span @click="clearValue('mood')" :class="{ active: modActive}">MOD <b>{{ modValue }}</b></span>
-          <span @click="clearValue('organic')" :class="{ active: orgActive}">ORG <b>{{ orgValue }}</b></span>
+          <span @click="clearValue('rhythm')" :class="{ active: rthActive }">RTM <b>{{ rthValue }}</b></span>
+          <span @click="clearValue('speed')" :class="{ active: spdActive }">SPD <b>{{ spdValue }}</b></span>
+          <span @click="clearValue('experimental')" :class="{ active: expActive }">EXP <b>{{ expValue }}</b></span>
+          <span @click="clearValue('mood')" :class="{ active: modActive }">MOD <b>{{ modValue }}</b></span>
+          <span @click="clearValue('organic')" :class="{ active: orgActive }">ORG <b>{{ orgValue }}</b></span>
           <!-- </p>
           <p> -->
         <br class="linebreak" />
           <span v-for="searchKey in searchKeys" :key="searchKey.key" class="searchWords" @click="clearValue( searchKey )" :data-col="searchKey.type">{{ searchKey.key }}</span>
           </p>
       </div>
+      <div class="actions">
+            <img :src="require('~/assets/images/actions/playSong_dark.svg')" alt="Play Tracks" @click="playThem()">
+            <img :src="require('~/assets/images/actions/addToQueue_dark.svg')" alt="Add to Queue" @click="addThem()">
+            <img :src="require('~/assets/images/actions/Share_Icon_dark.svg')" alt="Share" @click="copyURL()">
+      </div>
+
     <div class="mobileActions">
         <img class="actionBtn" :src="require('~/assets/images/actions/Actions_Icon.svg')" alt="Actions" @click="openAction()">
     </div>
@@ -47,25 +55,25 @@
         <li class="actionHead">
             <p>RTM <b>{{ rthValue }}</b>, SPD <b>{{ spdValue }}</b>, EXP <b>{{ expValue }}</b>, MOD <b>{{ modValue }}</b>, ORG <b>{{ orgValue }}</b>, <span v-for="searchKey in searchKeys" :key="searchKey.key">{{ searchKey.key }}, </span></p>
         </li>
-        <li class="actionHead" @click="rangesldr">
+        <!-- <li class="actionHead" @click="rangesldr">
             <p>Song Range <b>#{{ songFrom }}</b> - <b>#{{ songTo }}</b></p>
             <img :src="require('~/assets/images/global/edit-icon_dark.svg')" alt="Edit">
-        </li>
+        </li> -->
         <li @click="playThem()">
             <img :src="require('~/assets/images/actions/playSong_dark.svg')" alt="Play Track">
-            <p>Play #{{songFrom}} - #{{songTo}}</p>
+            <p>Play Tracks</p>
         </li>
         <li @click="addThem()">
             <img :src="require('~/assets/images/actions/addToQueue_dark.svg')" alt="Add to Queue">
-            <p>Add #{{songFrom}} - #{{songTo}} to Queue</p>
+            <p>Add to Queue</p>
         </li>
-        <li @click="shareURL()">
+        <li @click="copyURL()">
             <img :src="require('~/assets/images/actions/Share_Icon_dark.svg')" alt="Share">
-            <p>Share the Result</p>
+            <p>Share the Search Result</p>
         </li>
     </ul>
 
-    <div class="mobileSldr" v-if="rngsldr">
+    <!-- <div class="mobileSldr" v-if="rngsldr">
         <div class='range-slider'>
             <div class="sliderTitle">
                 <div><b>Select Songs</b></div>
@@ -80,101 +88,167 @@
         <div class="closeIcon panelNav" @click="rangesldr(), openAction()" v-else>
             <img :src="require('~/assets/images/global/Close_Icon_dark.svg')" alt="Close">
         </div>
-    </div>
+    </div> -->
 </div>
 </template>
 
 <script>
+import { mapState } from 'vuex';
+// import GlobalRangeSelector from "~/components/global/rangeSelector"
+import GlobalRangeSlider from "~/components/global/rangeSlider"
+
 export default {
     name: 'ResultHead',
-    props: ['songCount', 'resultQuery'],
-    emits: ['clearVal', 'queueAction'],
+    props: ['songCount', 'ids'],
+    components: { GlobalRangeSlider },
     data() {
         return {
             songFrom: 1,
             songTo: 10,
+            actionType: '',
             mobileAction: false,
-            rngsldr: false,
-            changed: false
+            rangeSlider: false
+            // rngsldr: false,
+            // changed: false
         }
     },
     computed: {
+        ...mapState(['rhythm', 'speed', 'experimental', 'mood', 'organic', 'search', 'allSearch']),
         rthActive() {
-            if (this.resultQuery.rhythm.min == 0 && this.resultQuery.rhythm.max == 10) {
+            if (this.rhythm.min == 0 && this.rhythm.max == 10) {
                 return false } else { return true }
         },
         spdActive() {
-            if (this.resultQuery.speed.min == 0 && this.resultQuery.speed.max == 10) {
+            if (this.speed.min == 0 && this.speed.max == 10) {
                 return false } else { return true }
         },
         expActive() {
-            if (this.resultQuery.experimental.min == 0 && this.resultQuery.experimental.max == 10) {
+            if (this.experimental.min == 0 && this.experimental.max == 10) {
                 return false } else { return true }
         },
         modActive() {
-            if (this.resultQuery.mood.min == 0 && this.resultQuery.mood.max == 10) {
+            if (this.mood.min == 0 && this.mood.max == 10) {
                 return false } else { return true }
         },
         orgActive() {
-            if (this.resultQuery.organic.min == 0 && this.resultQuery.organic.max == 10) {
+            if (this.organic.min == 0 && this.organic.max == 10) {
                 return false } else { return true }
         },
         rthValue() { 
-            return  this.resultQuery.rhythm.min + '-' + this.resultQuery.rhythm.max },
+            return  this.rhythm.min + '-' + this.rhythm.max },
         spdValue() { 
-            return this.resultQuery.speed.min + '-' + this.resultQuery.speed.max },
+            return this.speed.min + '-' + this.speed.max },
         expValue() { 
-            return this.resultQuery.experimental.min + '-' + this.resultQuery.experimental.max },
+            return this.experimental.min + '-' + this.experimental.max },
         modValue() { 
-            return this.resultQuery.mood.min + '-' + this.resultQuery.mood.max },
+            return this.mood.min + '-' + this.mood.max },
         orgValue() { 
-            return this.resultQuery.organic.min + '-' + this.resultQuery.organic.max },
-        searchKeys() { return this.resultQuery.search }
+            return this.organic.min + '-' + this.organic.max },
+        searchKeys() { return this.allSearch }
     },
     methods: {
         clearValue(type) {
-            this.$emit('clearVal', type)
-        },
-        playThem() {
-            let data = {
-                type: 'playThem',
-                from: Number(this.songFrom -1),
-                to: Number(this.songTo)
+            if(type == 'rhythm') {
+                this.$store.commit('SET_RHY', { min: 0, max: 10 })
+            } else if (type == 'speed') {
+                this.$store.commit('SET_SPD', { min: 0, max: 10 })
+            } else if (type == 'experimental') {
+                this.$store.commit('SET_EXP', { min: 0, max: 10 })
+            } else if (type == 'mood') {
+                this.$store.commit('SET_MOD', { min: 0, max: 10 })
+            } else if (type == 'organic') {
+                this.$store.commit('SET_ORG', { min: 0, max: 10 })
+            } else {
+                let word = type
+                this.$store.commit('SET_SEARCH', '')
+                if(this.allSearch.length == 1) {
+                    this.$store.commit('SET_ALL_SEARCH', [])
+                } else {
+                    for(let s = 0; s < this.allSearch.length; s++ ) {
+                        if(this.allSearch[s] == word) {
+                            this.$store.commit('SPLICE_ALL_SEARCH', { id: s, num: 1 })
+                        }
+                    }
+                }
             }
-            this.$emit('queueAction', data)
+        },
+        // playThem() {
+        //     let fromN = Number(this.songFrom -1)
+        //     let toN = Number(this.songTo)
+        //     let data = this.ids.slice(fromN, toN)
+        //     this.$store.commit('PLAY_ALL', data)
+        // },
+        // addThem() {
+        //     let fromN = Number(this.songFrom -1)
+        //     let toN = Number(this.songTo)
+        //     let data = this.ids.slice(fromN, toN)
+        //     this.$store.commit('ADD_ALL', data)
+        // },
+        playThem() {
+            if(this.ids.length < 10) {
+                this.$store.commit('PLAY_ALL', this.ids)
+            } else {
+                this.actionType = 'PLAY'
+                this.rangeSlider = true
+            }
         },
         addThem() {
-            let data = {
-                type: 'addThem',
-                from: Number(this.songFrom -1),
-                to: Number(this.songTo)
+            if(this.ids.length < 10) {
+                this.$store.commit('ADD_ALL', this.ids)
+            } else {
+                this.actionType = 'ADD TO QUEUE'
+                this.rangeSlider = true
             }
-            this.$emit('queueAction', data)
         },
-        playAll() {
-            let data = { 
-                type: 'playThem',
-                from: 0,
-                to: this.songCount
-             }
-            this.$emit('queueAction', data)
+        setRange(data) {
+            if(data.type == 'PLAY') {
+                let rangeIDs = this.ids.slice(data.from, data.to)
+                this.$store.commit('PLAY_ALL', rangeIDs)
+            } else {
+                let rangeIDs = this.ids.slice(data.from, data.to)
+                let leng = Number(data.to - data.from)
+                this.$store.commit('ADD_ALL', rangeIDs)
+                setTimeout(() => {
+                    this.$store.dispatch('addedQPanel', leng)
+                }, 1000)
+            }
         },
-        addAll() {
-            let data = { 
-                type: 'addThem',
-                from: 0,
-                to: this.songCount
-             }
-            this.$emit('queueAction', data)
-        },
+        // playAll() {
+        //     this.$store.commit('PLAY_ALL', this.ids)
+        // },
+        // addAll() {
+        //     this.$store.commit('ADD_ALL', this.ids)
+        // },
         openAction() {
             this.mobileAction = true
         },
         closeAction() {
             this.mobileAction = false
         },
-        rangesldr() {
-            this.rngsldr = !this.rngsldr
+        // rangesldr() {
+        //     this.rngsldr = !this.rngsldr
+        // },
+        copyURL() {
+            let searches = ''
+            let query
+            if(this.searchKeys.length > 0) {
+                for(let s = 0; s < this.searchKeys.length; s++) {
+                    if(s < this.searchKeys.length - 1) {
+                        let akey = this.searchKeys[s].type + '@' + encodeURI(this.searchKeys[s].key) + ','
+                        searches = searches + akey
+                    } else {
+                        let akey = this.searchKeys[s].type + '@' + encodeURI(this.searchKeys[s].key)
+                        searches = searches + akey  
+                    }
+                }
+                query = '?rth=' + this.rthValue + '&spd=' + this.spdValue + '&exp=' + this.expValue + '&mod=' + this.modValue + '&org=' + this.orgValue + '&keys=' + searches
+            } else {
+                query = '?rth=' + this.rthValue + '&spd=' + this.spdValue + '&exp=' + this.expValue + '&mod=' + this.modValue + '&org=' + this.orgValue
+            }
+
+            const url = 'https://' + window.location.hostname + query
+            this.$store.dispatch('CopyURL', url)
+            console.log(url)
         }
     }
 }
@@ -189,6 +263,17 @@ export default {
     justify-content: left;
     position: relative;
 }
+.resultHead .actions {
+    position: absolute;
+    margin: 0;
+    top: 0;
+    right: 0;
+}
+@media (hover: none) {
+    .resultHead .actions {
+        display: none;
+    }
+}
 .resultIcon {
     width: 60px;
     height: 60px;
@@ -199,44 +284,12 @@ export default {
     position: relative;
     z-index: 100;
 }
-.resultIcon .screen {
-    width: 100%;
-    height: 60px;
-    background: #444;
-    position: absolute;
-    padding: 0 10px;
-    top: 0;
-    left: 0;
+.resultIcon .rangeSelector {
     opacity: 0;
-    vertical-align: middle;
-    overflow: hidden;
-    color: #ddd;
-}
-.resultIcon .screen div {
-    display: flex;
-    justify-content: space-between;
-}
-.resultIcon .screen input {
-    width: 60px;
-    height: 40px;
-    margin: auto 0;
-    font-size: 1.2em;
-    color: #ddd;
-    border: none;
-    text-align: center;
-    padding: 0;
-    font-weight: bold;
-}
-.resultIcon .screen img {
-    width: 40px;
-    height: 40px;
-    padding: 10px;
-    cursor: pointer;
 }
 
 @media (hover: hover) {
-    .resultIcon:hover .screen {
-    width: max-content;
+    .resultIcon:hover .rangeSelector {
     opacity: 1;
     transition-duration: 200ms;
 }
@@ -389,7 +442,7 @@ div.mobileActions {
     .resultHead {
         display: block;
     }
-    .resultIcon .screen {
+    .resultIcon .rangeSelector {
         display: none;
     }
     .resultIcon {
@@ -406,7 +459,11 @@ div.mobileActions {
         width: 100%;
     }
     div.mobileActions {
+        display: block;
         top: 0;
+    }
+    .resultHead .actions {
+        display: none;
     }
     div.mobileSldr {
         bottom: 100px;

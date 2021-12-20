@@ -3,40 +3,47 @@
     <div>
       <GlobalCliLeftNav />
     </div>
-    <!-- <div v-else>
-      <FilterIcons />
-    </div> -->
-    <GlobalCliNav />
     <Nuxt />
+    <GlobalCliNav :cart="cart" />
 
-    <transition name="slideFRBottom">
-    <PlayerQueue v-show="$store.state.queuePanel" />
-    </transition>
-    <transition name="slideFRBottom">
-    <PlayerSimilar v-show="$store.state.similarPanel" />
-    </transition>
+    <!-- <transition name="slideFRBottom"> -->
+      <PlayerQueue v-if="queuePanel" />
+    <!-- </transition>
+    <transition name="slideFRBottom"> -->
+      <PlayerSimilar v-if="similarPanel" />
+    <!-- </transition> -->
 
-    <PlayerBar />
+    <PlayerBar v-if="playerBar" />
+
+    <PanelCart v-if="cartPanel" />
 
     <PanelSingleSong />
-    <PanelCopied />
-    <PanelSent />
+    <PanelLicense />
+    <PanelFlash />
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 import GlobalCliLeftNav from "~/components/global/cliLeftNav"
 import GlobalCliNav from "~/components/global/cliNav"
 import PlayerBar from "~/components/player/Bar"
 import PlayerQueue from "~/components/player/Queue"
 import PlayerSimilar from "~/components/player/Similar"
 import PanelSingleSong from "~/components/panel/SingleSong"
-import PanelCopied from "~/components/panel/Copied"
-import PanelSent from "~/components/panel/Sent"
+import PanelFlash from "~/components/panel/Flash"
+import PanelLicense from "~/components/panel/License"
+import PanelCart from "~/components/cart/main"
 
 export default {
+  // transition: 'slideFRBottom',
   components: {
-    GlobalCliNav, GlobalCliLeftNav, PlayerBar, PlayerQueue, PlayerSimilar, PanelSingleSong, PanelCopied, PanelSent
+    GlobalCliNav, GlobalCliLeftNav, PlayerBar, PlayerQueue, PlayerSimilar, PanelSingleSong, 
+    PanelFlash, PanelLicense, PanelCart
+  },
+  computed: {
+    ...mapState(['similarPanel', 'queuePanel', 'playerBar', 'licensePanel', 'cartPanel', 'cart']),
   }
 }
 </script>

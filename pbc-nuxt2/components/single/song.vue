@@ -22,7 +22,7 @@
             <NuxtLink :to="{ path: '/requests', query: { song: song.ID }}">
             <img :src="require('../../assets/images/actions/inquery_dark.svg')" alt="Inquery" @click="$store.commit('CLOSE_SING_SONG')">
             </NuxtLink>
-            <button class="small">LICENSE</button> 
+            <button class="small" @click="licenseThis(song.ID)">LICENSE</button> 
           </div>
           <p>{{ song.Description }}</p>
 
@@ -89,6 +89,9 @@ export default {
     shareURL() {
         let url = 'https://' + window.location.hostname + '/song/' + this.song.ID + '-' + this.slug(this.song.Title)
             this.$store.dispatch('CopyURL', url)
+        },
+    licenseThis(id) {
+        this.$store.dispatch('OpenLicenseP', id)
         }
     }
 }

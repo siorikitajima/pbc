@@ -14,7 +14,7 @@
         <p>{{ sqPData.ID }} // {{ sqPData.Title }} <span> by {{ sqPData.ArtistName }}</span></p>
         <div class="progress_bar_flex">
             <!-- <div class="progress__duration">{{ duration }}</div> -->
-            <div class="duration progress__bar" ref="progress" @click="clickProgress">
+            <div class="duration progress__bar" ref="progressBar" @click="clickProgress">
                 <div class="progress__current" :style="{ width : barWidth }"></div>
             </div>
             <div class="progress__time">{{ currentTime }} / {{ duration }}</div>
@@ -33,12 +33,14 @@
         <NuxtLink :to="{ path: '/requests', query: { song: sqPData.ID }}">
         <img :src="require('~/assets/images/actions/inquery_white.svg')" alt="Inquery">
         </NuxtLink>
+        <img :src="require('~/assets/images/actions/CustomWork_white.svg')" alt="License" @click="licenseThis(sqPData.ID)">
         <img class="actionBtn" :src="require('~/assets/images/actions/Actions_Icon_white.svg')" alt="Actions" @click="toggleAction()">
         <img :src="require('~/assets/images/actions/PlayList_Icon.svg')" class="queueBtn" alt="Playlist" @click="$store.commit('TOGGLE_QUEUE')">
     </div>
     </client-only>
 </div>
-  <div class="thePlayer mobilePlayer" v-if="sqPData">
+
+<div class="thePlayer mobilePlayer" v-if="sqPData">
     <div class="mobileController">
         <div class="controller">
             <img :src="require('~/assets/images/player/Previous_btn.svg')" alt="Previous" @click="prevTrack">
@@ -58,7 +60,7 @@
             <div class="progress__time">{{ currentTime }} / {{ duration }}</div>
         </div>
         <div class="progress_bar_flex">
-            <div class="duration progress__bar" ref="progress" @click="clickProgress">
+            <div class="duration progress__bar" ref="progressBarMobile" @click="clickProgressMobile">
                 <div class="progress__current" :style="{ width : barWidth }"></div>
             </div>
         </div>
@@ -96,7 +98,7 @@
                 <p>Custom Work</p>
             </li>
             </NuxtLink>
-            <li>
+            <li @click="licenseThis(sqPData.ID)">
                 <img :src="require('~/assets/images/actions/CustomWork_dark.svg')" alt="License">
                 <p>License</p>
             </li>
@@ -122,7 +124,7 @@ export default {
         }
     },
     computed: {
-        ...mapState(['songs', 'sqQueue', 'sqPlaying', 'sqEnded', 'alsoPlay', 'isTimerPlaying' ]),
+        ...mapState(['songs', 'sqQueue', 'sqPlaying', 'sqEnded', 'alsoPlay', 'isTimerPlaying', 'playerBar' ]),
         ...mapGetters({
             sqPData: 'PLAYING_DATA',
             sqQData: 'QUEUE_DATA',
@@ -169,7 +171,7 @@ export default {
             this.currentTime = curmin + ":" + cursec;
         },
         updateBar(x) {
-            let progress = this.$refs.progress;
+            let progress = this.$refs.progressBar;
             let maxduration = this.audio.duration;
             let position = x - progress.offsetLeft;
             let percentage = (100 * position) / progress.offsetWidth;
@@ -179,6 +181,7 @@ export default {
             if (percentage < 0) {
                 percentage = 0;
             }
+            // console.log(position, progress.clientWidth, progress.getBoundingClientRect())
             this.barWidth = percentage + "%";
             this.circleLeft = percentage + "%";
             this.audio.currentTime = (maxduration * percentage) / 100;
@@ -188,6 +191,31 @@ export default {
             // this.isTimerPlaying = true;
             this.audio.pause();
             this.updateBar(e.pageX);
+        },
+        updateBarMobile(x) {
+            let progressM = this.$refs.progressBarMobile;
+            let maxdurationM = this.audio.duration;
+            let positionM = x - progressM.offsetLeft;
+            let percentageM = (100 * positionM) / progressM.offsetWidth;
+            if (percentageM > 100) {
+                percentageM = 100;
+            }
+            if (percentageM < 0) {
+                percentageM = 0;
+            }
+            // console.log(positionM, progressM.clientWidth, progressM.getBoundingClientRect())
+            this.barWidth = percentageM + "%";
+            this.circleLeft = percentageM + "%";
+            this.audio.currentTime = (maxdurationM * percentageM) / 100;
+            this.audio.play();
+        },
+        clickProgressMobile(e) {
+            if(e.type == 'touchstart' || e.type == 'touchmove' || e.type == 'touchend' || e.type == 'touchcancel'){
+            // this.isTimerPlaying = true;
+            var touch = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];
+            this.audio.pause();
+            this.updateBar(touch.pageX);
+            }
         },
         prevTrack() {
             this.$store.commit('PLAY_PREV')
@@ -236,6 +264,9 @@ export default {
             },
         toggleAction() {
             this.mobileAction = !this.mobileAction
+        },
+        licenseThis(id) {
+        this.$store.dispatch('OpenLicenseP', id)
         }
     },
     mounted() {
@@ -334,7 +365,15 @@ export default {
 .thePlayer .info {
     margin: 0 20px;
     width: inherit;
+    max-width: calc(100% - 687px);
     flex-shrink: 2;
+}
+.thePlayer .info p {
+    height: 20px;
+    width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 .thePlayer .info p span {
     font-size: 0.9em;
@@ -342,6 +381,7 @@ export default {
 .thePlayer .info .progress_bar_flex {
     display: flex;
     justify-content: left;
+    overflow-x: visible;
 }
 .duration {
     height: 14px;
@@ -379,13 +419,10 @@ img.actionBtn {
     }
 }
 
-@media (max-width: 700px) {
+@media (max-width: 960px) {
     .thePlayer .cover {
         display: none;
     }
-}
-
-@media (max-width: 600px) {
     .thePlayer {
         display: none;
     }
@@ -396,6 +433,7 @@ img.actionBtn {
     .mobilePlayer .info {
         margin: 0;
         width: 100%;
+        max-width: unset;
     }
     .mobileController, .mobilesonginfo {
         display: flex;
@@ -411,9 +449,6 @@ img.actionBtn {
     .thePlayer .controller {
         border-right: none;
     }
-}
-
-@media (max-width: 600px) {
     .progress__time {
         display: none;
     }

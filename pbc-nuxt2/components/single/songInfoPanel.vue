@@ -20,7 +20,7 @@
                 </span> </p>
         </div>
         <div class="div400 group">
-            <p><b>Album</b></p>
+            <p><b>Album/Collection</b></p>
             <NuxtLink :to="'/album/'+ song.CatNum + '-' + slug(song.AlbumTitle)">
                 <p @click="$store.commit('CLOSE_SING_SONG')"><b class="underlined">{{ song.AlbumTitle }}</b> ({{ song.Year }})</p>
             </NuxtLink>

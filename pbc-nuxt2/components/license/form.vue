@@ -1,7 +1,7 @@
 <template>
 <div>
     <div class="note">
-      <p>Stems for all songs are readily available, and it is included in the Standard License.</p>
+      <p>Tell us about your project and we will get back to you with a quote.</p>
     </div>
     <form @submit.prevent="submitForm" ref="thisForm">
     <div class="theforms">
@@ -17,12 +17,16 @@
         <input type="text" id="company" name="company">
     </div>
     <div class="theforms">
-        <label for="invoice">Order# <span class="agreement">(If you've already purchased license(s))</span></label>
-        <input type="text" id="invoice" name="invoice" v-model="order">
+        <label for="project">Project Name</label>
+        <input type="text" id="project" name="project">
     </div>
     <div class="theforms">
-        <label for="message">Message / Special Request</label>
-        <textarea type="text" id="message" name="message" />
+        <label for="url">URL</label>
+        <input type="text" id="url" name="url">
+    </div>
+    <div class="theforms">
+        <label for="details">Details*</label>
+        <textarea type="text" id="details" name="details" required />
     </div>
     <div class="theforms">
             <p><input class="checkbox" type="checkbox" name="term" required>
@@ -36,26 +40,31 @@
 <script>
 import axios from 'axios';
 import baseURL from '~/assets/api-url.js'
+import { mapState } from 'vuex'
 
 export default {
-    name: 'FormStems',
-    props: [ 'song', 'orderNum' ],
-    data(props) {
-        return {
-            order: props.orderNum
-        }
+    name: 'LicenseForm',
+    props: [ 'category', 'type', 'subType' ],
+    computed: {
+        ...mapState(['licenseSong'])
     },
     methods: {
         async submitForm(event) {
-            const {name, email, company, invoice, message, term} = Object.fromEntries(new FormData(event.target))
+            const {name, email, company, project, url, details, term} = Object.fromEntries(new FormData(event.target))
             let data = {
-                inqueryType: 'Stems',
-                song: this.song,
+                inqueryType: 'CustomQuote',
+                category: this.category,
+                type: this.type,
+                subType: this.subType,
+                songID: this.licenseSong[0].ID,
+                songName: this.licenseSong[0].Title,
+                songBy: this.licenseSong[0].ArtistName,
                 name: name,
                 email: email,
                 company: company,
-                invoice: invoice,
-                message: message,
+                project: project,
+                url: url,
+                details: details,
                 term: term
             }
             let formUrl = baseURL + '/form'
@@ -71,6 +80,7 @@ export default {
         showPanel() {
             this.$store.dispatch('sentPanel')
             this.$refs.thisForm.reset()
+            this.$store.commit('CLOSE_LICENSE_PANEL')
         }
     }
 }

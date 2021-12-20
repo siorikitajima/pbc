@@ -1,13 +1,13 @@
 <template>
 <div>
-  <div class="similarPanel">
+  <div class="similarPanel" v-if="simOG.length > 0 && simSonData">
       <div class="actions">
            <img :src="require('~/assets/images/global/Close_Icon_dark.svg')" alt="Close" @click="closePanel">
            <p>Similar Songs</p>
            <img :src="require('~/assets/images/global/share.svg')" alt="Share" @click="openShareP()">
       </div>
 
-      <div class="rPanelHead" v-if="simOG.length > 0">
+      <div class="rPanelHead">
           <div class="coverSm" >
                 <img :src="'https://pblibrary.s3.us-east-2.amazonaws.com/' + simOG[0].CatNum +'/cover-thumb.jpg'" :alt="simOG[0].AlbumTitle">
           </div>
@@ -19,7 +19,7 @@
           </div>
       </div>
 
-      <div class="similarList" v-if="simSonData">
+      <div class="similarList">
           <div v-for="song in simSonData" :key="song.ID" class="similarSong">
             <div class="coverSm" @click="playThisNow(song.ID)">
                 <img :src="'https://pblibrary.s3.us-east-2.amazonaws.com/' + song.CatNum +'/cover-thumb.jpg'" :alt="song.AlbumTitle">

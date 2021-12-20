@@ -1,5 +1,5 @@
 <template>
-<div>
+<div class="wrapper">
 <h2 class="first sectTitle">// Albums and Collections //</h2>
   <div class="albumList" v-if="albums">
       <SingleAAlbum v-for="album in albums || []" :key="album.AlbumID" :album="album"  />
@@ -36,6 +36,11 @@ export default {
 </script>
 
 <style scoped>
+.wrapper {
+    width: 100%;
+    height: fit-content;
+    padding-bottom: 20px;
+}
 .albumList {
     width: 800px;
     height: calc(100% - 100px);
@@ -63,8 +68,12 @@ h2.first {
 }
 
 @media(max-width:600px) {
-    .albumList {
+    /* .albumList {
         margin: 30px auto 140px auto;
+    } */
+    .albumList {
+        height: calc(100% - 220px);
+        padding: 0 0 120px 0;
     }
 }
 </style>

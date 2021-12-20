@@ -1,7 +1,7 @@
 <template>
   <div class="pagewrapper">
     <div v-if="singalbum">
-        <SingleAlbum :album="singalbum" />
+        <SingleAlbum :album="singalbum" :albumSongs="albumSongList" />
         <SingleAlbumInfo :album="singalbum" />
     </div>
 
@@ -65,9 +65,15 @@ export default {
             slug: 'SLUG'
         }),
         albumSongList: function() {
-            return this.$store.state.songs.filter((song) => {
-                return song.CatNum == this.theId[0]
-            })
+            if (this.singalbum.Type == 'Album') {
+                return this.$store.state.songs.filter((song) => {
+                    return song.CatNum == this.theId[0]
+                }).sort((a, b) => a.Seq - b.Seq)
+            } else {
+                return this.$store.state.songs.filter((song) => {
+                    return song.CatNum == this.theId[0]
+                })
+            }
         }
     }
 }

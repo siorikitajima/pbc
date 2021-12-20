@@ -1,7 +1,7 @@
 <template>
   <div class="pagewrapper">
     <div v-if="singartist">
-        <SingleArtist :artist="singartist" />
+        <SingleArtist :artist="singartist" :ids="songIDs" />
     </div>
 
         <h2 class="sectTitle">// FEATURED TRACKS //</h2>
@@ -75,8 +75,17 @@ export default {
 
         featuredTracks: function() {
             return this.$store.state.songs.filter((song) => {
-                return song.Writers.includes(this.singartist.ArtistName)
+                return song.Writers == this.singartist.ArtistName
             })
+        },
+        songIDs() {
+            let songIDs = []
+            let leng = this.featuredTracks.length
+            for (let t = 0; t < leng; t++) {
+                let id = this.featuredTracks[t].ID
+                songIDs.push(id)
+            }
+            return songIDs
         }
     }
 }

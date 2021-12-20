@@ -3,13 +3,14 @@
 <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 viewBox="0 0 36 36" style="enable-background:new 0 0 36 36;" xml:space="preserve">
 <style type="text/css">
-	.st0{fill:#FFFFFF;}
+	.st0{fill:#DDDDDD;}
 </style>
 <g>
-	<polygon class="st0" points="19,12 17,12 17,17 12,17 12,19 17,19 17,24 19,24 19,19 24,19 24,17 19,17 	"/>
-</g>
-<g id="Layer_1_1_">
-	<path class="st0" d="M18,4c7.7,0,14,6.3,14,14s-6.3,14-14,14S4,25.7,4,18S10.3,4,18,4 M18,2C9.2,2,2,9.2,2,18s7.2,16,16,16
-		s16-7.2,16-16S26.8,2,18,2L18,2z"/>
+	<circle class="st0" cx="12.8" cy="31.3" r="2.3"/>
+	<circle class="st0" cx="25.4" cy="31.3" r="2.3"/>
+	<g>
+		<path class="st0" d="M9.3,25.6L9,23l21.9,0c0.3,0,0.8-0.2,0.9-0.6l1.2-5.6l1.6-8.4c0.1-0.3,0-0.7-0.2-0.9S33.9,7,33.5,7L7.3,7.1
+			L7,4.9c-0.1-0.6-0.6-1-1.1-1H1.3v2.3h3.7l2.2,20.7c0.1,0.6,0.6,1,1.1,1h22.5l0.5-2.3H9.3z"/>
+	</g>
 </g>
 </svg>

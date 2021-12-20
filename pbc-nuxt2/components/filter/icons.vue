@@ -24,12 +24,27 @@ export default {
     emits: ['leftPanel'],
     methods: {
         toggleSliderPanel() {
+            if(!this.sliderPanel && window.innerWidth <= 600) {
+                this.$store.commit('HIDE_PLAYER')
+            } else {
+                this.$store.commit('SHOW_PLAYER')
+            }
             this.$emit('leftPanel', { type: 'filter'})
         },
         togglePresetPanel() {
+            if(!this.presetPanel && window.innerWidth <= 600) {
+                this.$store.commit('HIDE_PLAYER')
+            } else {
+                this.$store.commit('SHOW_PLAYER')
+            }
             this.$emit('leftPanel', { type: 'preset'})
         },
         toggleSearchPanel() {
+            if(!this.searchPanel && window.innerWidth <= 600) {
+                this.$store.commit('HIDE_PLAYER')
+            } else {
+                this.$store.commit('SHOW_PLAYER')
+            }
             this.$emit('leftPanel', { type: 'search'})
         }
     }

@@ -58,15 +58,18 @@ export default {
         })
       },
       setKey(data) {
-        let alreadyHaveIt = false
-        for(let s = 0; s < this.searchKey.length; s++) {
-          if (this.searchKey[s].key.match(data.key)) {
-            alreadyHaveIt = true
-          }
-        }
-        if(!alreadyHaveIt) {this.searchKey.push(data)}
-        this.tempSearch = ''
-        this.searchPanel = false
+        // let alreadyHaveIt = false
+        // for(let s = 0; s < this.searchKey.length; s++) {
+        //   if (this.searchKey[s].key.match(data.key)) {
+        //     alreadyHaveIt = true
+        //   }
+        // }
+        // if(!alreadyHaveIt) {
+        //   this.$store('ADD_ALL_SEARCH', data)
+        //   // this.searchKey.push(data)
+        //   }
+        // this.tempSearch = ''
+        // this.searchPanel = false
         this.$emit('loadSearch', data)
       }
     },
@@ -165,5 +168,10 @@ input.searchBox {
   height: calc(100% - 226px);
   top: 110px;
   }
+}
+@media (max-width: 800px) {
+    .searchKeys {
+      height: calc(100% - 126px);
+    }
 }
 </style>

@@ -1,10 +1,13 @@
 <template>
 <div id="thenav">
   <div id="navRight" class="cornerNavs">
-    <!-- <NuxtLink to="/">
-      <img v-if="sideNavOpen" class="navIcons" :src="require('~/assets/images/header/PatternBased_Icon_white.svg')" alt="PatternBased">
-      <img v-else class="navIcons" :src="require('~/assets/images/header/PatternBased_Icon.svg')" alt="PatternBased">
-    </NuxtLink> -->
+
+      <img v-if="cart.length > 0 && sideNavOpen" class="navIcons" :src="require('~/assets/images/header/Cart_Icon_white.svg')" alt="Cart" @click="$store.commit('TOGGLE_CART')">
+      
+      <img v-if="cart.length > 0 && !sideNavOpen" class="navIcons" :src="require('~/assets/images/header/Cart_Icon.svg')" alt="Cart" @click="$store.commit('TOGGLE_CART')">
+    
+      <div v-if="cart.length > 0" class="num" :class="{ 'blue': sideNavOpen }" @click="$store.commit('TOGGLE_CART')">{{cart.length}}</div>
+
       <img v-if="sideNavOpen" class="navIcons" :src="require('~/assets/images/header/Menu_Icon_white.svg')" alt="Menu" @click="sideNavHandler">
       <img v-else class="navIcons" :src="require('~/assets/images/header/Menu_Icon.svg')" alt="Menu" @click="sideNavHandler">
   </div>
@@ -36,6 +39,7 @@
 <script>
 export default {
     name: 'CliNav',
+    props: ['cart'],
     data() {
         return {
             sideNavOpen: false
@@ -44,13 +48,25 @@ export default {
     methods: {
         sideNavHandler() {
             this.sideNavOpen = !this.sideNavOpen
-        }
+        },
+        setLocalStorage() {
+            localStorage.setItem("cart", JSON.stringify(this.cart))
+        },
     },
     watch:{
     $route (to, from){
         this.sideNavOpen = false;
+    },
+    cart(newV, oldV) { 
+            this.setLocalStorage()
+        }
+    },
+    mounted() {
+        if(localStorage.getItem("cart")) {
+            let cData = JSON.parse(localStorage.getItem("cart"))
+            this.$store.commit('SET_CART', cData)
+        }
     }
-} 
 }
 </script>
 
@@ -80,6 +96,9 @@ export default {
 .sideNav ul li:hover {
     background: linear-gradient(90deg, rgba(51,51,51,1) 0%, rgba(68,68,68,1) 50%, rgba(51,51,51,1) 100%);
     transition-duration: 200ms;
+}
+.num {
+    cursor: pointer;
 }
 @media (max-width: 600px) {
     .sideNav {

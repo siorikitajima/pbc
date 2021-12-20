@@ -1,5 +1,5 @@
 <template>
-<div>
+<div class="wrapper">
 <h2 class="first sectTitle">// PatternBased Projects //</h2>
   <div class="artistList" v-if="allProjects">
     <SingleAArtist v-for="artist in allProjects || []" :key="artist.ID" :artist="artist" :location="'aList'" />
@@ -35,9 +35,7 @@ export default {
         }
     },
     computed: {
-        ...mapState( ['artists'] )
-    },
-    computed: {
+        ...mapState( ['artists'] ),
         allProjects: function() {
             return this.$store.state.artists.filter((artist) => { return artist.Type == 'P' && artist.Show == 'Y'} )
         },
@@ -49,6 +47,11 @@ export default {
 </script>
 
 <style scoped>
+.wrapper {
+    width: 100%;
+    height: fit-content;
+    padding-bottom: 20px;
+}
 .artistList {
     width: 800px;
     height: calc(100% - 100px);
@@ -84,6 +87,10 @@ h2.first {
 @media(max-width:600px) {
     .artistList.last {
         margin: 30px auto 140px auto;
+    }
+    .artistList {
+        height: calc(100% - 220px);
+        /* padding: 0 0 120px 0; */
     }
 }
 </style>
