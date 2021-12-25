@@ -36,7 +36,7 @@ const readSingleSongData = (req, res) => {
     .then((data) => {
       albumId = data.CatNum;
       artistName = data.ArtistName;
-      writers = data.Writers.split('; ');
+      writers = data.WriterSlug.split(',');
       singleSongData = data.toObject();
       slugArtistName = artistName.toLowerCase().replace(/\s+/g, '-');
       let slugTitle = data.Title.toLowerCase().replace(/\s+/g, '-');
@@ -45,7 +45,7 @@ const readSingleSongData = (req, res) => {
   Album.findOne({ 'AlbumID': albumId })
       .then((aldata) => {
         singleSongData.Year = aldata.Year;
-      Artist.find({ 'ArtistName': {$in: writers} })
+      Artist.find({ 'ArtistSlug': {$in: writers} })
         .then((ardata) => {
           let writeArray = [];
           let pimage;

@@ -21,32 +21,31 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+// import { mapState } from 'vuex';
 export default {
     name: 'Filters',
     emits: ['leftPanel'],
-    props: [ 'songCount'],
+    props: [ 'songCount' ],
     data() {
         return {
         filterItems: [],
         filterPanel: false
         }
     },
-    computed: {
-        ...mapState(['rhythm', 'speed', 'experimental', 'mood', 'organic', 'search', 'allSearch']),
-    },
+    // computed: {
+    //     ...mapState(['rhythm', 'speed', 'experimental', 'mood', 'organic']),
+    // },
     methods: {
-      setLocalStorage() {
-        const query = {
-            rhythm: this.rhythm,
-            speed: this.speed,
-            experimental: this.experimental,
-            mood: this.mood,
-            organic: this.organic,
-            search: this.allSearch 
-        }
-        localStorage.setItem("filterValues", JSON.stringify(query))
-      },
+      // setLocalStorage() {
+      //   const query = {
+      //       rhythm: this.rhythm,
+      //       speed: this.speed,
+      //       experimental: this.experimental,
+      //       mood: this.mood,
+      //       organic: this.organic
+      //   }
+      //   localStorage.setItem("filterValues", JSON.stringify(query))
+      // },
       seeResult() {
         if(window.innerWidth <= 600) {
               this.$store.commit('SHOW_PLAYER')
@@ -54,26 +53,23 @@ export default {
           this.$emit('leftPanel', { type: 'filter'})
       }
     },
-    watch: {
-      rhythm(newV, oolV) {
-        this.setLocalStorage()
-      },
-      speed(newV, oolV) {
-        this.setLocalStorage()
-      },
-      experimental(newV, oolV) {
-        this.setLocalStorage()
-      },
-      mood(newV, oolV) {
-        this.setLocalStorage()
-      },
-      organic(newV, oolV) {
-        this.setLocalStorage()
-      },
-      allSearch(newV, oolV) {
-        this.setLocalStorage()
-      }
-    }
+    // watch: {
+    //   rhythm(newV, oolV) {
+    //     this.setLocalStorage()
+    //   },
+    //   speed(newV, oolV) {
+    //     this.setLocalStorage()
+    //   },
+    //   experimental(newV, oolV) {
+    //     this.setLocalStorage()
+    //   },
+    //   mood(newV, oolV) {
+    //     this.setLocalStorage()
+    //   },
+    //   organic(newV, oolV) {
+    //     this.setLocalStorage()
+    //   }
+    // }
     // methods: {
     //   passValue(val) {
     //         if (val.type == 'rhythm') {

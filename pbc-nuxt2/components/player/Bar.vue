@@ -8,7 +8,7 @@
         <img :src="require('~/assets/images/player/Next_btn.svg')" alt="Next" @click="nextTrack">
     </div>
     <div class="cover">
-        <img :src="'https://pblibrary.s3.us-east-2.amazonaws.com/' + sqPData.CatNum +'/cover-thumb.jpg'" :alt="sqPData.AlbumTitle">
+        <img :src="coverImg(sqPData.CatNum, sqPData.ID)" :alt="sqPData.AlbumTitle">
     </div>
     <div class="info">
         <p>{{ sqPData.ID }} // {{ sqPData.Title }} <span> by {{ sqPData.ArtistName }}</span></p>
@@ -130,6 +130,7 @@ export default {
             sqQData: 'QUEUE_DATA',
             sqEData: 'ENDED_DATA',
             slug: 'SLUG',
+            coverImg: 'COVER_IMG'
         }),
         songSrc() { 
             return 'https://pblibrary.s3.us-east-2.amazonaws.com/' + this.sqPData.CatNum + '/' + this.sqPData.ID  + '.mp3';

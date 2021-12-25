@@ -1,5 +1,6 @@
 const axios = require('axios');
 import baseURL from '~/assets/api-url.js'
+// import * as Filters from '~/helpers/filters'
 
 let songsUrl = baseURL + `/songs`
 let albumsUrl = baseURL + '/albums'
@@ -13,6 +14,21 @@ export const state = () => ({
     ogSongID: '',
     tempSongIDs: [],
     // rangeSlider: false,
+
+    filteredSongs: [],
+    // aSong: {},
+    filter: {
+        artist: [],
+        project: [],
+        album: [],
+        order: 'Rate',
+        search : [],
+        song : [],
+        instrument : [],
+        genre : [],
+        tag : [],
+        mood : []
+    },
 
     similarPanel: false,
     simSongGap: 1.5,
@@ -177,6 +193,7 @@ export const mutations = {
             }
         }
     },
+
     RMV_Q: (state, id) => {
         let index = state.sqQueue.indexOf(id)
         state.sqQueue.splice(index, 1)
@@ -189,6 +206,7 @@ export const mutations = {
         state.sqEnded.splice(0);
         state.sqQueue.splice(0);
     },
+
     OPEN_SING_SONG: (state) => {
         if(state.singleSongPanel) {
             state.singleSongPanel = false
@@ -198,6 +216,7 @@ export const mutations = {
     CLOSE_SING_SONG: (state) => {
         state.singleSongPanel = false
     },
+
     FLASH_ON: (state, text) => {
         state.flashPanel = true
         state.flashText = text
@@ -206,12 +225,14 @@ export const mutations = {
         state.flashPanel = false
         state.flashText = ''
     },
+
     IS_PLAYING_ON: (state) => {
         state.isTimerPlaying = true
     },
     IS_PLAYING_OFF: (state) => {
         state.isTimerPlaying = false
     },
+
     SET_RHY_MIN: (state, value) => {
         state.rhythm.min = value
     },
@@ -272,18 +293,20 @@ export const mutations = {
         state.density.min = min
         state.density.max = max
     },
-    SET_SEARCH: (state, value) => {
-        state.search = value
-    },
-    SET_ALL_SEARCH: (state, value) => {
-        state.allSearch = value
-    },
-    ADD_ALL_SEARCH: (state, value) => {
-        state.allSearch.push(value)
-    },
-    SPLICE_ALL_SEARCH: (state, { id, num }) => {
-        state.allSearch.splice( id, num )
-    },
+
+    // SET_SEARCH: (state, value) => {
+    //     state.search = value
+    // },
+    // SET_ALL_SEARCH: (state, value) => {
+    //     state.allSearch = value
+    // },
+    // ADD_ALL_SEARCH: (state, value) => {
+    //     state.allSearch.push(value)
+    // },
+    // SPLICE_ALL_SEARCH: (state, { id, num }) => {
+    //     state.allSearch.splice( id, num )
+    // },
+
     SET_PRESETS_OG(state, { rhyMin, rhyMax, spdMin, spdMax, expMin, expMax, modMin, modMax, orgMin, orgMax }) {
         state.rhythm.min = rhyMin
         state.rhythm.max = rhyMax
@@ -295,6 +318,18 @@ export const mutations = {
         state.mood.max = modMax
         state.organic.min = orgMin
         state.organic.max = orgMax
+    },
+    CLEAR_PB_FILTERS(state) {
+        state.rhythm.min = 0
+        state.rhythm.max = 10
+        state.speed.min = 0
+        state.speed.max = 10
+        state.experimental.min = 0
+        state.experimental.max = 10
+        state.mood.min = 0
+        state.mood.max = 10
+        state.organic.min = 0
+        state.organic.max = 10
     },
     SET_SONG_IDS(state, ids) {
         state.tempSongIDs = ids
@@ -322,9 +357,6 @@ export const mutations = {
         state.licenseData.subType = ''
         state.licenseSong = []
     },
-    // UPDATE_LICENSE_ID(state, id) {
-    //     state.licenseData.id = id
-    // },
     UPDATE_LICENSE_CATEGORY(state, type) {
         state.licenseData.category = type
     },
@@ -342,6 +374,7 @@ export const mutations = {
     UPDATE_LICENSE_SONG(state, song) {
         state.licenseSong = song
     },
+
     CART_HAS_ITEM(state) {
         state.itemInCart = true
     },
@@ -371,7 +404,123 @@ export const mutations = {
     },
     TOGGLE_CART(state) {
         state.cartPanel = !state.cartPanel
-    }
+    },
+
+    // setFilteredSongs(state, songs) { state.filteredSongs = [songs] },
+    
+    setFilterSong(state, song) { state.filter.song = [song] },
+    rmFilterSong(state, song) { 
+        let index = state.filter.song.findIndex(a => a.id == song)
+        state.filter.song.splice(index, 1)},
+    addFilterSong(state, song) { state.filter.song.push(song)},
+    clearFilterSong(state) { state.filter.song = [] },
+
+    setFilterAlbum(state, album) { state.filter.album = [album] },
+    rmFilterAlbum(state, album) { 
+        let index = state.filter.album.findIndex(a => a.id == album)
+        state.filter.album.splice(index, 1)},
+    addFilterAlbum(state, album) { state.filter.album.push(album)},
+    clearFilterAlbum(state) { state.filter.album = [] },
+    
+    setFilterArtist(state, artist) { state.filter.artist = [artist] },
+    rmFilterArtist(state, artist) { 
+        let index = state.filter.artist.findIndex(a => a.id == artist)
+        state.filter.artist.splice(index, 1)},
+    addFilterArtist(state, artist) { state.filter.artist.push(artist)},
+    clearFilterArtist(state) { state.filter.artist = [] },
+    
+    setFilterProject(state, project) { state.filter.project = [project] },
+    rmFilterProject(state, project) { 
+        let index = state.filter.project.findIndex(a => a.key == project)
+        state.filter.project.splice(index, 1)},
+    addFilterProject(state, project) { state.filter.project.push(project)},
+    clearFilterProject(state) { state.filter.project = [] },
+
+    setFilterInstrument(state, instrument) { state.filter.instrument = [instrument] },
+    rmFilterInstrument(state, instrument) { 
+        let index = state.filter.instrument.findIndex(a => a.key == instrument)
+        state.filter.instrument.splice(index, 1)},
+    addFilterInstrument(state, instrument) { state.filter.instrument.push(instrument)},
+    clearFilterInstrument(state) { state.filter.instrument = [] },
+
+    setFilterGenre(state, genre) { state.filter.genre = [genre] },
+    rmFilterGenre(state, genre) { 
+        let index = state.filter.genre.findIndex(a => a.key == genre)
+        state.filter.genre.splice(index, 1)},
+    addFilterGenre(state, genre) { state.filter.genre.push(genre)},
+    clearFilterGenre(state) { state.filter.genre = [] },
+
+    setFilterTag(state, tag) { state.filter.tag = [tag] },
+    rmFilterTag(state, tag) { 
+        let index = state.filter.tag.findIndex(a => a.key == tag)
+        state.filter.tag.splice(index, 1)},
+    addFilterTag(state, tag) { state.filter.tag.push(tag)},
+    clearFilterTag(state) { state.filter.tag = [] },
+
+    setFilterMood(state, mood) { state.filter.mood = [mood] },
+    rmFilterMood(state, mood) { 
+        let index = state.filter.mood.findIndex(a => a.key == mood)
+        state.filter.mood.splice(index, 1)},
+    addFilterMood(state, mood) { state.filter.mood.push(mood)},
+    clearFilterMood(state) { state.filter.mood = [] },
+
+    setFilterSearch (state, search) { state.filter.search = [search] },
+    rmFilterSearch(state, search) { 
+        let index = state.filter.search.findIndex(a => a.key == search)
+        state.filter.search.splice(index, 1)},
+    addFilterSearch(state, search) { state.filter.search.push(search)},
+    clearFilterSearch(state) { state.filter.search = [] },
+
+    setOrder(state, order) { state.filter.order = order },
+
+    clearFilter (state) {
+        state.filter.album = []
+        state.filter.artist = []
+        state.filter.project = []
+        state.filter.song = []
+        state.filter.instrument = []
+        state.filter.genre = []
+        state.filter.tag = []
+        state.filter.mood = []
+        state.filter.search = []
+        state.filter.order = 'Rate'
+    },
+    setAllFilter (state, {album, artist, project, song, instrument, genre, tag, mood, search, order}) {
+        state.filter.album = album
+        state.filter.artist = artist
+        state.filter.project = project
+        state.filter.song = song
+        state.filter.instrument = instrument
+        state.filter.genre = genre
+        state.filter.tag = tag
+        state.filter.mood = mood
+        state.filter.search = search
+        state.filter.order = order
+    },
+
+    // SET_ALL_SEARCH: (state, value) => {
+    //     state.filter.allSearch = value
+    // },
+    // ADD_ALL_SEARCH: (state, value) => {
+    //     state.filter.allSearch.push(value)
+    // },
+    // SPLICE_ALL_SEARCH: (state, id ) => {
+    //     state.filter.allSearch.splice( id, 1 )
+    // },
+  
+    // filterSongs (state) {
+    //   const songs = [...state.songs]
+    //   state.filteredSongs = songs
+    //   state.filteredSongs = Filters.filterSongs(state.filter, songs)
+    // },
+    // PBfilterSongs (state) {
+    //     const songs = [...state.filteredSongs]
+    //     state.filteredSongs = Filters.PBfilterSongs(state.rhythm, state.speed, state.experimental, state.mood, state.organic, songs)
+    //   },
+    // orderSongs (state) {
+    //   const songs = [...state.filteredSongs]
+    //   state.filteredSongs = Filters.orderSongs(state.filter.order, songs)
+    // }
 }
 
 export const actions = {
@@ -496,6 +645,12 @@ export const actions = {
             commit('FLASH_OFF')
         }, 1000)
     },
+    flashPanel({ commit }, msg) {
+        commit('FLASH_ON', msg)
+        setTimeout(() => {
+            commit('FLASH_OFF')
+        }, 1000)
+    },
     addedQPanel({ commit }, num) {
         commit('FLASH_ON', num + ' SONGS ADDED TO QUEUE')
         setTimeout(() => {
@@ -507,13 +662,39 @@ export const actions = {
             return item.songID == id
           });
         commit('DELETE_FROM_CART', index)
-    }
+    },
     // setPresets({ commit }, { rhy, spd, exp, mod, org }) {
     //     commit('SET_PRESET_RHY', rhy)
     //     commit('SET_PRESET_SPD', spd)
     //     commit('SET_PRESET_EXP', exp)
     //     commit('SET_PRESET_MOD', mod)
     //     commit('SET_PRESET_ORG', org)
+    // }
+    // async filterOrder ({ commit }, order) {
+    //     await commit('setOrder', order)
+    //     await commit('orderSongs')
+    //     console.log( state.filter )
+    // },
+    // async filterAlbum ({ commit, dispatch }, album) {
+    //     await commit('setFilterAlbum', album)
+    //     dispatch('filterSongs')
+    // },
+    // async filterArtist ({ commit, dispatch }, artist) {
+    //     await commit('setFilterArtist', artist)
+    //     dispatch('filterSongs')
+    // },
+    // async filterProject ({ commit, dispatch }, project) {
+    //     await commit('setFilterProject', project)
+    //     dispatch('filterSongs')
+    // },
+    // async filterSearch ({ commit, dispatch }, search) {
+    //     await commit('setFilterSearch', search)
+    //     dispatch('filterSongs')
+    // },
+    // async filterSongs ({ state, commit }) {
+    //     await commit('filterSongs')
+    //     // await commit('PBfilterSongs')
+    //     console.log( state.filter )
     // }
 }
 
@@ -616,13 +797,24 @@ export const getters = {
     },
     COVER_IMG: () => (CatNum, SongID) => {
         if (CatNum == 'PB26') {
+            return 'https://pblibrary.s3.us-east-2.amazonaws.com/PB26/' + SongID +'_thumb.jpg'
+        } else if (CatNum == 'PB36') {
+            return 'https://pblibrary.s3.us-east-2.amazonaws.com/PB36/' + SongID +'_thumb.jpg'
+        } else if (CatNum == 'PB37') {
+            return 'https://pblibrary.s3.us-east-2.amazonaws.com/PB37/' + SongID +'_thumb.jpg'
+        } else {
+            return 'https://pblibrary.s3.us-east-2.amazonaws.com/' + CatNum +'/cover-thumb.jpg'
+        }
+    },
+    COVER_IMG_L: () => (CatNum, SongID) => {
+        if (CatNum == 'PB26') {
             return 'https://pblibrary.s3.us-east-2.amazonaws.com/PB26/' + SongID +'.jpg'
         } else if (CatNum == 'PB36') {
             return 'https://pblibrary.s3.us-east-2.amazonaws.com/PB36/' + SongID +'.jpg'
         } else if (CatNum == 'PB37') {
             return 'https://pblibrary.s3.us-east-2.amazonaws.com/PB37/' + SongID +'.jpg'
         } else {
-            return 'https://pblibrary.s3.us-east-2.amazonaws.com/' + CatNum +'/cover-thumb.jpg'
+            return 'https://pblibrary.s3.us-east-2.amazonaws.com/' + CatNum +'/cover.jpg'
         }
     },
     GENERATE_NEXT_SONG: (state) => (id) => {
@@ -657,5 +849,230 @@ export const getters = {
         return state.songs.filter((song) => {
             return song.ID == id
         })
+    },
+    PB_FILTERED_SONGS: (state) => {
+        return state.songs.filter((song) => {
+            return (song.PBRhythm >= state.rhythm.min) && (song.PBRhythm <= state.rhythm.max) && (song.PBSpeed >= state.speed.min) && (song.PBSpeed <= state.speed.max) && (song.PBExperimental >= state.experimental.min) && (song.PBExperimental <= state.experimental.max) && (song.PBMood >= state.mood.min) && (song.PBMood <= state.mood.max) && (song.PBOrganic >= state.organic.min) && (song.PBOrganic <= state.organic.max) 
+        })
+    },
+    FILTERED_SONGS_SEARCH: (state, getters) => {
+        let filteredList = getters.PB_FILTERED_SONGS
+        // Filter song
+            if(state.filter.song.length !== 0) {
+                const songList = []
+                for (let i = 0; i < filteredList.length; i++) {
+                    state.filter.song.forEach(a => {
+                    if (filteredList[i].ID !== null && filteredList[i].ID.match(a.id)) {
+                      if((songList.findIndex(s => s.ID == filteredList[i].ID)) === -1) {
+                        songList.push(filteredList[i])
+                    }}})}
+                filteredList = songList }
+        // Filter search
+            if (state.filter.search.length !== 0 && filteredList.length > 0) {
+            const searchList = []
+            for (let i = 0; i < filteredList.length; i++) {
+                state.filter.search.forEach(a => {
+                if ((filteredList[i].Title && filteredList[i].Title.toLowerCase().includes(a.key.toLowerCase())) || (filteredList[i].Description && filteredList[i].Description.toLowerCase().includes(a.key.toLowerCase())) || (filteredList[i].Story && filteredList[i].Story.toLowerCase().includes(a.key.toLowerCase()))) {
+                if((searchList.findIndex(s => s.ID == filteredList[i].ID)) === -1) {
+                    searchList.push(filteredList[i])
+                }}})}
+            filteredList = searchList } 
+  
+        // Filter album
+            if (state.filter.album.length !== 0 && filteredList.length > 0) {
+                const albumList = []
+                for (let i = 0; i < filteredList.length; i++) {
+                    state.filter.album.forEach(a => {
+                    if (filteredList[i].CatNum !== null && filteredList[i].CatNum.match(a.id)) {
+                    if((albumList.findIndex(s => s.ID == filteredList[i].ID)) === -1) {
+                        albumList.push(filteredList[i])
+                    }}})}
+                filteredList = albumList}
+  
+        // Filter project
+            if (state.filter.project.length !== 0 && filteredList.length > 0) {
+                const projectList = []
+                for (let i = 0; i < filteredList.length; i++) {
+                    state.filter.project.forEach(a => {
+                    if (filteredList[i].ArtistName !== null && filteredList[i].ArtistName.match(a.key)) {
+                    if((projectList.findIndex(s => s.ID == filteredList[i].ID)) === -1) {
+                        projectList.push(filteredList[i])
+                    }}})}
+                filteredList = projectList}
+  
+        // Filter artist (writer)
+            if (state.filter.artist.length !== 0 && filteredList.length > 0) {
+        
+                ////!!!! This is AND search method !!!!////
+                // const filtered = filteredList.filter(song => { 
+                //   return filter.artist.every(a => {
+                //     return song.WriterSlug.includes(a)
+                //   })})
+                // filteredList = filtered
+                
+                //// This is OR search method ////
+                const searchList = []
+                for (let i = 0; i < filteredList.length; i++) {
+                    state.filter.artist.forEach(a => {
+                    if (filteredList[i].WriterSlug !== null && filteredList[i].WriterSlug.includes(a.id)) {
+                        if((searchList.findIndex(s => s.ID == filteredList[i].ID)) === -1) {
+                        searchList.push(filteredList[i])
+                        }}})}
+                filteredList = searchList }
+  
+        // Filter song
+            if (state.filter.song.length !== 0 && filteredList.length > 0) {
+                const songList = []
+                for (let i = 0; i < filteredList.length; i++) {
+                    state.filter.song.forEach(a => {
+                    if (filteredList[i].ID !== null && filteredList[i].ID.match(a.id)) {
+                    if((songList.findIndex(s => s.ID == filteredList[i].ID)) === -1) {
+                        songList.push(filteredList[i])
+                    }}})}
+                filteredList = songList }
+  
+        // Filter instrument
+            if (state.filter.instrument.length !== 0 && filteredList.length > 0) {
+                const instrumentList = []
+                for (let i = 0; i < filteredList.length; i++) {
+                    state.filter.instrument.forEach( a => {
+                    if (filteredList[i].Instruments && filteredList[i].Instruments.toLowerCase().includes( a.key.toLowerCase() )) {
+                    if((instrumentList.findIndex(s => s.ID == filteredList[i].ID)) === -1) {
+                        instrumentList.push(filteredList[i])
+                    }}})}
+                filteredList = instrumentList }
+  
+        // Filter genre, tag, mood
+            if (state.filter.genre.length !== 0 && filteredList.length > 0 || state.filter.tag.length !== 0 && filteredList.length > 0 || state.filter.mood.length !== 0 && filteredList.length > 0) {
+            const genreList = []
+            let keyList = state.filter.genre.concat(state.filter.tag)
+            keyList = keyList.concat(state.filter.mood)
+            for (let i = 0; i < filteredList.length; i++) {
+                keyList.forEach(a => {
+                if (filteredList[i].Tags && filteredList[i].Tags.toLowerCase().includes(a.key.toLowerCase()) || (filteredList[i].Genre && filteredList[i].Genre.toLowerCase().includes(a.key.toLowerCase())) || (filteredList[i].SubGenreA && filteredList[i].SubGenreA.toLowerCase().includes(a.key.toLowerCase())) || (filteredList[i].SubGenreB && filteredList[i].SubGenreB.toLowerCase().includes(a.key.toLowerCase())) || (filteredList[i].PrimaryMood && filteredList[i].PrimaryMood.toLowerCase().includes(a.key.toLowerCase())) || (filteredList[i].SecondaryMoods && filteredList[i].SecondaryMoods.toLowerCase().includes(a.key.toLowerCase()))) {
+                    if((genreList.findIndex(s => s.ID == filteredList[i].ID)) === -1) {
+                    genreList.push(filteredList[i])
+                    }}})
+            }
+            filteredList = genreList
+            }
+
+        // Order
+            if (state.filter.order === 'Rate') {
+                filteredList.sort(({Rate:a}, {Rate:b}) => b-a);
+                } else if (state.filter.order === 'Seq') {
+                    filteredList.sort(({Seq:a}, {Seq:b}) => a-b);
+            }
+      return filteredList
+    },
+    SONGS_SEARCH: (state) => {
+        let filteredList = [...state.songs]
+        // Filter song
+            if(state.filter.song.length !== 0) {
+                const songList = []
+                for (let i = 0; i < filteredList.length; i++) {
+                    state.filter.song.forEach(a => {
+                    if (filteredList[i].ID !== null && filteredList[i].ID.match(a.id)) {
+                      if((songList.findIndex(s => s.ID == filteredList[i].ID)) === -1) {
+                        songList.push(filteredList[i])
+                    }}})}
+                filteredList = songList }
+        // Filter search
+            if (state.filter.search.length !== 0 && filteredList.length > 0) {
+            const searchList = []
+            for (let i = 0; i < filteredList.length; i++) {
+                state.filter.search.forEach(a => {
+                if ((filteredList[i].Title && filteredList[i].Title.toLowerCase().includes(a.key.toLowerCase())) || (filteredList[i].Description && filteredList[i].Description.toLowerCase().includes(a.key.toLowerCase())) || (filteredList[i].Story && filteredList[i].Story.toLowerCase().includes(a.key.toLowerCase()))) {
+                if((searchList.findIndex(s => s.ID == filteredList[i].ID)) === -1) {
+                    searchList.push(filteredList[i])
+                }}})}
+            filteredList = searchList } 
+  
+        // Filter album
+            if (state.filter.album.length !== 0 && filteredList.length > 0) {
+                const albumList = []
+                for (let i = 0; i < filteredList.length; i++) {
+                    state.filter.album.forEach(a => {
+                    if (filteredList[i].CatNum !== null && filteredList[i].CatNum.match(a.id)) {
+                    if((albumList.findIndex(s => s.ID == filteredList[i].ID)) === -1) {
+                        albumList.push(filteredList[i])
+                    }}})}
+                filteredList = albumList}
+  
+        // Filter project
+            if (state.filter.project.length !== 0 && filteredList.length > 0) {
+                const projectList = []
+                for (let i = 0; i < filteredList.length; i++) {
+                    state.filter.project.forEach(a => {
+                    if (filteredList[i].ArtistName !== null && filteredList[i].ArtistName.match(a.key)) {
+                    if((projectList.findIndex(s => s.ID == filteredList[i].ID)) === -1) {
+                        projectList.push(filteredList[i])
+                    }}})}
+                filteredList = projectList}
+  
+        // Filter artist (writer)
+            if (state.filter.artist.length !== 0 && filteredList.length > 0) {
+        
+                ////!!!! This is AND search method !!!!////
+                // const filtered = filteredList.filter(song => { 
+                //   return filter.artist.every(a => {
+                //     return song.WriterSlug.includes(a)
+                //   })})
+                // filteredList = filtered
+                
+                //// This is OR search method ////
+                const searchList = []
+                for (let i = 0; i < filteredList.length; i++) {
+                    state.filter.artist.forEach(a => {
+                    if (filteredList[i].WriterSlug !== null && filteredList[i].WriterSlug.includes(a.id)) {
+                        if((searchList.findIndex(s => s.ID == filteredList[i].ID)) === -1) {
+                        searchList.push(filteredList[i])
+                        }}})}
+                filteredList = searchList }
+  
+        // Filter song
+            if (state.filter.song.length !== 0 && filteredList.length > 0) {
+                const songList = []
+                for (let i = 0; i < filteredList.length; i++) {
+                    state.filter.song.forEach(a => {
+                    if (filteredList[i].ID !== null && filteredList[i].ID.match(a.id)) {
+                    if((songList.findIndex(s => s.ID == filteredList[i].ID)) === -1) {
+                        songList.push(filteredList[i])
+                    }}})}
+                filteredList = songList }
+  
+        // Filter instrument
+            if (state.filter.instrument.length !== 0 && filteredList.length > 0) {
+                const instrumentList = []
+                for (let i = 0; i < filteredList.length; i++) {
+                    state.filter.instrument.forEach( a => {
+                    if (filteredList[i].Instruments && filteredList[i].Instruments.toLowerCase().includes( a.key.toLowerCase() )) {
+                    if((instrumentList.findIndex(s => s.ID == filteredList[i].ID)) === -1) {
+                        instrumentList.push(filteredList[i])
+                    }}})}
+                filteredList = instrumentList }
+  
+        // Filter genre, tag, mood
+            if (state.filter.genre.length !== 0 && filteredList.length > 0 || state.filter.tag.length !== 0 && filteredList.length > 0 || state.filter.mood.length !== 0 && filteredList.length > 0) {
+            const genreList = []
+            let keyList = state.filter.genre.concat(state.filter.tag)
+            keyList = keyList.concat(state.filter.mood)
+            for (let i = 0; i < filteredList.length; i++) {
+                keyList.forEach(a => {
+                if (filteredList[i].Tags && filteredList[i].Tags.toLowerCase().includes(a.key.toLowerCase()) || (filteredList[i].Genre && filteredList[i].Genre.toLowerCase().match(a.key.toLowerCase())) || (filteredList[i].SubGenreA && filteredList[i].SubGenreA.toLowerCase().match(a.key.toLowerCase())) || (filteredList[i].SubGenreB && filteredList[i].SubGenreB.toLowerCase().match(a.key.toLowerCase())) || (filteredList[i].PrimaryMood && filteredList[i].PrimaryMood.toLowerCase().match(a.key.toLowerCase())) || (filteredList[i].SecondaryMoods && filteredList[i].SecondaryMoods.toLowerCase().match(a.key.toLowerCase()))) {
+                    if((genreList.findIndex(s => s.ID == filteredList[i].ID)) === -1) {
+                    genreList.push(filteredList[i])
+                    }}})
+            }
+            filteredList = genreList
+            }
+
+        // Order
+            if (state.filter.order === 'Rate') {
+                filteredList.sort(({Rate:a}, {Rate:b}) => b-a);
+                } else if (state.filter.order === 'Seq') {
+                    filteredList.sort(({Seq:a}, {Seq:b}) => a-b);
+            }
+      return filteredList
     }
 }

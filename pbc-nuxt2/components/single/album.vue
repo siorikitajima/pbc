@@ -7,7 +7,7 @@
         <div class="div400">
           <p>// PB {{ album.Type }} //</p>
           <h2>{{ album.Title }}</h2>
-          <p>by {{ album.Project }}</p>
+          <p>by <NuxtLink :to="'/project/' + album.ArtistSlug" >{{ album.Project }}</NuxtLink></p>
           <div class="actions">
             <img :src="require('~/assets/images/actions/playSong_dark.svg')" alt="Play All" @click="playAll()">
             <img :src="require('~/assets/images/actions/addToQueue_dark.svg')" alt="Add All to Queue" @click="addAll()">

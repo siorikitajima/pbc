@@ -36,7 +36,8 @@
           <!-- </p>
           <p> -->
         <br class="linebreak" />
-          <span v-for="searchKey in searchKeys" :key="searchKey.key" class="searchWords" @click="clearValue( searchKey )" :data-col="searchKey.type">{{ searchKey.key }}</span>
+          <span v-for="searchKey in searchKeys" :key="searchKey.key" class="searchWords" @click="clearSearchValue( searchKey )" :data-col="searchKey.type">{{ searchKey.key }}</span>
+          <span v-if="anythingActive" class="searchWords clearAll" @click="clearAll()" >CLEAR ALL</span>
           </p>
       </div>
       <div class="actions">
@@ -55,10 +56,7 @@
         <li class="actionHead">
             <p>RTM <b>{{ rthValue }}</b>, SPD <b>{{ spdValue }}</b>, EXP <b>{{ expValue }}</b>, MOD <b>{{ modValue }}</b>, ORG <b>{{ orgValue }}</b>, <span v-for="searchKey in searchKeys" :key="searchKey.key">{{ searchKey.key }}, </span></p>
         </li>
-        <!-- <li class="actionHead" @click="rangesldr">
-            <p>Song Range <b>#{{ songFrom }}</b> - <b>#{{ songTo }}</b></p>
-            <img :src="require('~/assets/images/global/edit-icon_dark.svg')" alt="Edit">
-        </li> -->
+
         <li @click="playThem()">
             <img :src="require('~/assets/images/actions/playSong_dark.svg')" alt="Play Track">
             <p>Play Tracks</p>
@@ -94,7 +92,6 @@
 
 <script>
 import { mapState } from 'vuex';
-// import GlobalRangeSelector from "~/components/global/rangeSelector"
 import GlobalRangeSlider from "~/components/global/rangeSlider"
 
 export default {
@@ -113,7 +110,7 @@ export default {
         }
     },
     computed: {
-        ...mapState(['rhythm', 'speed', 'experimental', 'mood', 'organic', 'search', 'allSearch']),
+        ...mapState(['rhythm', 'speed', 'experimental', 'mood', 'organic', 'filter']),
         rthActive() {
             if (this.rhythm.min == 0 && this.rhythm.max == 10) {
                 return false } else { return true }
@@ -144,7 +141,42 @@ export default {
             return this.mood.min + '-' + this.mood.max },
         orgValue() { 
             return this.organic.min + '-' + this.organic.max },
-        searchKeys() { return this.allSearch }
+        searchKeys() { 
+            let searches = []
+            if ( this.filter.album.length !== 0 ) {
+                this.filter.album.forEach(a => searches.push(a))
+            }
+            if ( this.filter.project.length !== 0 ) {
+                this.filter.project.forEach(a => searches.push(a))
+            }
+            if ( this.filter.artist.length !== 0 ) {
+                this.filter.artist.forEach(a => searches.push(a))
+            }
+            if ( this.filter.song.length !== 0 ) {
+                this.filter.song.forEach(a => searches.push(a))
+            }
+            if ( this.filter.instrument.length !== 0 ) {
+                this.filter.instrument.forEach(a => searches.push(a))
+            }
+            if ( this.filter.genre.length !== 0 ) {
+                this.filter.genre.forEach(a => searches.push(a))
+            }
+            if ( this.filter.tag.length !== 0 ) {
+                this.filter.tag.forEach(a => searches.push(a))
+            }
+            if ( this.filter.mood.length !== 0 ) {
+                this.filter.mood.forEach(a => searches.push(a))
+            }
+            if ( this.filter.search.length !== 0 ) {
+                this.filter.search.forEach(a => searches.push(a))
+            }
+            return searches
+        },
+        anythingActive() {
+            if (this.rthActive || this.spdActive || this.expActive || this.modActive || this.orgActive || this.searchKeys.length > 0) {
+                return true
+            } else { return false }
+        }
     },
     methods: {
         clearValue(type) {
@@ -158,32 +190,35 @@ export default {
                 this.$store.commit('SET_MOD', { min: 0, max: 10 })
             } else if (type == 'organic') {
                 this.$store.commit('SET_ORG', { min: 0, max: 10 })
-            } else {
-                let word = type
-                this.$store.commit('SET_SEARCH', '')
-                if(this.allSearch.length == 1) {
-                    this.$store.commit('SET_ALL_SEARCH', [])
-                } else {
-                    for(let s = 0; s < this.allSearch.length; s++ ) {
-                        if(this.allSearch[s] == word) {
-                            this.$store.commit('SPLICE_ALL_SEARCH', { id: s, num: 1 })
-                        }
+            } 
+            // this.$store.dispatch('filterSongs')
+        },
+        clearSearchValue(data) {
+            for(let s = 0; s < this.searchKeys.length; s++ ) {
+                if(this.searchKeys[s].type == data.type && this.searchKeys[s].key == data.key) {
+                    if(data.type == 'album') {
+                    this.$store.commit('rmFilterAlbum', data.id)
+                    } else if(data.type == 'artist') {
+                    this.$store.commit('rmFilterArtist', data.id)
+                    } else if(data.type == 'project') {
+                    this.$store.commit('rmFilterProject', data.key)
+                    } else if(data.type == 'song') {
+                    this.$store.commit('rmFilterSong', data.id)
+                    } else if(data.type == 'instrument') {
+                    this.$store.commit('rmFilterInstrument', data.id)
+                    } else if(data.type == 'genre') {
+                    this.$store.commit('rmFilterGenre', data.id)
+                    } else if(data.type == 'tag') {
+                    this.$store.commit('rmFilterTag', data.id)
+                    } else if(data.type == 'mood') {
+                    this.$store.commit('rmFilterMood', data.id)
+                    } else if(data.type == 'search') {
+                    this.$store.commit('rmFilterSearch', data.id)
                     }
                 }
             }
+                // this.$store.dispatch('filterSongs')
         },
-        // playThem() {
-        //     let fromN = Number(this.songFrom -1)
-        //     let toN = Number(this.songTo)
-        //     let data = this.ids.slice(fromN, toN)
-        //     this.$store.commit('PLAY_ALL', data)
-        // },
-        // addThem() {
-        //     let fromN = Number(this.songFrom -1)
-        //     let toN = Number(this.songTo)
-        //     let data = this.ids.slice(fromN, toN)
-        //     this.$store.commit('ADD_ALL', data)
-        // },
         playThem() {
             if(this.ids.length < 10) {
                 this.$store.commit('PLAY_ALL', this.ids)
@@ -213,12 +248,6 @@ export default {
                 }, 1000)
             }
         },
-        // playAll() {
-        //     this.$store.commit('PLAY_ALL', this.ids)
-        // },
-        // addAll() {
-        //     this.$store.commit('ADD_ALL', this.ids)
-        // },
         openAction() {
             this.mobileAction = true
         },
@@ -249,6 +278,10 @@ export default {
             const url = 'https://' + window.location.hostname + query
             this.$store.dispatch('CopyURL', url)
             console.log(url)
+        },
+        clearAll() {
+            this.$store.commit('clearFilter')
+            this.$store.commit('CLEAR_PB_FILTERS')
         }
     }
 }
@@ -364,6 +397,9 @@ export default {
     background: #666; 
     border: #666 1px solid;}
 
+.resultQuery p span.searchWords.clearAll {
+    background: #444;
+}
 div.mobileActions {
     position: absolute;
     top: 10px;
@@ -418,6 +454,10 @@ div.mobileSldr {
 }
 .resultQuery p span.searchWords:hover::after {
     content: 'DELETE';
+}
+.resultQuery p span.searchWords.clearAll:hover::after {
+    content: 'CLEAR ALL';
+    font-size: 1em;
 }
 
 div.mobileActions {

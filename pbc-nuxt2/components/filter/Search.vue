@@ -1,6 +1,6 @@
 <template>
 <div>
-    <div v-if="filteredKeys.length > 0 && searchPanel" class="fullScreen" @click="searchPanel = false">
+    <div v-if="searchPanel" class="fullScreen" @click="searchPanel = false">
     </div>
   <div class="searchBar">
   </div>
@@ -14,18 +14,19 @@
     @focus="searchPanel = true"
     @keyup.enter="setKey({type: 'search', key: tempSearch})"
     @input="e => tempSearch = e.target.value"
-    autofocus
+    autofocus="autofocus"
+    ref="theInput"
     >
 
-    <div v-if="filteredKeys.length > 0 && searchPanel || tempSearch != ''">
+    <div v-if="(filteredKeys.length > 0 && searchPanel) || tempSearch != ''">
       <ul class="searchKeys">
-        <li class="searchKey" v-if="tempSearch != ''" @click="setKey({type: 'search' ,key: tempSearch})" >
+        <li class="searchKey" @click="setKey({type: 'search' ,key: tempSearch})" >
           <span class="pill" :data-col="'search'">keyword</span>
           {{tempSearch}}
         </li>
         <li class="searchKey" 
         v-for="(filteredKey, index) in filteredKeys" 
-        @click="setKey({type: filteredKey.type ,key: filteredKey.key})" :key="filteredKey.key + '-' + index">
+        @click="setKey(filteredKey)" :key="index">
           <span class="pill" :data-col="filteredKey.type">{{filteredKey.type}}</span>
           {{filteredKey.key}}
         </li>
@@ -36,17 +37,24 @@
 </template>
 
 <script>
+import { mapState, mapGetters } from 'vuex'
 export default {
     name: 'Search',
     emits: ['loadSearch'],
-    props: ['search', 'allSearch', 'searchKeys'],
-    data(props) {
+    props: ['search', 'searchKeys'],
+    data() {
         return {
-            searchKey: props.allSearch,
-            tempSearch: props.search,
+            // searchKey: props.allSearch,
+            tempSearch: '',
             filteredKeys: [],
-            searchPanel: false
+            searchPanel: true
         }
+    },
+    computed: {
+        ...mapState(['filter']),
+        ...mapGetters({
+            slug: 'SLUG'
+        }),
     },
     methods: {
       filterKeys() {
@@ -59,24 +67,52 @@ export default {
       },
       setKey(data) {
         // let alreadyHaveIt = false
-        // for(let s = 0; s < this.searchKey.length; s++) {
-        //   if (this.searchKey[s].key.match(data.key)) {
+        // for(let s = 0; s < this.filter.length; s++) {
+        //   if (this.filteredKeys[s].key.match(data.key)) {
         //     alreadyHaveIt = true
         //   }
         // }
         // if(!alreadyHaveIt) {
-        //   this.$store('ADD_ALL_SEARCH', data)
-        //   // this.searchKey.push(data)
-        //   }
-        // this.tempSearch = ''
-        // this.searchPanel = false
-        this.$emit('loadSearch', data)
+          if(window.innerWidth <= 600) {
+              this.$store.commit('SHOW_PLAYER')
+          }
+          this.searchPanel = false
+          this.$emit('loadSearch')
+          if (data.type == 'album') {
+            this.$store.commit('addFilterAlbum', data)
+          } else if (data.type == 'artist') {
+            this.$store.commit('addFilterArtist', data)
+          } else if (data.type == 'project') {
+            this.$store.commit('addFilterProject', data)
+          } else if (data.type == 'song') {
+            this.$store.commit('addFilterSong', data)
+          } else if (data.type == 'instrument') {
+            this.$store.commit('addFilterInstrument', data)
+          } else if (data.type == 'genre') {
+            this.$store.commit('addFilterGenre', data)
+          } else if (data.type == 'tag') {
+            this.$store.commit('addFilterTag', data)
+          } else if (data.type == 'mood') {
+            this.$store.commit('addFilterMood', data)
+          } else if (data.type == 'search') {
+            this.$store.commit('addFilterSearch', data)
+          }
+        // this.$store.dispatch('filterSongs')
+        this.tempSearch = ''
+        // } else {
+        //   this.$store.dispatch('flashPanel', 'This keyword is already used')
+        // }
+        localStorage.setItem("searchKeys", JSON.stringify(this.filter))
       }
     },
     watch: {
       tempSearch() {
         this.filterKeys()
       }
+    },
+    mounted() {
+      const theInput = this.$refs.theInput
+      theInput.focus()
     }
 }
 </script>
@@ -107,10 +143,11 @@ input.searchBox {
 
 .searchKeys {
   width: 100vw;
-  height: calc(100% - 60px);
-  padding: 0;
+  margin: 0;
+  height: calc(100% - 125px);
+  padding: 0 0 70px 0;
   position: fixed;
-  top: 40px;
+  top: 65px;
   left: 0;
   z-index: 2000;
   text-align: center;

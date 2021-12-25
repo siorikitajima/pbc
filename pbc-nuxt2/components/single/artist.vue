@@ -10,12 +10,24 @@
             <img :src="require('~/assets/images/actions/playSong_white.svg')" alt="Play All" @click="playAll()">
             <img :src="require('~/assets/images/actions/addToQueue_white.svg')" alt="Add All to Queue" @click="addAll()">
             <img :src="require('~/assets/images/actions/Share_Icon_white.svg')" alt="Share" @click="shareURL()">
-            <img :src="require('~/assets/images/singles/Single-Artist_ws.svg')" alt="Website">
-            <img :src="require('~/assets/images/singles/Single-Artist_BC.svg')" alt="Bandcamp">
-            <img :src="require('~/assets/images/singles/Single-Artist_SC.svg')" alt="SoundCloud">
-            <img :src="require('~/assets/images/singles/Single-Artist_IG.svg')" alt="Instagram">   
-            <img :src="require('~/assets/images/singles/Single-Artist_FB.svg')" alt="Facebook">   
-            <img :src="require('~/assets/images/singles/Single-Artist_SP.svg')" alt="Spotify">   
+            <a :href="artist.URL" v-if="artist.URL" target="_blank">
+                <img :src="require('~/assets/images/singles/Single-Artist_ws.svg')" alt="Website">
+            </a>
+            <a :href="artist.BandcampURL" v-if="artist.BandcampURL" target="_blank">
+                <img :src="require('~/assets/images/singles/Single-Artist_BC.svg')" alt="Bandcamp">
+            </a>
+            <a :href="artist.SoundcloudURL" v-if="artist.SoundcloudURL" target="_blank">
+                <img :src="require('~/assets/images/singles/Single-Artist_SC.svg')" alt="SoundCloud">
+            </a>
+            <a :href="artist.InstagramURL" v-if="artist.InstagramURL" target="_blank">
+                <img :src="require('~/assets/images/singles/Single-Artist_IG.svg')" alt="Instagram"> 
+            </a>  
+            <a :href="artist.FacebookURL" v-if="artist.FacebookURL" target="_blank">
+                <img :src="require('~/assets/images/singles/Single-Artist_FB.svg')" alt="Facebook"> 
+            </a>  
+            <a :href="artist.SpotifyURL" v-if="artist.SpotifyURL" target="_blank">
+                <img :src="require('~/assets/images/singles/Single-Artist_SP.svg')" alt="Spotify"> 
+            </a>  
         </div>
         </div>
 

@@ -5,8 +5,8 @@
     </div>
 
         <h2 class="sectTitle">// FEATURED TRACKS //</h2>
-        <div v-if="featuredTracks.length">
-            <TableSongList :fltdsongs="featuredTracks.slice(0, 5)" :dist="'project'" />
+        <div v-if="SearchedSongs.length">
+            <TableSongList :fltdsongs="SearchedSongs.slice(0, 5)" :dist="'project'" />
         </div>
         <div v-else><TableLoading /></div>
 
@@ -16,15 +16,15 @@
             <SingleRelatedArtists v-if="singartist" :artist="singartist" />
         </div>
 
-        <div v-if="featuredTracks.length > 5">
-            <TableSongList :fltdsongs="featuredTracks.slice(5, featuredTracks.length-1)" :dist="'project'" />
+        <div v-if="SearchedSongs.length > 5">
+            <TableSongList :fltdsongs="SearchedSongs.slice(5, SearchedSongs.length-1)" :dist="'project'" />
         </div>
     </div>
   </div>
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapGetters } from 'vuex';
 import axios from 'axios';
 import baseURL from '~/assets/api-url.js'
 
@@ -68,25 +68,50 @@ export default {
         let artistUrl = baseURL + '/artist/' + theSlug
         let artistdata = await axios.get(artistUrl)
         let singartist = await artistdata.data
-        return { singartist }
+        return { theSlug, singartist }
     },
+    // data() {
+    //     return {
+    //         featuredTracks: []
+    //     }
+    // },
     computed: {
-        ...mapState( ['songs'] ),
+        ...mapGetters({
+            SearchedSongs: 'SONGS_SEARCH'
+        }),
+        // featuredTracks() {
+        //     let matching = this.songs.find((song) => song.ArtistName.match('Taka'))
+        //     if(matching !== undefined) {
+        //         return matching;
+        //     } 
+        // },
+        //     // let fltrdSongs = [];
+        //     // for(let s = 0; s < this.songs.length; s++ ) {
+        //     //     let witers = this.songs[s].WritersSlug.split(',')
+        //     //     for(let w = 0; w < witers.length; w++ ) {
+        //     //         if( witers[w] == this.theSlug) { 
+        //     //             fltrdSongs.push(this.songs[s]) 
+        //     //         }
+        //     //     }
+        //     // }
+        //     let result = this.songs.filter( song => 
+        //        song.WriterSlug == 'joseph-minadeo')
+        //     return result
+        // },
 
-        featuredTracks: function() {
-            return this.$store.state.songs.filter((song) => {
-                return song.Writers == this.singartist.ArtistName
-            })
-        },
         songIDs() {
             let songIDs = []
-            let leng = this.featuredTracks.length
+            let leng = this.SearchedSongs.length
             for (let t = 0; t < leng; t++) {
-                let id = this.featuredTracks[t].ID
+                let id = this.SearchedSongs[t].ID
                 songIDs.push(id)
             }
             return songIDs
         }
+    },
+    mounted() {
+        this.$store.commit('clearFilter')
+        this.$store.commit('setFilterArtist', {id: this.theSlug})
     }
 }
 </script>

@@ -1,10 +1,10 @@
 <template>
   <div class='range-slider'>
     <div class="sliderTitle">
-        <div><b>{{ filterName }}</b></div>
+        <div><b>{{ this.type.toUpperCase() }}</b></div>
         <div>{{minV}} - {{maxV}}</div>
     </div>
-    <div class="sliderBG" :class="backgroundimg">
+    <div class="sliderBG" :class="this.type">
       <input type="range" :min="minNum" :max="maxNum" step="0.25" v-model="minV" >
       <input type="range" :min="minNum" :max="maxNum" step="0.25" v-model="maxV" >
       <div class="fading min" :style="minSpace"></div>
@@ -23,8 +23,20 @@ export default {
       minNum: 0,
       maxNum: 10
   }},
+  methods: {
+      setLocalStorage() {
+        const query = {
+            rhythm: this.rhythm,
+            speed: this.speed,
+            experimental: this.experimental,
+            mood: this.mood,
+            organic: this.organic
+        }
+        localStorage.setItem("filterValues", JSON.stringify(query))
+      }
+  },
   computed: {
-    ...mapState(['rhythm', 'speed', 'experimental', 'mood', 'organic', 'presetRhy', 'presetSpd', 'presetExp', 'presetMod', 'presetOrg']),
+    ...mapState(['rhythm', 'speed', 'experimental', 'mood', 'organic']),
     minV: {
         get () { 
           if(this.type == 'rhythm') return this.rhythm.min
@@ -100,6 +112,8 @@ export default {
                 this.$store.commit('SET_ORG_MIN', 9.75)
               }
             }
+            // this.$store.commit('PBfilterSongs')
+            this.setLocalStorage()
         }
     },
     maxV: {
@@ -165,6 +179,8 @@ export default {
               this.$store.commit('SET_ORG_MIN', 0)
             }
           }
+          this.setLocalStorage()
+          // this.$store.commit('PBfilterSongs')
         }
       },
       // minPreset: {
@@ -202,20 +218,20 @@ export default {
           return { "width": leftSpace }
       }
       },
-    filterName() {
-        if (this.type == 'speed') { return 'Speed'}
-        else if (this.type == 'rhythm') { return 'Rhythm'}
-        else if (this.type == 'experimental') { return 'Experimental'}
-        else if (this.type == 'mood') { return 'Mood'}
-        else if (this.type == 'organic') { return 'Organic'}
-    },
-    backgroundimg() {
-        if (this.type == 'speed') { return 'speed'}
-        else if (this.type == 'rhythm') { return 'rhythm'}
-        else if (this.type == 'experimental') { return 'experimental'}
-        else if (this.type == 'mood') { return 'mood'}
-        else if (this.type == 'organic') { return 'organic'}
-    }
+    // filterName() {
+    //     if (this.type == 'speed') { return 'Speed'}
+    //     else if (this.type == 'rhythm') { return 'Rhythm'}
+    //     else if (this.type == 'experimental') { return 'Experimental'}
+    //     else if (this.type == 'mood') { return 'Mood'}
+    //     else if (this.type == 'organic') { return 'Organic'}
+    // },
+    // backgroundimg() {
+    //     if (this.type == 'speed') { return 'speed'}
+    //     else if (this.type == 'rhythm') { return 'rhythm'}
+    //     else if (this.type == 'experimental') { return 'experimental'}
+    //     else if (this.type == 'mood') { return 'mood'}
+    //     else if (this.type == 'organic') { return 'organic'}
+    // }
   // },
   // methods: {
   //   setMinValu(val) {

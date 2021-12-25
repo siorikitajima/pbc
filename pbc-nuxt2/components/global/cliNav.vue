@@ -25,20 +25,28 @@
                 <NuxtLink to="/albums">
                     <li>Albums and Collections</li>
                 </NuxtLink>
+                <NuxtLink to="/about">
                 <li>About PB Catalog</li>
+                </NuxtLink>
                 <NuxtLink to="/requests">
                     <li>Request Work</li>
                 </NuxtLink>
             </ul>
             </client-only>
+            <div class="footer">
+            <GlobalCopyright/>
+            </div>
         </div>
     </transition>
 </div>
 </template>
 
 <script>
+import GlobalCopyright from '../../components/global/Copyright.vue'
+
 export default {
     name: 'CliNav',
+    components: { GlobalCopyright },
     props: ['cart'],
     data() {
         return {
@@ -105,5 +113,15 @@ export default {
     width: calc(100% - 40px);
     max-width: none;
     }
+}
+.footer {
+    width: calc(100% - 40px);
+    padding: 50px 20px;
+    background: #eee;
+    margin: 50px auto 0 -20px;
+    text-align: center;
+    vertical-align: bottom;
+    position: absolute;
+    bottom: 50px;
 }
 </style>

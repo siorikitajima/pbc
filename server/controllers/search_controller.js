@@ -21,7 +21,8 @@ const readSearchData = (req, res) => {
                 else { type = 'project' }
                 const artistkey = {
                 "key": artist[s].ArtistName,
-                "type": type
+                "type": type,
+                "id": artist[s].ArtistSlug
                 }
                 keys.push(artistkey)
             }
@@ -31,7 +32,8 @@ const readSearchData = (req, res) => {
             for(let al = 0; al < album.length; al++) {
                 const albumkey = {
                 "key": album[al].Title,
-                "type": 'album'
+                "type": 'album',
+                "id": album[al].AlbumID
                 }
                 keys.push(albumkey)
             }
@@ -40,7 +42,8 @@ const readSearchData = (req, res) => {
                 for(let s = 0; s < data.length; s++) {
                     const songkey = {
                     "key": data[s].Title,
-                    "type": 'song'
+                    "type": 'song',
+                    "id": data[s].ID
                     }
                     keys.push(songkey)
                 }

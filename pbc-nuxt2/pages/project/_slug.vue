@@ -5,8 +5,8 @@
     </div>
 
         <h2 class="sectTitle">// FEATURED TRACKS //</h2>
-        <div v-if="featuredTracks.length">
-            <TableSongList :fltdsongs="featuredTracks.slice(0, 5)" :dist="'project'" />
+        <div v-if="SearchedSongs.length">
+            <TableSongList :fltdsongs="SearchedSongs.slice(0, 5)" :dist="'project'" />
         </div>
         <div v-else><TableLoading /></div>
 
@@ -16,8 +16,8 @@
             <SingleProjectAlbums v-if="projectsAlbums" :projectsAlbums="projectsAlbums" />
         </div>
 
-        <div v-if="featuredTracks.length > 5">
-            <TableSongList :fltdsongs="featuredTracks.slice(5, 10)" :dist="'project'" />
+        <div v-if="SearchedSongs.length > 5">
+            <TableSongList :fltdsongs="SearchedSongs.slice(5, 10)" :dist="'project'" />
         </div>
 
         <div class="bggray">
@@ -25,8 +25,8 @@
             <SingleRelatedArtists v-if="singproj" :artist="singproj" />
         </div>
 
-        <div v-if="featuredTracks.length > 10">
-            <TableSongList :fltdsongs="featuredTracks.slice(10, featuredTracks.length-1)" :dist="'project'" />
+        <div v-if="SearchedSongs.length > 10">
+            <TableSongList :fltdsongs="SearchedSongs.slice(10, SearchedSongs.length-1)" :dist="'project'" />
         </div>
     </div>    
 
@@ -36,15 +36,15 @@
             <SingleRelatedArtists v-if="singproj" :artist="singproj" />
         </div>
 
-        <div v-if="featuredTracks.length > 5">
-            <TableSongList :fltdsongs="featuredTracks.slice(5, featuredTracks.length-1)" :dist="'project'" />
+        <div v-if="SearchedSongs.length > 5">
+            <TableSongList :fltdsongs="SearchedSongs.slice(5, SearchedSongs.length-1)" :dist="'project'" />
         </div>
     </div>
   </div>
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapGetters } from 'vuex';
 import axios from 'axios';
 import baseURL from '~/assets/api-url.js'
 
@@ -88,16 +88,18 @@ export default {
         let projectUrl = baseURL + '/project/' + theSlug
         let projectdata = await axios.get(projectUrl)
         let singproj = await projectdata.data
-        return { singproj }
+        return { theSlug, singproj }
     },
     computed: {
-        ...mapState( ['songs', 'albums'] ),
-
-        featuredTracks: function() {
-            return this.$store.state.songs.filter((song) => {
-                return song.ArtistName.match(this.singproj.ArtistName)
-            })
-        },
+        ...mapState( ['albums'] ),
+        ...mapGetters({
+            SearchedSongs: 'SONGS_SEARCH'
+        }),
+        // featuredTracks: function() {
+        //     return this.$store.state.songs.filter((song) => {
+        //         return song.ArtistName.match(this.singproj.ArtistName)
+        //     })
+        // },
         projectsAlbums: function() {
         return this.$store.state.albums.filter((album) => {
             return album.Project === this.singproj.ArtistName 
@@ -105,13 +107,18 @@ export default {
         },
         songIDs() {
             let songIDs = []
-            let leng = this.featuredTracks.length
+            let leng = this.SearchedSongs.length
             for (let t = 0; t < leng; t++) {
-                let id = this.featuredTracks[t].ID
+                let id = this.SearchedSongs[t].ID
                 songIDs.push(id)
             }
             return songIDs
         }
+    },
+    mounted() {
+        this.$store.commit('clearFilter')
+        let theName = this.singproj.ArtistName
+        this.$store.commit('setFilterProject', {key: theName})
     }
 }
 </script>

@@ -9,7 +9,7 @@
 
       <div class="rPanelHead">
           <div class="coverSm" >
-                <img :src="'https://pblibrary.s3.us-east-2.amazonaws.com/' + simOG[0].CatNum +'/cover-thumb.jpg'" :alt="simOG[0].AlbumTitle">
+                <img :src="coverImg(simOG[0].CatNum, simOG[0].ID)" :alt="simOG[0].AlbumTitle">
           </div>
           <div class="asname" @click="$store.dispatch('OpenSingSonP', simOG[0].ID)">
             <p><b>{{ simOG[0].Title }}</b>
@@ -22,7 +22,7 @@
       <div class="similarList">
           <div v-for="song in simSonData" :key="song.ID" class="similarSong">
             <div class="coverSm" @click="playThisNow(song.ID)">
-                <img :src="'https://pblibrary.s3.us-east-2.amazonaws.com/' + song.CatNum +'/cover-thumb.jpg'" :alt="song.AlbumTitle">
+                <img :src="coverImg(song.CatNum, song.ID)" :alt="song.AlbumTitle">
                 <div class="screen">
                     <img :src="require('~/assets/images/actions/playSong_light.svg')" alt="Play">
                 </div>
@@ -58,7 +58,8 @@ export default {
     computed: {
         ...mapState(['simSonData', 'simOG']),
         ...mapGetters({
-            slug: 'SLUG'
+            slug: 'SLUG',
+            coverImg: 'COVER_IMG'
         }),
         placeholder(){
             return 'Similar Songs of ' + this.simOG[0].Title

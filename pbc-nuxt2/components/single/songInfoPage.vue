@@ -40,15 +40,33 @@
     </div>
 
     <div class="channels">
-        <img :src="require('~/assets/images/singles/Single-Song_Apple.svg')" alt="Apple Music">
-        <img :src="require('~/assets/images/singles/Single-Song_Bandcamp.svg')" alt="Bandcamp">
-        <img :src="require('~/assets/images/singles/Single-Song_GooglePlay.svg')" alt="Google Play">
-        <img :src="require('~/assets/images/singles/Single-Song_SoundCloud.svg')" alt="SoundCloud">
-        <img :src="require('~/assets/images/singles/Single-Song_Spotify.svg')" alt="Spotify">   
-        <img :src="require('~/assets/images/singles/Single-Song_Vimeo.svg')" alt="Vimeo">   
-        <img :src="require('~/assets/images/singles/Single-Song_Youtube.svg')" alt="Youtube">   
-        <img :src="require('~/assets/images/singles/Single-Song_Tidal.svg')" alt="Tidal">   
-        <img :src="require('~/assets/images/singles/Single-Song_Deezer.svg')" alt="Deezer">   
+        <a :href="song.BandcampURL" v-if="song.BandcampURL" target="_blank">
+            <img :src="require('~/assets/images/singles/Single-Song_Bandcamp.svg')" alt="Bandcamp">
+        </a>
+        <a :href="song.AppleMusicURL" v-if="song.AppleMusicURL" target="_blank">
+            <img :src="require('~/assets/images/singles/Single-Song_Apple.svg')" alt="Apple Music">
+        </a>
+        <a :href="song.TidalURL" v-if="song.TidalURL" target="_blank">
+            <img :src="require('~/assets/images/singles/Single-Song_Tidal.svg')" alt="Tidal">   
+        </a>
+        <!-- <a href="{{song.BandcampURL}}" v-if="song.BandcampURL">
+            <img :src="require('~/assets/images/singles/Single-Song_GooglePlay.svg')" alt="Google Play">
+        </a> -->
+        <a :href="song.SoundcloudURL" v-if="song.SoundcloudURL" target="_blank">
+            <img :src="require('~/assets/images/singles/Single-Song_SoundCloud.svg')" alt="SoundCloud">
+        </a>
+        <a :href="song.VimeoURL" v-if="song.VimeoURL" target="_blank">
+            <img :src="require('~/assets/images/singles/Single-Song_Vimeo.svg')" alt="Vimeo">   
+        </a>
+        <a :href="song.YoutubeURL" v-if="song.YoutubeURL" target="_blank">
+            <img :src="require('~/assets/images/singles/Single-Song_Youtube.svg')" alt="Youtube">   
+        </a>
+        <a :href="song.DeezerURL" v-if="song.DeezerURL" target="_blank">
+            <img :src="require('~/assets/images/singles/Single-Song_Deezer.svg')" alt="Deezer">   
+        </a>
+        <a :href="song.SpotifyURL" v-if="song.SpotifyURL" target="_blank">
+            <img :src="require('~/assets/images/singles/Single-Song_Spotify.svg')" alt="Spotify"> 
+        </a>  
     </div>
   </div>
 

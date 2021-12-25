@@ -64,10 +64,13 @@
                 <img src="~/assets/images/license/audio-file.svg" alt="download">
                 <p>Download .WAV</p>
             </button> -->
-            <button class="large payment" @click="downloadFiles(orderedSongIds, 'mp3')">
+            <a :href="mp3Url" target="_blank" download>
+            <button class="large payment">
+             <!-- @click="downloadFiles(orderedSongIds, 'mp3')"> -->
                 <img src="~/assets/images/license/audio-file.svg" alt="download">
                 <p>Download .MP3</p>
             </button>
+            </a>
             <NuxtLink :to="'/invoice/' + finalOrder.pbId">
             <button class="large payment">
                 <img src="~/assets/images/license/invoice.svg" alt="download">
@@ -135,7 +138,8 @@ export default {
             loaded: false,
             paidFor: false,
             order: {},
-            finalOrder: {}
+            finalOrder: {},
+            mp3Url: ''
         }
     },
     async asyncData() {
@@ -151,7 +155,7 @@ export default {
         "https://www.paypal.com/sdk/js?client-id=Aef10JETQP3lyt5svy9xxkpxC5qNpKvKWeq0XShiVmwURTg9MG1FQPEIoPnzYtPGP2Z-F34rN6ijBKWf";
         script.addEventListener("load", this.setLoaded);
         document.body.appendChild(script);
-        console.log(this.cart)
+        // console.log(this.cart)
     },
     computed: {
         ...mapState(['cart']),
@@ -308,11 +312,17 @@ export default {
             let url = baseURL + '/order'
 
             axios.post(url, theorder)
-            .then(function (response) {
+            .then((response) => {
+                this.set_mp3Url(response.data)
             })
             .catch(function (error) {
                 console.log(error);
             });
+
+        },
+        set_mp3Url(data){
+            this.mp3Url = data
+            console.log(this.mp3Url)
         },
         async emailConf() {
             let url = baseURL + '/order-conf'

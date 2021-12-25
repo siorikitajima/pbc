@@ -19,7 +19,7 @@
         <div v-if="sqEData.length > 0">
           <div v-for="esong in sqEData" :key="esong.ID" class="queueSong ended">
             <div class="coverSm" @click="playThisNow(esong.ID)">
-                <img :src="`https://pblibrary.s3.us-east-2.amazonaws.com/${esong.CatNum}/cover-thumb.jpg`" :alt="esong.AlbumTitle">
+                <img :src="coverImg(esong.CatNum, esong.ID)" :alt="esong.AlbumTitle">
                 <div class="screen">
                     <img :src="require('~/assets/images/actions/playSong_light.svg')" alt="Play">
                 </div>
@@ -37,7 +37,7 @@
         <div v-if="sqPData">
           <div class="queueSong playing">
             <div class="coverSm" @click="playThisFirst(sqPData.ID)">
-                <img :src="`https://pblibrary.s3.us-east-2.amazonaws.com/${sqPData.CatNum}/cover-thumb.jpg`" :alt="sqPData.AlbumTitle">
+                <img :src="coverImg(sqPData.CatNum, sqPData.ID)" :alt="sqPData.AlbumTitle">
                 <div class="screen">
                     <img :src="require('~/assets/images/global/play-active.svg')" alt="Play">
                 </div>
@@ -52,7 +52,7 @@
         <div v-if="sqQData.length > 0">
           <div v-for="song in sqQData" :key="song.ID" class="queueSong upcoming">
             <div class="coverSm" @click="playThisFirst(song.ID)">
-                <img :src="`https://pblibrary.s3.us-east-2.amazonaws.com/${song.CatNum}/cover-thumb.jpg`" :alt="song.AlbumTitle">
+                <img :src="coverImg(song.CatNum, song.ID)" :alt="song.AlbumTitle">
                 <div class="screen">
                     <img :src="require('~/assets/images/actions/playSong_light.svg')" alt="Play">
                 </div>
@@ -101,6 +101,7 @@ export default {
             sqPData: 'PLAYING_DATA',
             sqQData: 'QUEUE_DATA',
             sqEData: 'ENDED_DATA',
+            coverImg: 'COVER_IMG',
             slug: 'SLUG'
         }),
     },

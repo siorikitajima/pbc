@@ -20,7 +20,7 @@
 <script>
 export default {
     name: 'SongList',
-    props: ['fltdsongs', 'dist', 'song'],
+    props: ['fltdsongs', 'dist'],
     // emits: ['passThis', 'openPanel', 'queueAction'],
     setup(props) {
         const dist = ref(props.dist)

@@ -2,12 +2,12 @@
   <div class="wrapper">
     <div class="flex">
         <div class="div260">
-        <img :src="'https://pblibrary.s3.us-east-2.amazonaws.com/' + song.CatNum +'/cover.jpg'" :alt="song.AlbumTitle">
+        <img :src="coverImg(song.CatNum, song.ID)" :alt="song.AlbumTitle">
         </div>
         <div class="div520">
           <p>// PB Track //</p>
           <h2>{{ song.Title }}</h2>
-          <p>by {{ song.ArtistName }}</p>
+          <p>by <NuxtLink :to="'/project/' + slug(song.ArtistName)">{{ song.ArtistName }}</NuxtLink></p>
           <div class="actions">
             <img :src="require('../../assets/images/actions/playSong_dark.svg')" alt="Play Track" @click="$store.commit('PLAY_THIS', song.ID)">
             <img :src="require('../../assets/images/actions/addToQueue_dark.svg')" alt="Add to Queue" @click="$store.commit('ADD_QUEUE', song.ID)">
@@ -82,7 +82,8 @@ export default {
     computed: {
         length() { return this.song.Length ? this.song.Length.slice(2) : '' },
         ...mapGetters({
-            slug: 'SLUG'
+            slug: 'SLUG',
+            coverImg: 'COVER_IMG_L'
         }),
     },
     methods: {
@@ -249,7 +250,12 @@ img.flow {
         background: #f2f2f2;
     }
 }
-@media(max-width: 600px) {
+@media(max-width: 560px) {
+    .div260 {
+        margin: 0 auto 20px auto;
+        max-width: calc(100% - 20px);
+        width: calc(100% - 20px);
+    }
     .flex.singleMobile {
         display: block;
         max-width: unset;

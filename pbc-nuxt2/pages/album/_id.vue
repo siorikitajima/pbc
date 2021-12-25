@@ -1,19 +1,18 @@
 <template>
   <div class="pagewrapper">
     <div v-if="singalbum">
-        <SingleAlbum :album="singalbum" :albumSongs="albumSongList" />
+        <SingleAlbum :album="singalbum" :albumSongs="SearchedSongs" />
         <SingleAlbumInfo :album="singalbum" />
     </div>
-
-        <div v-if="albumSongList.length">
-            <TableSongList :fltdsongs="albumSongList" :dist="'song'" />
+        <div v-if="SearchedSongs.length">
+            <TableSongList :fltdsongs="SearchedSongs" :dist="'song'" />
         </div>
         <div v-else><TableLoading /></div>
     </div>
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex';
+import { mapGetters } from 'vuex';
 import axios from 'axios';
 import baseURL from '~/assets/api-url.js'
 
@@ -57,24 +56,31 @@ export default {
         let albumUrl = baseURL + '/albums/' + theId[0]
         let albumdata = await axios.get(albumUrl)
         let singalbum = await albumdata.data
+
         return { singalbum, theId }
     },
     computed: {
-        ...mapState( ['songs'] ),
         ...mapGetters({
-            slug: 'SLUG'
+            slug: 'SLUG',
+            SearchedSongs: 'SONGS_SEARCH'
         }),
-        albumSongList: function() {
-            if (this.singalbum.Type == 'Album') {
-                return this.$store.state.songs.filter((song) => {
-                    return song.CatNum == this.theId[0]
-                }).sort((a, b) => a.Seq - b.Seq)
-            } else {
-                return this.$store.state.songs.filter((song) => {
-                    return song.CatNum == this.theId[0]
-                })
-            }
-        }
+        // albumSongList: function() {
+        //     if (this.singalbum.Type == 'Album') {
+        //         return this.$store.state.songs.filter((song) => {
+        //             return song.CatNum == this.theId[0]
+        //         }).sort((a, b) => a.Seq - b.Seq)
+        //     } else {
+        //         return this.$store.state.songs.filter((song) => {
+        //             return song.CatNum == this.theId[0]
+        //         })
+        //     }
+        // }
+    },
+    mounted() {
+        this.$store.commit('clearFilter')
+        let theId = this.$route.params.id.split("-");
+        this.$store.commit('setFilterAlbum', {id: theId[0]})
+        this.$store.commit('setOrder', 'Seq')
     }
 }
 </script>

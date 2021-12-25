@@ -27,14 +27,14 @@
 
     <div class="channels">
         <img :src="require('~/assets/images/singles/Single-Song_Bandcamp.svg')" alt="Bandcamp">
-        <img :src="require('~/assets/images/singles/Single-Song_Spotify.svg')" alt="Spotify">   
         <img :src="require('~/assets/images/singles/Single-Song_Apple.svg')" alt="Apple Music">
+        <img :src="require('~/assets/images/singles/Single-Song_Tidal.svg')" alt="Tidal">   
         <img :src="require('~/assets/images/singles/Single-Song_GooglePlay.svg')" alt="Google Play">
         <img :src="require('~/assets/images/singles/Single-Song_SoundCloud.svg')" alt="SoundCloud">
         <img :src="require('~/assets/images/singles/Single-Song_Vimeo.svg')" alt="Vimeo">   
         <img :src="require('~/assets/images/singles/Single-Song_Youtube.svg')" alt="Youtube">   
-        <img :src="require('~/assets/images/singles/Single-Song_Tidal.svg')" alt="Tidal">   
         <img :src="require('~/assets/images/singles/Single-Song_Deezer.svg')" alt="Deezer">   
+        <img :src="require('~/assets/images/singles/Single-Song_Spotify.svg')" alt="Spotify">   
     </div>
   </div>
 
