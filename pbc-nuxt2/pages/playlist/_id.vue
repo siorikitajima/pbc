@@ -1,18 +1,20 @@
 <template>
-  <div class="pagewrapper">
+<div>
+  <div class="pagewrapper" @scroll="onScroll">
     <div v-if="playlistInfo">
-        <SinglePlaylist :playlist="playlistInfo" />
+        <SinglePlaylist :playlistInfo="playlistInfo" />
     </div>
 
         <div v-if="playlistData.length">
-            <TableSongList :fltdsongs="playlistData" :dist="'song'" />
+            <TableSongList :fltdsongs="playlistData.slice(0, loadNum.loadTo)" :dist="'song'" />
         </div>
         <div v-else><TableLoading /></div>
     </div>
+</div>
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex';
+import { mapGetters } from 'vuex';
 import axios from 'axios';
 import baseURL from '~/assets/api-url.js'
 
@@ -36,6 +38,14 @@ export default {
         }
     },
     params: [ 'id' ],
+    data() {
+        return {
+            loadNum: {
+                offset: 0,
+                loadTo: 20
+            }
+        }
+    },
     async asyncData({ params, store }) {
         let theId = params.id
         let parts, theNum
@@ -53,11 +63,24 @@ export default {
         return { singplaylist, theId, playlistInfo }
     },
     computed: {
-        ...mapState( ['songs'] ),
         ...mapGetters({
             slug: 'SLUG',
             playlistData: 'PLAYLIST_DATA'
         })
+    },
+    methods: {
+        onScroll ({ target: { scrollTop, clientHeight, scrollHeight }}) {
+            if (scrollTop + clientHeight >= scrollHeight) {
+                this.loadMorePosts(scrollTop, clientHeight, scrollHeight)
+            }
+        },
+        loadMorePosts(){
+            let offset = this.loadNum.loadTo
+            let leng = this.playlistData.length
+            let leftOvers = leng - offset
+            this.loadNum.offset = offset
+            this.loadNum.loadTo = (leftOvers < (offset + 20)) ? leng : offset + 20
+        }
     }
 }
 </script>
@@ -65,6 +88,14 @@ export default {
 <style scoped>
 .pagewrapper {
     padding: 50px 0;
+    width: 100%;
+    height: calc(100% - 100px);
+    top: 0;
+    left: 0;
+    position: fixed;
+    overflow-y: scroll;
+    transition-duration: 200ms;
+    z-index: 0;
 }
 h2 {
     width: fit-content;

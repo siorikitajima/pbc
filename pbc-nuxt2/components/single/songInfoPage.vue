@@ -90,7 +90,7 @@ export default {
 .wrapper {
     width: 800px;
     max-width: 100%;
-    height: 100%;
+    height: fit-content;
     margin: 0 auto;
 }
 .flex {

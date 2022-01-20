@@ -39,6 +39,7 @@ export default {
     display: flex;
     width: fit-content;
     margin: 0 auto;
+    max-width: calc(100% - 40px);
 }
 .ascover {
     width: 50px;
@@ -69,7 +70,7 @@ export default {
 .ascover .screen img, .ascover .playing img {
     width: 40px;
     height: 40px;
-    padding: 10px;
+    padding: 5px;
 }
 @media (hover: hover) {
     .ascover .screen:hover {
@@ -85,5 +86,12 @@ export default {
     flex-shrink: 0;
     margin: 3px 0 0 10px;
     text-align: left;
+    max-width: inherit;
+}
+
+@media (max-width: 960px) {
+    .song {
+        padding-right: 50px;
+    }
 }
 </style>

@@ -43,10 +43,13 @@ export default {
         padding: 10px;
         background: #eee;
         margin: 10px 0;
+        border-radius: 5px;
     }
-    ul.categorys li:hover {
-        background: #0092c5;
-        color: #fff;
-        transition-duration: 200ms;
+    @media(hover: hover) {
+        ul.categorys li:hover {
+            background: #0092c5;
+            color: #fff;
+            transition-duration: 200ms;
+        }
     }
 </style>

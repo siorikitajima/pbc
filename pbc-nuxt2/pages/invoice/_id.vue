@@ -110,9 +110,9 @@ h2 {
 }
 .wrapper {
     width: 100%;
-    height: 100%;
+    height: calc(100% - 80px);
+    padding: 0 0 80px 0;
     margin: 0;
-    padding: 0;
     overflow: auto;
 }
 .invoice {
@@ -143,7 +143,6 @@ h2 {
 }
 .cartItem.head {
     border-bottom: #666 solid 2px;
-
 }
 .cartItem div {
     display: flex;
@@ -201,5 +200,35 @@ button.download {
     aspect-ratio: 1/1;
     height: 40px;
     width: 100%;
+}
+@media(max-width: 960px) {
+    .wrapper {
+        height: calc(100% - 120px);
+        padding: 0 0 120px 0;
+    }
+}
+
+@media(max-width: 800px) {
+
+    .cartItem.head div {
+        display: block;
+        text-align: left;
+    }
+    .cartItem div.invoiceHead div.headerR {
+        text-align: left;
+        margin-top: 20px;
+    }
+
+    .invoice {
+        padding: 5%;
+        box-shadow: none;
+        margin: 60px auto 40px auto;
+    }
+}
+@media(max-width: 600px) {
+    .cartItem .price {
+        margin-left: 10px;
+        flex-shrink: 0;
+    }
 }
 </style>

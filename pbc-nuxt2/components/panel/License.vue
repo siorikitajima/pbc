@@ -21,8 +21,8 @@
 
         <LicenseDetail v-if="step1 && step2 && step3 && !custom && !full || step1 && step2 && !step3 && fltLicense2.length == 1 && fltLicense2[0].name && !custom && !full || step1 && !step2 && fltLicense.length == 1 && fltLicense[0].name && !custom && !full" :license="slctLicense[0] || fltLicense2[0] || fltLicense[0]" :song="licenseSong[0]" @addToCart="addToCart($event)" />
 
-        <LicenseForm v-if="customForm" :category="categoryName" :type="typeName[0] || ''" :subType="subTypeName || ''" />
-        <LicenseFullForm v-if="fullForm" :category="categoryName" :type="typeName[0] || ''" :subType="subTypeName || ''" />
+        <LicenseForm v-if="customForm" :category="categoryName" :type="typeName[0] || ''" :subType="subTypeName || ''" @sentForm="closeLicenseP" />
+        <LicenseFullForm v-if="fullForm" :category="categoryName" :type="typeName[0] || ''" :subType="subTypeName || ''" @sentForm="closeLicenseP" />
 
         <div class="closeIcon panelNav" @click="closeLicenseP">
             <img :src="require('~/assets/images/global/Close_Icon_dark.svg')" alt="Close">
@@ -228,6 +228,7 @@ export default {
     background: #444;
     color: #fff;
     position: relative;
+    text-align: left;
 }
 .selectedList:hover {
     background: #0092C5;
@@ -254,9 +255,10 @@ export default {
 @media(max-width: 800px) {
     .licensePanelWrapper {
         width: calc(100% - 20px);
-        height: calc(100% - 20px);
+        height: calc(100% - 130px);
+        max-height: unset;
         max-width: unset;
-        padding: 10px;
+        padding: 20px 10px 10px 10px;
         top: 0;
         right: 0;
         border-radius: 0;
@@ -268,7 +270,7 @@ export default {
         position: absolute;
     }
     .panelNav.closeIcon {
-        right: calc(50% - 75px);
+        right: 10px;
     }
 }
 </style>

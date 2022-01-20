@@ -13,7 +13,7 @@
       <PlayerSimilar v-if="similarPanel" />
     <!-- </transition> -->
 
-    <PlayerBar v-if="playerBar" />
+    <PlayerBar :class="{ 'hidePlayer' : !playerBar }" />
 
     <PanelCart v-if="cartPanel" />
 
@@ -47,3 +47,9 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.hidePlayer {
+  visibility: hidden;
+}
+</style>

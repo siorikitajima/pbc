@@ -7,7 +7,7 @@
             <span> Tracks</span></p>
           </div>
           <!-- <GlobalRangeSelector class="rangeSelector" :songCount="songCount" :ids="ids" /> -->
-          <GlobalRangeSlider v-if="rangeSlider" :songCount="songCount" :type="actionType" @setRange="setRange($event)" @close="rangeSlider=false" />
+          <GlobalRangeSlider v-if="rangeSlider" :songCount="songCount" :type="actionType" @setRange="rangeAction($event)" @close="rangeSlider=false" />
         <!-- <div class="rangeSelector">
             <div v-if="songCount > 10">
                 <input type="number" min="1" :max="songTo-1" v-model="songFrom"/>
@@ -111,6 +111,9 @@ export default {
     },
     computed: {
         ...mapState(['rhythm', 'speed', 'experimental', 'mood', 'organic', 'filter']),
+        // ...mapGetters({
+        //     ids: 'FILTERED_SONGS_IDS'
+        // }),
         rthActive() {
             if (this.rhythm.min == 0 && this.rhythm.max == 10) {
                 return false } else { return true }
@@ -191,7 +194,14 @@ export default {
             } else if (type == 'organic') {
                 this.$store.commit('SET_ORG', { min: 0, max: 10 })
             } 
-            // this.$store.dispatch('filterSongs')
+            const query = {
+                rhythm: { min: this.rhythm.min, max: this.rhythm.max },
+                speed: { min: this.speed.min, max: this.speed.max },
+                experimental: { min: this.experimental.min, max: this.experimental.max },
+                mood: { min: this.mood.min, max: this.mood.max },
+                organic: { min: this.organic.min, max: this.organic.max }
+            }
+            localStorage.setItem("filterValues", JSON.stringify(query))
         },
         clearSearchValue(data) {
             for(let s = 0; s < this.searchKeys.length; s++ ) {
@@ -217,36 +227,27 @@ export default {
                     }
                 }
             }
-                // this.$store.dispatch('filterSongs')
+            localStorage.setItem("searchKeys", JSON.stringify(this.filter))
         },
         playThem() {
-            if(this.ids.length < 10) {
-                this.$store.commit('PLAY_ALL', this.ids)
+            if(this.ids.length < 11) {                
+                this.$store.dispatch('playThemAction', this.ids)
             } else {
                 this.actionType = 'PLAY'
                 this.rangeSlider = true
             }
         },
         addThem() {
-            if(this.ids.length < 10) {
-                this.$store.commit('ADD_ALL', this.ids)
+            if(this.ids.length < 11) {
+                this.$store.dispatch('AddThemAction', this.ids)
             } else {
                 this.actionType = 'ADD TO QUEUE'
                 this.rangeSlider = true
             }
         },
-        setRange(data) {
-            if(data.type == 'PLAY') {
-                let rangeIDs = this.ids.slice(data.from, data.to)
-                this.$store.commit('PLAY_ALL', rangeIDs)
-            } else {
-                let rangeIDs = this.ids.slice(data.from, data.to)
-                let leng = Number(data.to - data.from)
-                this.$store.commit('ADD_ALL', rangeIDs)
-                setTimeout(() => {
-                    this.$store.dispatch('addedQPanel', leng)
-                }, 1000)
-            }
+        rangeAction(data) {
+            let payload = { data: data, ids: this.ids }
+            this.$store.dispatch('setRange', payload)
         },
         openAction() {
             this.mobileAction = true
@@ -282,6 +283,15 @@ export default {
         clearAll() {
             this.$store.commit('clearFilter')
             this.$store.commit('CLEAR_PB_FILTERS')
+            const query = {
+                rhythm: { min: this.rhythm.min, max: this.rhythm.max },
+                speed: { min: this.speed.min, max: this.speed.max },
+                experimental: { min: this.experimental.min, max: this.experimental.max },
+                mood: { min: this.mood.min, max: this.mood.max },
+                organic: { min: this.organic.min, max: this.organic.max }
+            }
+            localStorage.setItem("filterValues", JSON.stringify(query))
+            localStorage.setItem("searchKeys", JSON.stringify(this.filter))
         }
     }
 }

@@ -104,7 +104,7 @@ h2 {
 }
 .wrapper {
     width: 800px;
-    height: 100%;
+    height: fit-content;
     max-width: 100%;
     margin: 0 auto;
 }

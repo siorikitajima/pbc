@@ -45,6 +45,7 @@ import { mapState } from 'vuex'
 export default {
     name: 'LicenseForm',
     props: [ 'category', 'type', 'subType' ],
+    emits: ['sentForm'],
     computed: {
         ...mapState(['licenseSong'])
     },
@@ -81,6 +82,7 @@ export default {
             this.$store.dispatch('sentPanel')
             this.$refs.thisForm.reset()
             this.$store.commit('CLOSE_LICENSE_PANEL')
+            this.$emit('sentForm')
         }
     }
 }

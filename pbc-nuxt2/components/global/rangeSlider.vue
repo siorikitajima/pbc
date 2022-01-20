@@ -34,14 +34,23 @@ export default {
     },
     methods: {
         setTheRange() {
-            let fromN = (this.songFrom > this.songTo) ? Number(this.songTo) : Number(this.songFrom -1)
-            let toN = (this.songFrom > this.songTo) ? Number(this.songFrom -1) : Number(this.songTo)
-            let data = {
-                type: this.type,
-                from: fromN,
-                to: toN
+            let fromN = Number(this.songFrom -1)
+            let toN = Number(this.songTo)
+            if(fromN < toN) {
+                let data = {
+                    type: this.type,
+                    from: fromN,
+                    to: toN
+                }
+                this.$emit('setRange', data)
+            } else {
+                let data = {
+                    type: this.type,
+                    from: toN,
+                    to: fromN
+                }
+                this.$emit('setRange', data)
             }
-            this.$emit('setRange', data)
             this.$emit('close')
         }
     }

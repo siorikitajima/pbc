@@ -11,7 +11,17 @@ const albumSchema = new Schema(
     Tracks: { type: Number },
     Rate: { type: Number },
     Description: { type: String },
-    AlbumArt: { type: String }
+    AlbumArt: { type: String },
+    BandcampURL: { type: String },
+    SoundcloudURL: { type: String },
+    SoundCloudId: { type: String },
+    SpotifyId: { type: String },
+    SpotifyURL: { type: String },
+    AppleMusicURL: { type: String },
+    DeezerURL: { type: String },
+    TidalURL: { type: String },
+    VimeoURL: { type: String },
+    YoutubeURL: { type: String }
 },
   { timestamps: true },
 );

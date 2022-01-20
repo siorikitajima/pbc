@@ -11,7 +11,7 @@
         <img :src="coverImg(sqPData.CatNum, sqPData.ID)" :alt="sqPData.AlbumTitle">
     </div>
     <div class="info">
-        <p>{{ sqPData.ID }} // {{ sqPData.Title }} <span> by {{ sqPData.ArtistName }}</span></p>
+        <p>{{ sqPData.ID }} // <NuxtLink :to="'/song/' + sqPData.ID + '-' + slug(sqPData.Title)">{{ sqPData.Title }}</NuxtLink> <span> by <NuxtLink :to="'/project/' + slug(sqPData.ArtistName)">{{ sqPData.ArtistName }}</NuxtLink></span></p>
         <div class="progress_bar_flex">
             <!-- <div class="progress__duration">{{ duration }}</div> -->
             <div class="duration progress__bar" ref="progressBar" @click="clickProgress">
@@ -130,16 +130,18 @@ export default {
             sqQData: 'QUEUE_DATA',
             sqEData: 'ENDED_DATA',
             slug: 'SLUG',
-            coverImg: 'COVER_IMG'
-        }),
-        songSrc() { 
-            return 'https://pblibrary.s3.us-east-2.amazonaws.com/' + this.sqPData.CatNum + '/' + this.sqPData.ID  + '.mp3';
-        }
+            coverImg: 'COVER_IMG',
+            songSrc: 'AUDIO_SRC'
+        })
+        // songSrc() { 
+        //     return 'https://pblibrary.s3.us-east-2.amazonaws.com/' + this.sqPData.CatNum + '/' + this.sqPData.ID  + '.mp3';
+        // }
     },
     methods: {
         play() {
             if (this.audio.paused) {
-                this.audio.play();
+                this.resetPlayer()
+                // this.audio.play()
                 this.$store.commit('IS_PLAYING_ON')
                 // this.isTimerPlaying = true;
             } else {
@@ -271,35 +273,34 @@ export default {
         }
     },
     mounted() {
-        let vm = this;
         this.audio = new Audio();
-        this.audio.src = 'https://pblibrary.s3.us-east-2.amazonaws.com/' + this.sqPData.CatNum + '/' + this.sqPData.ID  + '.mp3';
-        this.audio.ontimeupdate = function() {
-        vm.generateTime();
+        this.audio.src = this.songSrc
+        // 'https://pblibrary.s3.us-east-2.amazonaws.com/' + this.sqPData.CatNum + '/' + this.sqPData.ID  + '.mp3';
+        this.audio.ontimeupdate = ()=> {
+            this.generateTime()
         };
-        this.audio.onloadedmetadata = function() {
-        vm.generateTime();
+        this.audio.onloadedmetadata = ()=> {
+            this.generateTime()
         };
-        this.audio.onended = function() {
-        vm.nextTrack();
-        // this.isTimerPlaying = true;
+        this.audio.onended = ()=> {
+            this.nextTrack()
         };
 
         if(this.sqQueue.length == 0 && !localStorage.getItem("sqQueue")) { 
-            vm.setQueue([])
-            vm.setPlaying([])
-            vm.setEnded([])
+            this.setQueue([])
+            this.setPlaying([])
+            this.setEnded([])
         } else {
           if(this.sqQueue.length == 0) {
               let qData = JSON.parse(localStorage.getItem("sqQueue"))
               let pData = JSON.parse(localStorage.getItem("sqPlaying"))
               let eData = JSON.parse(localStorage.getItem("sqEnded"))
-              vm.setQueue(qData)
-              vm.setPlaying(pData)
-              vm.setEnded(eData)
+              this.setQueue(qData)
+              this.setPlaying(pData)
+              this.setEnded(eData)
           }
         }
-        vm.setLocalStorage()
+        this.setLocalStorage()
     },
    watch: { 
       	sqPData(newV, oldV) { 
@@ -308,13 +309,13 @@ export default {
         sqQData(newV, oldV) { 
             this.setLocalStorage()
         },
-        sqEData(newV, oldV) { 
-            this.setLocalStorage()
-        },
+        // sqEData(newV, oldV) { 
+        //     this.setLocalStorage()
+        // },
         alsoPlay(newV, oldV) {
-            setTimeout(() => {
-                this.resetPlayer();
-            }, 100)
+            // setTimeout(() => {
+                this.resetPlayer()
+            // }, 100)
         }
       }
 }
@@ -335,6 +336,7 @@ export default {
     color: #ffffff88;
     font-size: 0.9em;
     z-index: 5000;
+    flex-shrink: 0;
 }
 .thePlayer .controller {
     width: 160px;
@@ -366,7 +368,7 @@ export default {
 .thePlayer .info {
     margin: 0 20px;
     width: inherit;
-    max-width: calc(100% - 687px);
+    /* max-width: calc(100% - 687px); */
     flex-shrink: 2;
 }
 .thePlayer .info p {

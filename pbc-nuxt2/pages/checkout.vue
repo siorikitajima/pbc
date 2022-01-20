@@ -3,7 +3,7 @@
     <div class="bodytext" v-if="!paidFor">
         <h2 class="first sectTitle">// Checkout //</h2>
 
-        <CartItem v-for="item in cart" :key="item.songID + '-' + item.songName" :item="item" :page="true" />
+        <CartItem v-for="item in cart" :key="item.songID + '-' + item.songName" :item="item" :page="false" />
 
         <div class="cartItem total">
             <div>
@@ -65,10 +65,14 @@
                 <p>Download .WAV</p>
             </button> -->
             <a :href="mp3Url" target="_blank" download>
-            <button class="large payment">
+            <button class="large payment" v-if="downloadable">
              <!-- @click="downloadFiles(orderedSongIds, 'mp3')"> -->
                 <img src="~/assets/images/license/audio-file.svg" alt="download">
                 <p>Download .MP3</p>
+            </button>
+            <button class="large payment" v-else>
+                <img src="~/assets/images/license/Loading_icon.svg" alt="download">
+                <p>Prepping MP3...</p>
             </button>
             </a>
             <NuxtLink :to="'/invoice/' + finalOrder.pbId">
@@ -139,7 +143,8 @@ export default {
             paidFor: false,
             order: {},
             finalOrder: {},
-            mp3Url: ''
+            mp3Url: '',
+            downloadable: false
         }
     },
     async asyncData() {
@@ -318,11 +323,13 @@ export default {
             .catch(function (error) {
                 console.log(error);
             });
-
         },
         set_mp3Url(data){
             this.mp3Url = data
             console.log(this.mp3Url)
+            setTimeout(()=>{
+                this.downloadable = true
+            }, 10000)
         },
         async emailConf() {
             let url = baseURL + '/order-conf'
@@ -382,9 +389,9 @@ h2.first {
 }
 .wrapper {
     width: 100%;
-    height: 100%;
+    height: calc(100% - 80px);
     margin: 0;
-    padding: 0 0 60px 0;
+    padding: 0 0 80px 0;
     overflow: auto;
 }
 .paypal {
@@ -392,19 +399,20 @@ h2.first {
     text-align: center;
     transform: scale(0.8);
 }
-.cartItem {
+/* .cartItem {
     width: calc(100% - 20px);
     height: fit-content;
     padding: 20px 10px;
     /* display: flex;
-    justify-content: space-between; */
+    justify-content: space-between; 
     border-bottom: #ccc solid 1px;
 }
+*/
 .cartItem.head {
     border-bottom: #666 solid 2px;
-
+    padding: 20px 0;
 }
-.cartItem div {
+/*.cartItem div {
     display: flex;
     justify-content: space-between;
 }
@@ -426,10 +434,12 @@ h2.first {
     background: #666;
     transition-duration: 200ms;
 }
-.cartItem.total {
+*/
+ /* .cartItem.total {
     border-top: #666 solid 2px;
     border-bottom: none;
-}
+}  */
+/*
 .cartItem h4 {
     margin: 5px 0;
 }
@@ -450,7 +460,7 @@ h2.first {
 }
 .cartItem .price p:hover {
     color: #0092c5;
-}
+} */
 .btnbox {
     display: flex;
     justify-content: center;
@@ -476,7 +486,7 @@ button.promo.apply.active {
     opacity: 1;
 }
 
-.cartItem .cover {
+/* .cartItem .cover {
     width: 40px;
     height: 40px;
     margin-right: 10px;
@@ -487,7 +497,7 @@ button.promo.apply.active {
     aspect-ratio: 1/1;
     height: 40px;
     width: 100%;
-}
+} */
 .points {
     display: flex;
     background: #eee;
@@ -509,4 +519,49 @@ button.promo.apply.active {
     font-weight: bold;
     border-bottom: #0092c5 1px solid;
 }
+
+.cartItem.total {
+    padding: 15px 0;
+    border-top: #666 solid 2px;
+    border-bottom: none;
+}
+.cartItem.total div {
+    display: flex;
+    justify-content: space-between;
+}
+
+@media(max-width: 960px) {
+    .wrapper {
+        height: calc(100% - 120px);
+        padding: 0 0 120px 0;
+    }
+}
+
+@media(max-width: 800px) {
+    .paypal {
+        transform: scale(0.9);
+    }
+    .cartItem.total div.promoHeight {
+        display: block;
+        text-align: right;
+    }
+    .btnbox {
+    display: block;
+    margin: 20px auto;
+    }
+    button.payment {
+        width: 100%;
+        margin: 10px 0;
+        display: flex;
+        justify-content: center;
+    }
+    button.payment img {
+        width: 30px;
+        margin-right: 10px;
+    }
+    button.payment p {
+        line-height: 1.6em;
+    }
+}
+
 </style>

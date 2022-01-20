@@ -1,11 +1,12 @@
 <template>
-  <div class="pagewrapper">
+<div>
+  <div class="pagewrapper" @scroll="onScroll">
     <div v-if="singproj">
         <SingleArtist :artist="singproj" :ids="songIDs" />
     </div>
 
         <h2 class="sectTitle">// FEATURED TRACKS //</h2>
-        <div v-if="SearchedSongs.length">
+        <div v-if="dataLoad">
             <TableSongList :fltdsongs="SearchedSongs.slice(0, 5)" :dist="'project'" />
         </div>
         <div v-else><TableLoading /></div>
@@ -16,7 +17,7 @@
             <SingleProjectAlbums v-if="projectsAlbums" :projectsAlbums="projectsAlbums" />
         </div>
 
-        <div v-if="SearchedSongs.length > 5">
+        <div v-if="dataLoad && SearchedSongs.length > 5">
             <TableSongList :fltdsongs="SearchedSongs.slice(5, 10)" :dist="'project'" />
         </div>
 
@@ -25,7 +26,7 @@
             <SingleRelatedArtists v-if="singproj" :artist="singproj" />
         </div>
 
-        <div v-if="SearchedSongs.length > 10">
+        <div v-if="dataLoad && SearchedSongs.length > 10">
             <TableSongList :fltdsongs="SearchedSongs.slice(10, SearchedSongs.length-1)" :dist="'project'" />
         </div>
     </div>    
@@ -37,10 +38,11 @@
         </div>
 
         <div v-if="SearchedSongs.length > 5">
-            <TableSongList :fltdsongs="SearchedSongs.slice(5, SearchedSongs.length-1)" :dist="'project'" />
+            <TableSongList :fltdsongs="SearchedSongs.slice(5, loadNum.loadTo)" :dist="'project'" />
         </div>
     </div>
   </div>
+</div>
 </template>
 
 <script>
@@ -83,6 +85,15 @@ export default {
         }
     },
     params: [ 'slug' ],
+    data() {
+        return {
+            dataLoad: false,
+            loadNum: {
+                offset: 0,
+                loadTo: 20
+            }
+        }
+    },
     async asyncData({ params }) {
         let theSlug = params.slug;
         let projectUrl = baseURL + '/project/' + theSlug
@@ -119,6 +130,21 @@ export default {
         this.$store.commit('clearFilter')
         let theName = this.singproj.ArtistName
         this.$store.commit('setFilterProject', {key: theName})
+        this.dataLoad = true
+    },
+    methods: {
+        onScroll ({ target: { scrollTop, clientHeight, scrollHeight }}) {
+            if (scrollTop + clientHeight >= scrollHeight) {
+                this.loadMorePosts(scrollTop, clientHeight, scrollHeight)
+            }
+        },
+        loadMorePosts(){
+            let offset = this.loadNum.loadTo
+            let leng = this.SearchedSongs.length
+            let leftOvers = leng - offset
+            this.loadNum.offset = offset
+            this.loadNum.loadTo = (leftOvers < (offset + 20)) ? leng : offset + 20
+        }
     }
 }
 </script>
@@ -126,6 +152,14 @@ export default {
 <style scoped>
 .pagewrapper {
     padding: 50px 0;
+    width: 100%;
+    height: calc(100% - 100px);
+    top: 0;
+    left: 0;
+    position: fixed;
+    overflow-y: scroll;
+    transition-duration: 200ms;
+    z-index: 0;
 }
 h2 {
     width: fit-content;

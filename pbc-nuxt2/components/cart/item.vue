@@ -74,15 +74,17 @@ export default {
 }
 .cartItem div.songInfo {
     margin: 5px 0;
+    justify-content: left;
+    /* justify-content: space-between; */
 }
-.cartItem div.songInfo.wider {
+/* .cartItem div.songInfo.wider {
     justify-content: left;
     position: relative;
-}
-.cartItem div.songInfo.wider div.right {
+} */
+/* .cartItem div.songInfo.wider div.right {
     position: absolute;
     right: 0;
-}
+} */
 .cartItem div.right {
     justify-content: right;
 }
@@ -103,25 +105,6 @@ export default {
     background: #666;
     transition-duration: 200ms;
 }
-.cartItem.total {
-    border-top: #666 solid 2px;
-    border-bottom: none;
-}
-.cartItem h4 {
-    margin: 0;
-}
-.cartItem p {
-    font-size: 0.9em;
-}
-.cartItem .price {
-    text-align: right;
-}
-.cartItem .price p {
-    font-size: 0.8em;
-}
-.cartItem .price p:hover {
-    color: #0092c5;
-}
 
 .cartItem .cover {
     width: 40px;
@@ -135,11 +118,58 @@ export default {
     height: 40px;
     width: 100%;
 }
+.cartItem {
+    width: calc(100% - 20px);
+    height: fit-content;
+    padding: 20px 10px;
+    /* display: flex;
+    justify-content: space-between; */
+    border-bottom: #ccc solid 1px;
+}
+.cartItem div {
+    display: flex;
+    justify-content: space-between;
+}
+.cartItem h4 {
+    margin: 5px 0;
+}
+.cartItem p {
+    font-size: 0.9em;
+}
+.cartItem .price {
+    text-align: right;
+    margin-left: 20px;
+}
+.cartItem .price p {
+    font-size: 0.8em;
+}
+.cartItem .price p:hover {
+    color: #0092c5;
+}
 .songInfoText {
-    width: 210px;
+    width: inherit;
 }
 .songInfoText.wider {
     width: inherit;
+}
+
+@media(max-width: 800px) {
+    .cartItem div {
+        justify-content: space-between;
+    }
+
+    .cartItem div.songInfo {
+        justify-content: left;
+    }
+    .songInfoText {
+        width: inherit;
+    }
+    .cartItem div.right {
+    justify-content: right;
+    }
+    .cartItem div.songInfo.wider {
+        margin: 5px 0;
+    }
 }
 
 </style>

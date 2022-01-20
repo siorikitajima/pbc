@@ -69,10 +69,8 @@
         
          -->
 
-        <p>Created by PatternBased<br/>
-        Music production and database by Joseph Minadeo<br/>
-        Code and design by Siori Kitajima</p>
-        <p>Beautiful photos by amazing photographers from Unsplash.com. If you’d like to know the artist, right click to open the image in new tab. The file name contains the artist name and the ID# for you to find the original image in Unsplash.com.</p>
+        <p class="smallFont">Created by PatternBased</p>
+        <p class="smallFont">Beautiful photos by amazing photographers from Unsplash.com. If you’d like to know the artist, right click to open the image in new tab. The file name contains the artist name and the ID# for you to find the original image in Unsplash.com.</p>
     </div>
     </div>  
 </div>
@@ -150,6 +148,9 @@ h2.first {
     padding: 0;
     overflow: auto;
 }
+.smallFont {
+    font-size: 0.9em;
+}
 .about {
     width: 100%;
     height: calc(100% - 100px);
@@ -219,4 +220,10 @@ h2.first {
     height: auto;
     margin: auto auto 10px -5px;
 } */
+@media(max-width: 840px) {
+    .credit {
+        width: 90vw;
+        padding: 50px 5vw;
+    }
+}
 </style>

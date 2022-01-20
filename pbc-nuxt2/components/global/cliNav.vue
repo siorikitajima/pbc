@@ -8,8 +8,8 @@
     
       <div v-if="cart.length > 0" class="num" :class="{ 'blue': sideNavOpen }" @click="$store.commit('TOGGLE_CART')">{{cart.length}}</div>
 
-      <img v-if="sideNavOpen" class="navIcons" :src="require('~/assets/images/header/Menu_Icon_white.svg')" alt="Menu" @click="sideNavHandler">
-      <img v-else class="navIcons" :src="require('~/assets/images/header/Menu_Icon.svg')" alt="Menu" @click="sideNavHandler">
+      <img v-if="sideNavOpen" class="navIcons" :src="require('~/assets/images/header/Menu_Icon_white.svg')" alt="Menu" @click="$store.commit('MENU_TOGGLE')">
+      <img v-else class="navIcons" :src="require('~/assets/images/header/Menu_Icon.svg')" alt="Menu" @click="$store.commit('MENU_TOGGLE')">
   </div>
 
     <transition name="slideFRRight">
@@ -43,27 +43,31 @@
 
 <script>
 import GlobalCopyright from '../../components/global/Copyright.vue'
+import { mapState } from 'vuex'
 
 export default {
     name: 'CliNav',
     components: { GlobalCopyright },
     props: ['cart'],
-    data() {
-        return {
-            sideNavOpen: false
-        }
+    // data() {
+    //     return {
+    //         sideNavOpen: false
+    //     }
+    // },
+    computed: {
+        ...mapState(['sideNavOpen']),
     },
     methods: {
-        sideNavHandler() {
-            this.sideNavOpen = !this.sideNavOpen
-        },
+        // sideNavHandler() {
+        //     this.sideNavOpen = !this.sideNavOpen
+        // },
         setLocalStorage() {
             localStorage.setItem("cart", JSON.stringify(this.cart))
         },
     },
     watch:{
     $route (to, from){
-        this.sideNavOpen = false;
+        this.$store.commit('MENU_CLOSE')
     },
     cart(newV, oldV) { 
             this.setLocalStorage()
@@ -108,12 +112,6 @@ export default {
 .num {
     cursor: pointer;
 }
-@media (max-width: 600px) {
-    .sideNav {
-    width: calc(100% - 40px);
-    max-width: none;
-    }
-}
 .footer {
     width: calc(100% - 40px);
     padding: 50px 20px;
@@ -124,4 +122,20 @@ export default {
     position: absolute;
     bottom: 50px;
 }
+@media (max-width: 600px) {
+    .sideNav {
+    width: calc(100% - 40px);
+    max-width: none;
+    overflow: auto;
+    }
+    .footer {
+        position: static;
+        bottom: unset;
+        vertical-align: unset;
+        width: 100%;
+        /* width: calc(100% - 0); */
+        margin: 70px -20px 50px -20px;
+    }
+}
+
 </style>

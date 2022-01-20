@@ -45,6 +45,8 @@ export const state = () => ({
     singleSongPanel: false,
     singSonData: [],
 
+    sideNavOpen: false,
+
     flashPanel: false,
     flashText: '',
     
@@ -98,6 +100,19 @@ export const mutations = {
     },
     TOGGLE_QUEUE: (state) => {
         state.queuePanel = !state.queuePanel
+        if(state.sideNavOpen) {
+            state.sideNavOpen = false
+            state.queuePanel = true
+        }
+    },
+    MENU_OPEN: (state) => {
+        state.sideNavOpen = true
+    },
+    MENU_CLOSE: (state) => {
+        state.sideNavOpen = false
+    },
+    MENU_TOGGLE: (state) => {
+        state.sideNavOpen = !state.sideNavOpen
     },
     CLOSE_SIMSON: (state) => {
         state.similarPanel = false
@@ -558,6 +573,76 @@ export const actions = {
             commit('OPEN_LICENSE_PANEL', id)
         }, 500)
     },
+    PlayAllIDs({ commit }, ids) {
+        let song1 = ids[0]
+        commit('PLAY_THIS', song1)
+        console.log('started playing')
+    },
+    setRange({ commit, dispatch }, { data, ids }) {
+        if(data.type == 'PLAY') {
+            let rangeIDs = ids.slice(data.from, data.to)
+            dispatch('PlayAllIDs', rangeIDs)
+            setTimeout(()=> {
+                let thelen = rangeIDs.length
+                let theRest = rangeIDs.splice(1, thelen - 1)
+                commit('ADD_ALL', theRest)
+                let leng = Number(data.to - data.from)
+                setTimeout(() => {
+                    dispatch('addedQPanel', leng -1)
+                }, 1000)
+            }, 3000)
+        } else {
+            let rangeIDs = ids.slice(data.from, data.to)
+            let leng = Number(data.to - data.from)
+            commit('ADD_ALL', rangeIDs)
+            setTimeout(() => {
+                dispatch('addedQPanel', leng)
+            }, 1000)
+        }
+    },
+    async playThemAction({ commit, dispatch }, ids ) {
+        let rangeIDs = ids
+        await dispatch('PlayAllIDs', rangeIDs)
+        setTimeout(()=> {
+            let thelen = rangeIDs.length
+            let theRest = rangeIDs.splice(1, thelen - 1)
+            commit('ADD_ALL', theRest)
+            let leng = ids.length
+            setTimeout(() => {
+                dispatch('addedQPanel', leng)
+            }, 1000)
+        }, 3000)
+    },
+    async playThemPlaylist({ state, commit, dispatch }) {
+        let rangeIDs = state.playlist
+        await dispatch('PlayAllIDs', rangeIDs)
+
+        let thelen = rangeIDs.length
+        let theRest = rangeIDs.splice(1, thelen - 1)
+        commit('ADD_ALL', theRest)
+        let leng = state.playlist.length
+        setTimeout(() => {
+            dispatch('addedQPanel', leng)
+        }, 1000)
+    },
+    AddThemAction({ commit, dispatch }, ids ) {
+        commit('ADD_ALL', ids)
+        let leng = ids.length
+        setTimeout(() => {
+            dispatch('addedQPanel', leng)
+        }, 1000)
+    },
+    // AddAllIDs({ commit }, ids) {
+    //     let thelen = ids.length
+    //     let theRest = ids.splice(1, thelen - 1)
+    //     let steps = Math.floor(theRest/10)
+    //     for(let l = 0; l < steps; l++) {
+    //         commit('ADD_ALL', theRest.slice(10 * l, 10 * l + 9))
+    //         console.log('setRange 10 added')
+    //     }
+    //     commit('ADD_ALL', theRest.slice(10 * steps, thelen - 1))
+    //     console.log('finished adding')
+    // },
     
     /// This actuion is currently used in Single Song Page, but should be merged to 'OpenSingSonP'
     async OpenSimSong({ commit, state, getters }, id) {
@@ -577,6 +662,9 @@ export const actions = {
             let data = await getters.SIM_SON_PANEL_DATA(id)
             commit('SET_SIMOGP', og)
             commit('OPEN_SIMSON', data)
+        }
+        if(state.sideNavOpen) {
+            commit('MENU_CLOSE')
         }
     },
     async OpenSingSonP({ commit }, id) {
@@ -761,6 +849,10 @@ export const getters = {
             })
             return filtered[0]
         }
+    },
+    AUDIO_SRC: (state, getters) => {
+        let thedata = getters.PLAYING_DATA
+        return 'https://pblibrary.s3.us-east-2.amazonaws.com/' + thedata.CatNum + '/' + thedata.ID  + '.mp3';
     },
     ENDED_DATA: (state) => {
         if(state.sqEnded.length < 1) {
@@ -964,6 +1056,14 @@ export const getters = {
                     filteredList.sort(({Seq:a}, {Seq:b}) => a-b);
             }
       return filteredList
+    },
+    FILTERED_SONGS_IDS: (state, getters) => {
+        let searchedList = getters.FILTERED_SONGS_SEARCH
+        let ids = []
+            for (let s = 0; s < searchedList.length; s++ ) {
+                ids.push(searchedList[s].ID)
+            }
+        return ids
     },
     SONGS_SEARCH: (state) => {
         let filteredList = [...state.songs]

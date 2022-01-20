@@ -1,9 +1,9 @@
 <template>
 <div>
-    <div class="resultWrapper" v-bind:class="{ moveToRight: sliderPanel || presetPanel, moveDown: searchPanel }">
-        <div v-if="SearchedSongs">
-            <TableResultHead :songCount="songCount" v-if="componentLoaded" :ids="tempSongIDs" />
-            <TableSongList :fltdsongs="SearchedSongs" :dist="'result'" />
+    <div class="resultWrapper" v-bind:class="{ moveToRight: sliderPanel || presetPanel, moveDown: searchPanel }" @scroll="onScroll">
+        <div v-if="componentLoaded">
+            <TableResultHead :songCount="songCount" v-if="componentLoaded" :ids='SearchedIDs' />
+            <TableSongList :fltdsongs="SearchedSongs.slice(0, loadNum.loadTo)" :dist="'result'" />
         </div>
         <div v-else><TableLoading /></div>
     </div>
@@ -46,7 +46,11 @@ export default {
             sliderPanel: false,
             presetPanel: false,
             searchPanel: false,
-            componentLoaded: false
+            componentLoaded: false,
+            loadNum: {
+                offset: 0,
+                loadTo: 20
+            }
         }
     },
     mounted() {
@@ -76,35 +80,48 @@ export default {
             this.$store.commit('SET_PRESETS_OG', {rhyMin:rth[0], rhyMax:rth[1], spdMin:spd[0], spdMax:spd[1], expMin:exp[0], expMax:exp[1], modMin:mod[0], modMax:mod[1], orgMin:org[0], orgMax:org[1] })
         } else if (localStorage.getItem("filterValues")) {
             const va = JSON.parse(localStorage.getItem("filterValues"))
-                this.$store.commit('SET_PRESETS_OG', { rhyMin: va.rhythm.min, rhyMax: va.rhythm.max, spdMin: va.speed.min, spdMax: va.speed.max, expMin: va.experimental.min, expMax: va.experimental.max, modMin: va.mood.min, modMax: va.mood.max, orgMin: va.organic.min, orgMax: va.organic.max })            
+            const da = { rhyMin: Number(va.rhythm.min), rhyMax: Number(va.rhythm.max), spdMin: Number(va.speed.min), spdMax: Number(va.speed.max), expMin: Number(va.experimental.min), expMax: Number(va.experimental.max), modMin: Number(va.mood.min), modMax: Number(va.mood.max), orgMin: Number(va.organic.min), orgMax: Number(va.organic.max) }
+            this.$store.commit('SET_PRESETS_OG', da)            
         }
+
         if (localStorage.getItem("searchKeys")) {
             const va = JSON.parse(localStorage.getItem("searchKeys"))
-                this.$store.commit('setAllFilter', { album: va.album, artist: va.artist, project: va.project, song: va.song, instrument: va.instrument, genre: va.genre, tag: va.tag, mood: va.mood, search: va.search, order: va.order })
+            this.$store.commit('setAllFilter', { album: va.album, artist: va.artist, project: va.project, song: va.song, instrument: va.instrument, genre: va.genre, tag: va.tag, mood: va.mood, search: va.search, order: va.order })
                 // if(va.search.length !== 0) {
                 //     //// Save searchkeys from localstrage to $Store
                 // }
+        // } else {
+        //         this.$store.commit('setAllFilter', { album: '', artist: '', project: '', song: '', instrument: '', genre: '', tag: '', mood: '', search: '', order: 'Rate' })
         }
         this.componentLoaded = true
         // this.$store.dispatch('filterSongs')
 
         //// Debug Log
-        let query = {
-            rhythm: { min: this.rhythm.min, max: this.rhythm.max },
-            speed: { min: this.speed.min, max: this.speed.max },
-            experimental: { min: this.experimental.min, max: this.experimental.max },
-            mood: { min: this.mood.min, max: this.mood.max },
-            organic: { min: this.organic.min, max: this.organic.max },
-            search: this.filter 
-        }
-        console.log('Filter Value on Mounted:', query)
+        // let query = {
+        //     rhythm: { min: this.rhythm.min, max: this.rhythm.max },
+        //     speed: { min: this.speed.min, max: this.speed.max },
+        //     experimental: { min: this.experimental.min, max: this.experimental.max },
+        //     mood: { min: this.mood.min, max: this.mood.max },
+        //     organic: { min: this.organic.min, max: this.organic.max },
+        //     search: this.filter 
+        // }
+        // console.log('Filter Value on Mounted:', query)
     },
     computed: {
-        ...mapState(['songs', 'sqPData', 'rhythm', 'speed', 'experimental', 'mood', 'organic', 'filter', 'tempSongIDs']),
+        ...mapState(['rhythm', 'speed', 'experimental', 'mood', 'organic', 'filter']),
         ...mapGetters({
-            PBfilteredSongs: 'PB_FILTERED_SONGS',
-            SearchedSongs: 'FILTERED_SONGS_SEARCH'
+            // PBfilteredSongs: 'PB_FILTERED_SONGS',
+            SearchedSongs: 'FILTERED_SONGS_SEARCH',
+            SearchedIDs: 'FILTERED_SONGS_IDS'
         }),
+        // SearchedIDs() {
+        //     let ids = []
+        //     for (let s = 0; s < this.SearchedSongs.length; s++ ) {
+        //         ids.push(this.SearchedSongs[s].ID)
+        //     }
+        // return ids
+        // },
+
         // fltBySearch() {
         //     if( !this.componentLoaded || !this.songs ) {
         //         return null } else {
@@ -164,7 +181,7 @@ export default {
             // }
         // },
         songCount() {
-            if( !this.componentLoaded || !this.songs ) {
+            if( !this.componentLoaded || !this.SearchedSongs ) {
                 return null } else {
             return this.SearchedSongs.length;
                 }
@@ -209,35 +226,41 @@ export default {
                 }
             }
         },
-        getList4Queue(data) {
-            if(data.type == 'playThem') {
-                let songIds = []
-                for(let s = 0; s < this.SearchedSongs.length; s++) {
-                    let id = this.SearchedSongs[s].ID
-                    songIds.push(id)
-                }
-                this.$store.commit('PLAY_ALL', songIds)
-            } else if (data.type == 'addThem') {
-                let songIds = []
-                for(let s = 0; s < this.SearchedSongs.length; s++) {
-                    let id = this.SearchedSongs[s].ID
-                    songIds.push(id)
-                }
-                this.$store.commit('ADD_ALL', songIds)
-            } 
-        },
-        updateResult(data) { //// need to move to store
-            let alreadyHaveIt = false
-            for(let s = 0; s < this.allSearch.length; s++) {
-                if (this.allSearch[s].key.match(data.key)) {
-                    alreadyHaveIt = true
-                }
-            }
-            if(!alreadyHaveIt) {
-                this.$store.commit('ADD_ALL_SEARCH', data)
-                }
-            if(this.searchPanel) {this.searchPanel = false}
-        },
+        // getList4Queue(data) {
+        //     if(data.type == 'playThem') {
+        //         let songIds = []
+        //         for(let s = 0; s < this.SearchedSongs.length; s++) {
+        //             let id = this.SearchedSongs[s].ID
+        //             songIds.push(id)
+        //         }
+        //         // this.$store.commit('PLAY_ALL', songIds)
+        //         let song1 = songIds[0]
+        //         songIds.splice(songIds.length -1, 1)
+        //         this.$store.commit('PLAY_THIS', song1)
+        //         this.$store.commit('ADD_ALL', songIds)
+        //         console.log('Playing All', song1, songIds)
+        //     } else if (data.type == 'addThem') {
+        //         let songIds = []
+        //         for(let s = 0; s < this.SearchedSongs.length; s++) {
+        //             let id = this.SearchedSongs[s].ID
+        //             songIds.push(id)
+        //         }
+        //         this.$store.commit('ADD_ALL', songIds)
+        //     } 
+        // },
+
+        // updateResult(data) { //// need to move to store
+        //     let alreadyHaveIt = false
+        //     for(let s = 0; s < this.allSearch.length; s++) {
+        //         if (this.allSearch[s].key.match(data.key)) {
+        //             alreadyHaveIt = true
+        //         }
+        //     }
+        //     if(!alreadyHaveIt) {
+        //         this.$store.commit('ADD_ALL_SEARCH', data)
+        //         }
+        //     if(this.searchPanel) {this.searchPanel = false}
+        // },
         // toggleSearchPanel() {
         //     this.searchPanel = !this.searchPanel
         // },
@@ -249,18 +272,33 @@ export default {
         // },
         updateFilter() {
             this.presetPanel = false
-            this.sliderPanel = true
-        }
-    },
-    watch: {
-        SearchedSongs(newV, oldV) {
-            let ids = []
-            for (let s = 0; s < this.SearchedSongs.length; s++ ) {
-                ids.push(this.SearchedSongs[s].ID)
+            if(this.isMobile) {
+                this.sliderPanel = false
+            } else {
+                this.sliderPanel = true
             }
-            this.$store.commit('SET_SONG_IDS', ids)
+        },
+        onScroll ({ target: { scrollTop, clientHeight, scrollHeight }}) {
+            if (scrollTop + clientHeight >= scrollHeight) {
+                this.loadMorePosts()
+            }
+        },
+        loadMorePosts(){
+            let offset = this.loadNum.loadTo
+            let leftOvers = this.songCount - offset
+            this.loadNum.offset = offset
+            this.loadNum.loadTo = (leftOvers < (offset + 20)) ? this.songCount : offset + 20
         }
     }
+    // watch: {
+    //     SearchedSongs(newV, oldV) {
+    //         let ids = []
+    //         for (let s = 0; s < this.SearchedSongs.length; s++ ) {
+    //             ids.push(this.SearchedSongs[s].ID)
+    //         }
+    //         this.$store.commit('SET_SONG_IDS', ids)
+    //     }
+    // }
 }
 
 </script>

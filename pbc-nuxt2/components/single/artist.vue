@@ -31,7 +31,7 @@
         </div>
         </div>
 
-        <GlobalRangeSlider v-if="rangeSlider" :songCount="ids.length" :type="actionType" @setRange="setRange($event)" @close="rangeSlider=false" />
+        <GlobalRangeSlider v-if="rangeSlider" :songCount="ids.length" :type="actionType" @setRange="rangeAction($event)" @close="rangeSlider=false" />
 
     </div>
 </template>
@@ -51,33 +51,24 @@ export default {
     },
     methods: {
         playAll() {
-            if(this.ids.length < 10) {
-                this.$store.commit('PLAY_ALL', this.ids)
+            if(this.ids.length < 11) {
+                this.$store.dispatch('playThemAction', this.ids)
             } else {
                 this.actionType = 'PLAY'
                 this.rangeSlider = true
             }
         },
         addAll() {
-            if(this.ids.length < 10) {
+            if(this.ids.length < 11) {
                 this.$store.commit('ADD_ALL', this.ids)
             } else {
                 this.actionType = 'ADD TO QUEUE'
                 this.rangeSlider = true
             }
         },
-        setRange(data) {
-            if(data.type == 'PLAY') {
-                let rangeIDs = this.ids.slice(data.from, data.to)
-                this.$store.commit('PLAY_ALL', rangeIDs)
-            } else {
-                let rangeIDs = this.ids.slice(data.from, data.to)
-                let leng = Number(data.to - data.from)
-                this.$store.commit('ADD_ALL', rangeIDs)
-                setTimeout(() => {
-                    this.$store.dispatch('addedQPanel', leng)
-                }, 1000)
-            }
+        rangeAction(data) {
+            let payload = { data: data, ids: this.ids }
+            this.$store.dispatch('setRange', payload)
         },
         shareURL() {
             let url = window.location.href

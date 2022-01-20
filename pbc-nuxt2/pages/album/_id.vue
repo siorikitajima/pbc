@@ -1,14 +1,16 @@
 <template>
-  <div class="pagewrapper">
+<div>
+  <div class="pagewrapper" @scroll="onScroll">
     <div v-if="singalbum">
         <SingleAlbum :album="singalbum" :albumSongs="SearchedSongs" />
         <SingleAlbumInfo :album="singalbum" />
     </div>
-        <div v-if="SearchedSongs.length">
-            <TableSongList :fltdsongs="SearchedSongs" :dist="'song'" />
-        </div>
-        <div v-else><TableLoading /></div>
+    <div v-if="dataLoad">
+        <TableSongList :fltdsongs="SearchedSongs.slice(0, loadNum.loadTo)" :dist="'song'" />
     </div>
+    <div v-else><TableLoading /></div>
+  </div>
+</div>
 </template>
 
 <script>
@@ -51,6 +53,15 @@ export default {
         }
     },
     params: [ 'id' ],
+    data() {
+        return {
+            dataLoad: false,
+            loadNum: {
+                offset: 0,
+                loadTo: 20
+            }
+        }
+    },
     async asyncData({ params }) {
         let theId = params.id.split("-");
         let albumUrl = baseURL + '/albums/' + theId[0]
@@ -78,9 +89,23 @@ export default {
     },
     mounted() {
         this.$store.commit('clearFilter')
-        let theId = this.$route.params.id.split("-");
-        this.$store.commit('setFilterAlbum', {id: theId[0]})
+        // let theId = this.$route.params.id.split("-");
+        this.$store.commit('setFilterAlbum', {id: this.theId[0]})
         this.$store.commit('setOrder', 'Seq')
+        this.dataLoad = true
+    },
+    methods: {
+        onScroll ({ target: { scrollTop, clientHeight, scrollHeight }}) {
+            if (scrollTop + clientHeight >= scrollHeight) {
+                this.loadMorePosts(scrollTop, clientHeight, scrollHeight)
+            }
+        },
+        loadMorePosts(){
+            let offset = this.loadNum.loadTo
+            let leftOvers = this.singalbum.Tracks - offset
+            this.loadNum.offset = offset
+            this.loadNum.loadTo = (leftOvers < (offset + 20)) ? this.singalbum.Tracks : offset + 20
+        }
     }
 }
 </script>
@@ -88,6 +113,14 @@ export default {
 <style scoped>
 .pagewrapper {
     padding: 50px 0;
+    width: 100%;
+    height: calc(100% - 100px);
+    top: 0;
+    left: 0;
+    position: fixed;
+    overflow-y: scroll;
+    transition-duration: 200ms;
+    z-index: 0;
 }
 h2 {
     width: fit-content;

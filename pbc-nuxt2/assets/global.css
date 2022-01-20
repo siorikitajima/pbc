@@ -401,6 +401,11 @@ span.agreement a {
     border-bottom: 1px #0092c5 solid;
 }
 
+@media (max-width: 960px) {
+    ul.mobileActions {
+        bottom: 80px;
+    }
+}
 @media (max-width: 600px) {
     .theforms {
         display: block;
@@ -417,9 +422,6 @@ span.agreement a {
     }
     .theforms p {
         text-align: center;
-    }
-    ul.mobileActions {
-        bottom: 80px;
     }
 }
 /* @media (max-width: 400px) {

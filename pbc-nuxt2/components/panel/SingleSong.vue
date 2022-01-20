@@ -84,13 +84,18 @@ export default {
 .panelNav.nextIcon {
     right: 40px;
 }
+@media(max-width: 960px) {
+    .singlePageCoutainer {
+        max-height: calc(100% - 120px);
+    }
+}
 
 @media(max-width: 800px) {
     .singlePageCoutainer {
         width: calc(100% - 20px);
-        height: calc(100% - 20px);
+        height: calc(100% - 120px);
+        padding: 10px 10px 120px 10px;
         max-width: unset;
-        padding: 10px;
         top: 0;
         right: 0;
         border-radius: 0;
