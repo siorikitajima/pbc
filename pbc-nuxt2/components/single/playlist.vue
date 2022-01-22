@@ -2,7 +2,7 @@
     <div class="playlistTop">
         <div class="info">
             <p>// PB Playlist //</p>
-            <h1>{{ playlistInfo.PlaylistName }}</h1>
+            <h1>{{ PlaylistName }}</h1>
         <div class="channels">
             <img :src="require('~/assets/images/actions/playSong_light.svg')" alt="Play All" @click="playAll()">
             <img :src="require('~/assets/images/actions/addToQueue_light.svg')" alt="Add All to Queue" @click="addAll()">
@@ -14,17 +14,18 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+// import { mapState } from 'vuex';
 import GlobalRangeSlider from "~/components/global/rangeSlider"
 
 export default {
     name: 'SinglePlaylist',
-    props: [ 'playlistInfo' ],
+    props: [ 'PlaylistName', 'playlist' ],
     components: { GlobalRangeSlider },
-    computed:{
-        ...mapState(['playlist']),
-    },
+    // computed:{
+    //     ...mapState(['playlist']),
+    // },
     data(){
+        // console.log(this.playlist)
         return {
             actionType: '',
             rangeSlider: false
@@ -32,22 +33,27 @@ export default {
     },
     methods: {
         playAll() {
-            if(this.playlist.length < 11) {           
-                let payload = { data: {type: 'PLAY', from: 0, to: this.playlist.length }, ids: this.playlist }
-                this.$store.dispatch('setRange', payload)
-            } else {
-                this.actionType = 'PLAY'
-                this.rangeSlider = true
-            }
+            // if(this.playlist.length < 11) {
+                let ids = JSON.parse(JSON.stringify(this.playlist))
+                // console.log(this.playlist, ids)
+                this.$store.dispatch('playThemAction', ids)      
+                // let payload = { data: {type: 'PLAY', from: 0, to: this.playlist.length }, ids: this.playlist }
+                // this.$store.dispatch('setRange', payload)
+            // } else {
+            //     this.actionType = 'PLAY'
+            //     this.rangeSlider = true
+            // }
         },
         addAll() {
-            if(this.playlist.length < 11) {
-                let payload = { data: {type: 'ADD', from: 0, to: this.playlist.length }, ids: this.playlist }
-                this.$store.dispatch('setRange', payload)
-            } else {
-                this.actionType = 'ADD TO QUEUE'
-                this.rangeSlider = true
-            }
+            // if(this.playlist.length < 11) {
+                let ids = JSON.parse(JSON.stringify(this.playlist))
+                this.$store.dispatch('AddThemAction', ids)
+                // let payload = { data: {type: 'ADD', from: 0, to: this.playlist.length }, ids: this.playlist }
+                // this.$store.dispatch('setRange', payload)
+            // } else {
+            //     this.actionType = 'ADD TO QUEUE'
+            //     this.rangeSlider = true
+            // }
         },
         shareURL() {
             let url = window.location.href

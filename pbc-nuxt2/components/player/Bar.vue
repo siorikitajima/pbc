@@ -11,7 +11,7 @@
         <img :src="coverImg(sqPData.CatNum, sqPData.ID)" :alt="sqPData.AlbumTitle">
     </div>
     <div class="info">
-        <p>{{ sqPData.ID }} // <NuxtLink :to="'/song/' + sqPData.ID + '-' + slug(sqPData.Title)">{{ sqPData.Title }}</NuxtLink> <span> by <NuxtLink :to="'/project/' + slug(sqPData.ArtistName)">{{ sqPData.ArtistName }}</NuxtLink></span></p>
+        <p>{{ sqPData.ID }} // <NuxtLink :to="'/song/' + sqPData.ID + '-' + slug(sqPData.Title)">{{ sqPData.Title }}</NuxtLink> <span> by <NuxtLink :to="'/project/' + slug(sqPData.ArtistName)">{{ sqPData.ArtistName }}</NuxtLink></span><span v-if="sqPData.FeatArtist" v-html="featArtURL(sqPData.FeatArtist)"></span></p>
         <div class="progress_bar_flex">
             <!-- <div class="progress__duration">{{ duration }}</div> -->
             <div class="duration progress__bar" ref="progressBar" @click="clickProgress">
@@ -131,7 +131,8 @@ export default {
             sqEData: 'ENDED_DATA',
             slug: 'SLUG',
             coverImg: 'COVER_IMG',
-            songSrc: 'AUDIO_SRC'
+            songSrc: 'AUDIO_SRC',
+            featArtURL: 'FEATART_LINK'
         })
         // songSrc() { 
         //     return 'https://pblibrary.s3.us-east-2.amazonaws.com/' + this.sqPData.CatNum + '/' + this.sqPData.ID  + '.mp3';
@@ -286,9 +287,9 @@ export default {
             this.nextTrack()
         };
 
-        if(this.sqQueue.length == 0 && !localStorage.getItem("sqQueue")) { 
+        if(this.sqQueue.length == 0 && !localStorage.getItem("sqQueue") && !localStorage.getItem("sqPlaying")) { 
             this.setQueue([])
-            this.setPlaying([])
+            this.setPlaying(['PBS2002'])
             this.setEnded([])
         } else {
           if(this.sqQueue.length == 0) {

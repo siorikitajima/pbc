@@ -7,7 +7,7 @@
         <div class="div520">
           <p>// PB Track //</p>
           <h2>{{ song.Title }}</h2>
-          <p>by <NuxtLink :to="'/project/' + slug(song.ArtistName)">{{ song.ArtistName }}</NuxtLink></p>
+          <p>by <NuxtLink :to="'/project/' + slug(song.ArtistName)">{{ song.ArtistName }}</NuxtLink><span v-if="song.FeatArtist" v-html="featArtURL(song.FeatArtist)"></span></p>
           <div class="actions">
             <img :src="require('../../assets/images/actions/playSong_dark.svg')" alt="Play Track" @click="$store.commit('PLAY_THIS', song.ID)">
             <img :src="require('../../assets/images/actions/addToQueue_dark.svg')" alt="Add to Queue" @click="$store.commit('ADD_QUEUE', song.ID)">
@@ -83,7 +83,8 @@ export default {
         length() { return this.song.Length ? this.song.Length.slice(2) : '' },
         ...mapGetters({
             slug: 'SLUG',
-            coverImg: 'COVER_IMG_L'
+            coverImg: 'COVER_IMG_L',
+            featArtURL: 'FEATART_LINK'
         }),
     },
     methods: {

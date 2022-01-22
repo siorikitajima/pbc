@@ -149,7 +149,7 @@ input.searchBox {
   position: fixed;
   top: 65px;
   left: 0;
-  z-index: 2000;
+  z-index: 1000;
   text-align: center;
   overflow-y: auto;
 }
@@ -193,22 +193,20 @@ input.searchBox {
 }
 @media (max-width: 800px) {
   .searchBar {
-    padding: 60px 0 0;
+    padding: 60px 0 0 0;
     background: #f2f2f2;
     z-index: 0;
+    height: calc(100% - 60px);
+    overflow-y: auto;
   }
   input.searchBox {
   top: 60px;
   }
   .searchKeys {
   width: 100%;
-  height: calc(100% - 226px);
-  top: 110px;
+  height: calc(100% - 125px);
+  top: 125px;
+    padding: 0 0 0 0;
   }
-}
-@media (max-width: 800px) {
-    .searchKeys {
-      height: calc(100% - 126px);
-    }
 }
 </style>

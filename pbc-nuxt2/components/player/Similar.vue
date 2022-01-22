@@ -15,7 +15,7 @@
             <p><b>{{ simOG[0].Title }}</b>
             <!-- <img src="~/assets/images/table/eye_white.svg" alt="See More"> -->
             </p>
-            <p>by {{ simOG[0].ArtistName }}</p>
+            <p>by {{ simOG[0].ArtistName }}<span v-if="simOG[0].FeatArtist"> ft. {{ simOG[0].FeatArtist }}</span></p>
           </div>
       </div>
 
@@ -31,7 +31,7 @@
                 <p><b>{{ song.Title }}</b>
                 <!-- <img src="~/assets/images/table/eye.svg" alt="See More"> -->
                 </p>
-                <p>by {{ song.ArtistName }}</p>
+                <p>by {{ song.ArtistName }}<span v-if="song.FeatArtist"> ft. {{ song.FeatArtist }}</span></p>
             </div>
             <div class="song-actions">
                 <img :src="require('~/assets/images/actions/addToQueue_dark.svg')" alt="Add to Queue" @click="addToQueue(song.ID)">

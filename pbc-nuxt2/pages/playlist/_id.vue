@@ -2,7 +2,7 @@
 <div>
   <div class="pagewrapper" @scroll="onScroll">
     <div v-if="playlistInfo">
-        <SinglePlaylist :playlistInfo="playlistInfo" />
+        <SinglePlaylist :PlaylistName="playlistInfo.PlaylistName" :playlist="singplaylist" />
     </div>
 
         <div v-if="playlistData.length">
@@ -22,17 +22,17 @@ export default {
     name: 'Playlist',
     head() {
         return {
-        title: 'Playlist #' + this.theId[0] + ' ' + this.playlistInfo.PlaylistName + ' || PatternBased Catalog',
+        title: 'Playlist #' + this.theNum + ' ' + this.playlistInfo.PlaylistName + ' || PatternBased Catalog',
         meta: [
         {
             hid: 'og:title',
             name: 'og:title',
-            content: 'Playlist #' + this.theId[0] + ' ' + this.playlistInfo.PlaylistName + ' || PatternBased Catalog'
+            content: 'Playlist #' + this.theNum + ' ' + this.playlistInfo.PlaylistName + ' || PatternBased Catalog'
         },
         {
             hid: 'og:url',
             name: 'og:url',
-            content: 'https://dev-catalog.patternbased.com/playlist/' + this.theId[0]
+            content: 'https://dev-catalog.patternbased.com/playlist/' + this.theId
         }
         ]
         }
@@ -57,10 +57,10 @@ export default {
         }
         let playlistUrl = baseURL + '/playlist/' + theNum
         let pLdata = await axios.get(playlistUrl)
-        let singplaylist = await pLdata.data.Songs
+        let singplaylist = await JSON.parse(JSON.stringify(pLdata.data.Songs))
         let playlistInfo = await pLdata.data
         store.commit('SET_PLAYLIST', singplaylist)
-        return { singplaylist, theId, playlistInfo }
+        return { singplaylist, theId, theNum, playlistInfo }
     },
     computed: {
         ...mapGetters({

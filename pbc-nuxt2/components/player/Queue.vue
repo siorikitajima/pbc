@@ -26,7 +26,7 @@
             </div>
             <div>
                 <p><b>{{ esong.Title }}</b></p>
-                <p>by {{ esong.ArtistName }}</p>
+                <p>by {{ esong.ArtistName }}<span v-if="esong.FeatArtist"> ft. {{ esong.FeatArtist }}</span></p>
             </div>
             <div class="song-actions">
                 <img :src="require('~/assets/images/actions/Delete_Icon_dark.svg')" alt="Delete" @click="removeFromEnded(esong.ID)">
@@ -44,7 +44,7 @@
             </div>
             <div>
                 <p><b>{{ sqPData.Title }}</b></p>
-                <p>by {{ sqPData.ArtistName }}</p>
+                <p>by {{ sqPData.ArtistName }}<span v-if="sqPData.FeatArtist"> ft. {{ sqPData.FeatArtist }}</span></p>
             </div>
           </div>
         </div>
@@ -59,7 +59,7 @@
             </div>
             <div>
                 <p><b>{{ song.Title }}</b></p>
-                <p>by {{ song.ArtistName }}</p>
+                <p>by {{ song.ArtistName }}<span v-if="song.FeatArtist"> ft. {{ song.FeatArtist }}</span></p>
             </div>
             <div class="song-actions">
                 <img :src="require('~/assets/images/actions/Delete_Icon_dark.svg')" alt="Delete" @click="removeFromQueue(song.ID)">
@@ -129,7 +129,7 @@ export default {
             this.$store.dispatch('CopyURL', url)
         },
         async sharePlaylist() {
-            let allIDs = this.sqQueue.concat(this.sqPlaying, this.sqEnded)
+            let allIDs = this.sqEnded.concat(this.sqPlaying, this.sqQueue)
             let url = baseURL + '/playlist'
             return axios.post(url, {
                 name: this.thename, 

@@ -14,7 +14,7 @@
         <p><b>{{ song.Title }} </b>
         <!-- <img src="~/assets/images/table/eye.svg" alt="See More"> -->
         </p>
-        <p>by {{ song.ArtistName }}</p>
+        <p>by {{ song.ArtistName }}<span v-if="song.FeatArtist"> ft. {{ song.FeatArtist }}</span></p>
     </div>
     <div class="asflow">
         <img :src="require('~/assets/images/table/' + song.ShapeArc + '.png')" :alt="song.ShapeArc">

@@ -6,11 +6,13 @@ let songsUrl = baseURL + `/songs`
 let albumsUrl = baseURL + '/albums'
 let artistsUrl = baseURL + '/artists'
 let licenseUrl = baseURL + '/license'
+let featArtistsUrl = baseURL + '/featartists'
 
 export const state = () => ({
     songs: [],
     albums: [],
     artists: [],
+    featArtists: [],
     ogSongID: '',
     tempSongIDs: [],
     // rangeSlider: false,
@@ -37,7 +39,7 @@ export const state = () => ({
 
     queuePanel: false,
     sqQueue: [],
-    sqPlaying: [],
+    sqPlaying: ['PBS2002'],
     sqEnded: [],
     alsoPlay: 0,
     playerBar: true,
@@ -82,6 +84,9 @@ export const mutations = {
     SET_ARTISTS: (state, payload) => {
         state.artists = payload;
     },
+    SET_FEATARTISTS: (state, payload) => {
+        state.featArtists = payload;
+    },
     SET_QUEUE: (state, payload) => {
         state.sqQueue = payload;
     },
@@ -113,6 +118,7 @@ export const mutations = {
     },
     MENU_TOGGLE: (state) => {
         state.sideNavOpen = !state.sideNavOpen
+        state.playerBar = true
     },
     CLOSE_SIMSON: (state) => {
         state.similarPanel = false
@@ -207,6 +213,16 @@ export const mutations = {
                 state.sqQueue.push(ids[s])
             }
         }
+    },
+    ADD_ALL_AFTER_PLAY: (state, ids) => {
+        const reversed = ids.reverse()
+        for (let s = 0; s < reversed.length; s++) {
+            let exist = state.sqQueue.some(qID => {
+                return qID == reversed[s] })
+            if(!exist) {
+                state.sqQueue.unshift(reversed[s])
+            }
+          }
     },
 
     RMV_Q: (state, id) => {
@@ -549,6 +565,9 @@ export const actions = {
         const artresponse = await axios.get(artistsUrl);
         const artdata = artresponse.data;
         commit("SET_ARTISTS", artdata);
+        const featArtresponse = await axios.get(featArtistsUrl);
+        const featArtdata = featArtresponse.data;
+        commit("SET_FEATARTISTS", featArtdata);
     },
     async PlayNext({ commit, state, getters }) {
         if(state.sqQueue.length == 0) {
@@ -576,7 +595,7 @@ export const actions = {
     PlayAllIDs({ commit }, ids) {
         let song1 = ids[0]
         commit('PLAY_THIS', song1)
-        console.log('started playing')
+        // console.log('started playing')
     },
     setRange({ commit, dispatch }, { data, ids }) {
         if(data.type == 'PLAY') {
@@ -585,11 +604,11 @@ export const actions = {
             setTimeout(()=> {
                 let thelen = rangeIDs.length
                 let theRest = rangeIDs.splice(1, thelen - 1)
-                commit('ADD_ALL', theRest)
-                let leng = Number(data.to - data.from)
-                setTimeout(() => {
-                    dispatch('addedQPanel', leng -1)
-                }, 1000)
+                commit('ADD_ALL_AFTER_PLAY', theRest)
+                // let leng = Number(data.to - data.from)
+                // setTimeout(() => {
+                //     dispatch('addedQPanel', leng -1)
+                // }, 1000)
             }, 3000)
         } else {
             let rangeIDs = ids.slice(data.from, data.to)
@@ -600,31 +619,33 @@ export const actions = {
             }, 1000)
         }
     },
-    async playThemAction({ commit, dispatch }, ids ) {
+    playThemAction({ commit, dispatch }, ids ) {
         let rangeIDs = ids
-        await dispatch('PlayAllIDs', rangeIDs)
+        // console.log(ids)
+        dispatch('PlayAllIDs', rangeIDs)
         setTimeout(()=> {
             let thelen = rangeIDs.length
             let theRest = rangeIDs.splice(1, thelen - 1)
-            commit('ADD_ALL', theRest)
-            let leng = ids.length
-            setTimeout(() => {
-                dispatch('addedQPanel', leng)
-            }, 1000)
+            commit('ADD_ALL_AFTER_PLAY', theRest)
+            // setTimeout(() => {
+            //     dispatch('addedQPanel', thelen)
+            // }, 1000)
         }, 3000)
     },
-    async playThemPlaylist({ state, commit, dispatch }) {
-        let rangeIDs = state.playlist
-        await dispatch('PlayAllIDs', rangeIDs)
-
-        let thelen = rangeIDs.length
-        let theRest = rangeIDs.splice(1, thelen - 1)
-        commit('ADD_ALL', theRest)
-        let leng = state.playlist.length
-        setTimeout(() => {
-            dispatch('addedQPanel', leng)
-        }, 1000)
-    },
+    // async playThemPlaylist({ state, commit, dispatch }) {
+    //     let rangeIDs = state.playlist
+    //     let thelen = rangeIDs.length
+    //     let theRest = rangeIDs.splice(1, thelen - 1)
+    //     await dispatch('PlayAllIDs', rangeIDs)
+    //     setTimeout(()=> {
+    //         console.log(theRest)
+    //         commit('ADD_ALL', theRest)
+    //         // let leng = state.playlist.length
+    //         setTimeout(() => {
+    //             dispatch('addedQPanel', thelen)
+    //         }, 1000)
+    //     }, 3000)
+    // },
     AddThemAction({ commit, dispatch }, ids ) {
         commit('ADD_ALL', ids)
         let leng = ids.length
@@ -632,6 +653,13 @@ export const actions = {
             dispatch('addedQPanel', leng)
         }, 1000)
     },
+    // AddThemPlaylist({ state, commit, dispatch }) {
+    //     commit('ADD_ALL', state.playlist)
+    //     let leng = state.playlist.length
+    //     setTimeout(() => {
+    //         dispatch('addedQPanel', leng)
+    //     }, 1000)
+    // },
     // AddAllIDs({ commit }, ids) {
     //     let thelen = ids.length
     //     let theRest = ids.splice(1, thelen - 1)
@@ -841,14 +869,17 @@ export const getters = {
         }
     },
     PLAYING_DATA: (state) => {
-        if(state.sqPlaying.length < 1) {
-            return state.songs[0]
-        } else {
-            let filtered = state.songs.filter((song) => {
+        let filtered
+        // if(state.sqPlaying.length == 0) {
+        //     filtered = state.songs.filter((song) => {
+        //         return song.ID.match(state.sqPlaying[0])
+        //     })
+        // } else {
+            filtered = state.songs.filter((song) => {
                 return song.ID.match(state.sqPlaying[0])
             })
+        // }
             return filtered[0]
-        }
     },
     AUDIO_SRC: (state, getters) => {
         let thedata = getters.PLAYING_DATA
@@ -908,6 +939,10 @@ export const getters = {
         } else {
             return 'https://pblibrary.s3.us-east-2.amazonaws.com/' + CatNum +'/cover.jpg'
         }
+    },
+    FEATART_LINK: (state) => (FeatArtist) => {
+        let theFA = state.featArtists.filter((artist) => artist.ArtistName == FeatArtist )
+        return ' ft. <a href="' + theFA[0].URL + '" target="_blank">' + theFA[0].ArtistName + '</a>'
     },
     GENERATE_NEXT_SONG: (state) => (id) => {
         let len = state.songs.length;
