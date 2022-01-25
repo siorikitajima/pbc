@@ -50,7 +50,7 @@ export default {
 
 <style scoped>
 .accordion-item-trigger, .accordion-item-details-inner {
-  padding: 0.75rem 1.25rem;
+  padding: 1.25rem;
 }
 
 .accordion-item-title {

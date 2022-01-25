@@ -16,8 +16,8 @@
                         <div class="headerR">
                             <p><img src="~/assets/images/header/PatternBased_Icon.svg" alt="PatternBased" style="width: 20px; margin: auto 5px -5px auto"><b>PatternBased Corp</b><br/>
                             www.patternbased.com<br/>
-                            48999 Paradise Ave.<br/>
-                            Morongo Valley, CA, 92256, USA<br/>
+                            958 N. Western Ave. #792<br/>
+                            Hollywood, CA, 90029, USA<br/>
                             info@patternbased.com
                             </p>
                         </div>

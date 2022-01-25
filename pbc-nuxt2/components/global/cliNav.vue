@@ -137,5 +137,18 @@ export default {
         margin: 70px -20px 50px -20px;
     }
 }
+@media (max-height: 750px) {
+    .sideNav {
+    overflow: auto;
+    }
+    .footer {
+        position: static;
+        bottom: unset;
+        vertical-align: unset;
+        width: 100%;
+        /* width: calc(100% - 0); */
+        margin: 70px -20px 0 -20px;
+    }
+}
 
 </style>

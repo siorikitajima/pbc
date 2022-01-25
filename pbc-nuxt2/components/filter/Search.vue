@@ -1,6 +1,6 @@
 <template>
 <div>
-    <div v-if="searchPanel" class="fullScreen" @click="searchPanel = false">
+    <div v-if="searchPanel" class="fullScreen" @click="closeSearch()">
     </div>
   <div class="searchBar">
   </div>
@@ -41,7 +41,7 @@ import { mapState, mapGetters } from 'vuex'
 export default {
     name: 'Search',
     emits: ['loadSearch'],
-    props: ['search', 'searchKeys'],
+    props: ['search', 'searchKeys', 'focus'],
     data() {
         return {
             // searchKey: props.allSearch,
@@ -64,6 +64,17 @@ export default {
         this.filteredKeys = this.searchKeys.filter(key => {
           return key.key.toLowerCase().match(this.tempSearch.toLowerCase())
         })
+      },
+      focusInput() {
+        if (this.focus) {
+          const theInput = this.$refs.theInput
+          theInput.focus()
+        }
+      },
+      closeSearch() {
+        this.searchPanel = false
+        this.tempSearch = ''
+        this.$emit('loadSearch')
       },
       setKey(data) {
         // let alreadyHaveIt = false
@@ -108,6 +119,9 @@ export default {
     watch: {
       tempSearch() {
         this.filterKeys()
+      },
+      focus() {
+        this.focusInput()
       }
     },
     mounted() {
@@ -138,7 +152,7 @@ input.searchBox {
   left: 50%;
   transform: translateX(-50%);
   margin: 20px auto 0 auto;
-  z-index: 100;
+  z-index: 900;
 }
 
 .searchKeys {

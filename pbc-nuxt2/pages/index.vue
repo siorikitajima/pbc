@@ -15,7 +15,7 @@
     <FilterPresets v-show="presetPanel" :presets="presets"  @loadPreset="updateFilter()" />
 </transition>
 <transition name="slideFRLeft">
-    <FilterSearch @loadSearch="searchPanel = false" v-show="searchPanel" :searchKeys="searchKeys" ref="searchComp" />
+    <FilterSearch @loadSearch="searchPanel = false" v-show="searchPanel" :searchKeys="searchKeys" :focus="searchPanel" ref="searchComp" />
 </transition>
 
 <FilterIcons :sliderPanel="sliderPanel" :presetPanel="presetPanel" :searchPanel="searchPanel" @leftPanel="leftPanel($event)" />

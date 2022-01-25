@@ -12,12 +12,12 @@
         <AccordionBox :content="aboutPBC"></AccordionBox>
 
         <h2 class="sectTitle">// Our Music //</h2>
-        <p>At PatternBased, we have been creating music for the sake of creation and also for films and other projects for over two decades with clients including Netflix, Showtime, Amazon, Google, Lucasfilm, The United Nations and so much more. From the cinematic rhythms of Low in the Sky to the sparse and beautiful tones of Michael Tolan and Ron Tucker. From upbeat whimsical pieces to the sounds of an apocalyptic hellscape and from highly electronic to highly organic. The catalog as a whole covers a lot of sonic ground and could be used for an endless variety of projects.</p>
+        <p>At PatternBased, we have been creating music for the sake of creation and also for films and other projects for over two decades with clients including Netflix, Showtime, Amazon, Google, Lucasfilm, The United Nations and so much more. From the cinematic rhythms of <NuxtLink to="/project/low-in-the-sky">Low in the Sky</NuxtLink> to the sparse and beautiful tones of <NuxtLink to="/artist/michael-tolan">Michael Tolan</NuxtLink> and <NuxtLink to="/artist/ron-tucker">Ron Tucker</NuxtLink>. From upbeat whimsical pieces to the sounds of an apocalyptic hellscape and from highly electronic to highly organic. The catalog as a whole covers a lot of sonic ground and could be used for an endless variety of projects.</p>
 
         <AccordionBox :content="aboutMusic"></AccordionBox>
 
         <h2 class="sectTitle">// Love and Support //</h2>
-        <p>PatternBased is focused on supporting artists such as indie filmmakers, indie game devs, non-profits and other grassroots and forward thinking entities through multiple means including discounted rates on licensing for creations focused on the environment, animal and human rights and similar projects. We work to balance these notions with our best attempts to support our recording artists and the creatives that have contributed to building this catalog by getting them paid via studio fees, licensing/placement fees and royalties.</p>
+        <p>PatternBased supports progress-focused artists such as indie filmmakers, indie game devs, non-profits and other grassroots and forward thinking entities through multiple means including discounted rates on licensing for creations focused on the environment, animal and human rights and similar projects. We work to balance these notions with our best attempts to support our recording artists and the creatives that have contributed to building our label by getting them paid via studio fees, licensing/placement fees and royalties.</p>
 
         <AccordionBox :content="aboutLove"></AccordionBox>
 
@@ -69,8 +69,10 @@
         
          -->
 
-        <p class="smallFont">Created by PatternBased</p>
-        <p class="smallFont">Beautiful photos by amazing photographers from Unsplash.com. If you’d like to know the artist, right click to open the image in new tab. The file name contains the artist name and the ID# for you to find the original image in Unsplash.com.</p>
+        <p class="smallFont">Created by <a href="https://patternbased.com" target="_blank">PatternBased</a></p>
+        <p class="smallFont">Beautiful photos by amazing photographers from <a href="https://unsplash.com/" target="_blank">Unsplash.com</a> 
+        <!-- If you’d like to know the artist, right click to open the image in new tab. The file name contains the artist name and the ID# for you to find the original image in Unsplash.com. -->
+        </p>
     </div>
     </div>  
 </div>

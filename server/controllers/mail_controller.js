@@ -68,7 +68,9 @@ const form_post = (req, res) => {
 const order_comfirmation = (req, res) => {
   Invoice.find({ orderIdPB: req.body.pbId})
   .then((data) => {
-    // console.log(data, data[0].mp3Url)
+    // console.log(req.body.pbId)
+    // console.log(data)
+    // console.log(data[0].mp3Url)
 
   const GMAIL_USER = process.env.GMAIL_USER;
   const GMAIL_PASS = process.env.GMAIL_PASS;
@@ -148,11 +150,12 @@ const order_comfirmation = (req, res) => {
   </div>`
   }
 
-  smtpTrans.sendMail(mailHtml, (error, response) => {
-    if (error) { res.json(error) }
-    else { res.json(response);  }
-  })
-
+  setTimeout(() => {
+    smtpTrans.sendMail(mailHtml, (error, response) => {
+      if (error) { res.json(error) }
+      else { res.json(response);  }
+    })
+  }, 300000)
   })
   .catch((err) => {
     console.error(err);

@@ -44,6 +44,9 @@ export default {
   },
   computed: {
     ...mapState(['similarPanel', 'queuePanel', 'playerBar', 'licensePanel', 'cartPanel', 'cart']),
+  },
+  mounted() {
+      this.$store.commit('SET_WINDOWWIDTH', window.innerWidth)
   }
 }
 </script>

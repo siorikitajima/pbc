@@ -10,12 +10,18 @@
             <img :src="require('~/assets/images/actions/playSong_light.svg')" alt="Play">
         </div>
     </div>
-    <div class="asname" @click="$store.dispatch('OpenSingSonP', song.ID)">
-        <p><b>{{ song.Title }} </b>
-        <!-- <img src="~/assets/images/table/eye.svg" alt="See More"> -->
-        </p>
+
+    <div v-if="isMobile" class="asname" >
+        <NuxtLink :to="'/song/' + song.ID + '-' + slug(song.Title)">
+            <p><b>{{ song.Title }} </b></p>
+            <p>by {{ song.ArtistName }}<span v-if="song.FeatArtist"> ft. {{ song.FeatArtist }}</span></p>
+        </NuxtLink>
+    </div>
+    <div v-else class="asname" @click="$store.dispatch('OpenSingSonP', song.ID)">
+        <p><b>{{ song.Title }} </b></p>
         <p>by {{ song.ArtistName }}<span v-if="song.FeatArtist"> ft. {{ song.FeatArtist }}</span></p>
     </div>
+
     <div class="asflow">
         <img :src="require('~/assets/images/table/' + song.ShapeArc + '.png')" :alt="song.ShapeArc">
     </div>
@@ -109,7 +115,8 @@ export default {
     props: [ 'song', 'dist' ],
     data() {
         return {
-            mobileAction: false
+            mobileAction: false,
+            windowWidth: null
         }
     },
     computed: {
@@ -124,6 +131,10 @@ export default {
         showProjectLink() {
             if(this.dist == 'project') { return false }
             else { return true }
+        },
+        isMobile() {
+            if(this.windowWidth <= 800) { return true }
+            else { return false }
         }
     },
     methods: {
@@ -140,7 +151,10 @@ export default {
     licenseThis(id) {
         this.$store.dispatch('OpenLicenseP', id)
         // this.$store.commit('OPEN_LICENSE_PANEL', id)
-    }
+        }
+    },
+    mounted() {
+        this.windowWidth = window.innerWidth
     }
 }
 </script>
@@ -198,12 +212,6 @@ export default {
     height: 40px;
     padding: 10px;
 }
-@media (hover: hover) {
-    .ascover .screen:hover {
-        opacity: 1;
-        transition-duration: 200ms;
-    }
-}
 .asname {
     padding-left: 10px;
     /* margin-top: -10px; */
@@ -212,7 +220,16 @@ export default {
     flex-shrink: 0;
     margin-right: 10px;
 }
-
+@media (hover: hover) {
+    .ascover .screen:hover {
+        opacity: 1;
+        transition-duration: 200ms;
+    }
+    .asname a p:hover {
+        color: inherit;
+        border: none;
+    }
+}
 .asflow {
     width: 100px;
     height: fit-content;

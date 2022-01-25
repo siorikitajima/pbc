@@ -1,10 +1,12 @@
 <template>
     <div class="playlistTop">
+        <img class="bgimg" src="~/assets/images/global/sharon-mccutcheon-kh8OsQRLJFU-unsplash.jpg" alt="">
         <div class="info">
             <p>// PB Playlist //</p>
             <h1>{{ PlaylistName }}</h1>
-        <div class="channels">
-            <img :src="require('~/assets/images/actions/playSong_light.svg')" alt="Play All" @click="playAll()">
+        <div class="channels pl">
+            <!-- <img :src="require('~/assets/images/actions/playSong_light.svg')" alt="Play All" @click="playAll()"> -->
+            <button class="playlist" @click="playAll()">PLAY ALL</button> 
             <img :src="require('~/assets/images/actions/addToQueue_light.svg')" alt="Add All to Queue" @click="addAll()">
             <img :src="require('~/assets/images/actions/Share_Icon_white.svg')" alt="Share" @click="shareURL()">
         </div>
@@ -76,15 +78,51 @@ export default {
     overflow: hidden;
     text-align: center;
     color: #fff;
-    background: #444;
+    background: #00000033;
+    position: relative;
+}
+.playlistTop img.bgimg {
+    width: 100%;
+    height: auto;
+    min-height: 100%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    /* opacity: 0; */
+    z-index: -1;
+}
+@media screen and (max-width: 600px) {
+    .playlistTop img.bgimg {
+        width: 150%;
+    }
 }
 .playlistTop .info {
     height: auto;
     width: 100%;
     padding: 40px 0 20px 0;
+    z-index: 1000;
 }
 .playlistTop .info h1 {
     margin: 10px auto;
 }
-
+.channels.pl {
+    display: flex;
+    justify-content: center;
+}
+button.playlist {
+    display: inline-block;
+    margin: 0 16px 0 0;
+    padding: 8px 20px;
+    background-color: #d85192;
+    animation: glowbtn 5s infinite;
+}
+button.playlist:hover {
+    animation: none;
+}
+@keyframes glowbtn {
+  0% {background-color: #d85192;}
+  50% {background-color: #2e327c;}
+  100% {background-color: #d85192;}
+}
 </style>

@@ -21,7 +21,7 @@ doc
     height: 100,
     ellipsis: true
   }, 150)
-  .text('PatternBased Corp \npatternbased.com \n48999 Paradise Ave. \nMorongo Valley, CA 92256 USA \ninfo@patternbased.com', {
+  .text('PatternBased Corp \npatternbased.com \n958 N. Western Ave. #792 \nHollywood, CA 90029 USA \ninfo@patternbased.com', {
     width: 420,
     align: 'right',
     height: 100,

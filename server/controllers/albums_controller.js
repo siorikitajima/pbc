@@ -32,11 +32,13 @@ const readAlbumData = (req, res) => {
     let tempAlbum = data[0].toObject();
     let slugProject = tempAlbum.Project.toLowerCase().replace(/\s+/g, '-');
     let coverArt = tempAlbum.AlbumArt.toLowerCase().replace(/\s+/g, '-');
-    const theartist = Artist.findOne({ 'ArtistSlug': coverArt, 'Type': 'V' });
-    if (theartist) {
-      Artist.find({ 'ArtistSlug': coverArt, 'Type': 'V'} )
+    // const theartist = Artist.findOne({ 'ArtistSlug': coverArt, 'Type': 'V' });
+    Artist.countDocuments({ 'ArtistSlug': coverArt, 'Type': 'V' }, function (err, count){ 
+      if( count > 0 ){
+    // if (theartist) {
+      Artist.findOne({ 'ArtistSlug': coverArt, 'Type': 'V'} )
         .then((vdata) => {
-          let url = vdata.URL || '#';
+          let url = vdata.URL || '#' ;
           tempAlbum.coverLink = url; 
           tempAlbum.ArtistSlug = slugProject || ''; 
           res.status(200).json(tempAlbum);
@@ -46,10 +48,11 @@ const readAlbumData = (req, res) => {
           res.status(500).json(err);
         });
     } else {
-      tempAlbum.coverLink = ''
+      tempAlbum.coverLink = '#'
       tempAlbum.ArtistSlug = slugProject || ''; 
       res.status(200).json(tempAlbum);
     }
+  })
   })
 };
 

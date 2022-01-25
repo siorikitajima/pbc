@@ -64,9 +64,8 @@
                 <img src="~/assets/images/license/audio-file.svg" alt="download">
                 <p>Download .WAV</p>
             </button> -->
-            <a :href="mp3Url" target="_blank" download>
+            <!-- <a :href="mp3Url" target="_blank" download>
             <button class="large payment" v-if="downloadable">
-             <!-- @click="downloadFiles(orderedSongIds, 'mp3')"> -->
                 <img src="~/assets/images/license/audio-file.svg" alt="download">
                 <p>Download .MP3</p>
             </button>
@@ -74,7 +73,7 @@
                 <img src="~/assets/images/license/Loading_icon.svg" alt="download">
                 <p>Prepping MP3...</p>
             </button>
-            </a>
+            </a> -->
             <NuxtLink :to="'/invoice/' + finalOrder.pbId">
             <button class="large payment">
                 <img src="~/assets/images/license/invoice.svg" alt="download">
@@ -90,7 +89,7 @@
         <div class="bodytext">
             <div class="points">
                 <img src="~/assets/images/license/audio-file_blue.svg" alt="Wavs">
-                <p> Click on <b>'Download MP3'</b> above to download MP3. We will send you <b>wav</b> format file(s) within 24 hours via Email.</p>
+                <p> You will receive download links for <b>mp3</b> and <b>wav</b> format files within 10 minites via Email. Please <NuxtLink :to="'/requests?type=other&order=' + orderId">contact us</NuxtLink> if you need other formats.</p>
             </div>
             <div class="points">
                 <img src="~/assets/images/license/Stems_icon_blue.svg" alt="Stems">
@@ -144,7 +143,7 @@ export default {
             order: {},
             finalOrder: {},
             mp3Url: '',
-            downloadable: false
+            // downloadable: false
         }
     },
     async asyncData() {
@@ -327,9 +326,9 @@ export default {
         set_mp3Url(data){
             this.mp3Url = data
             console.log(this.mp3Url)
-            setTimeout(()=>{
-                this.downloadable = true
-            }, 10000)
+            // setTimeout(()=>{
+            //     this.downloadable = true
+            // }, 10000)
         },
         async emailConf() {
             let url = baseURL + '/order-conf'
@@ -467,7 +466,7 @@ h2.first {
     margin: 20px auto;
 }
 button.payment {
-    width: 200px;
+    width: 240px;
     margin: 10px 5px;
     font-size: 1.1em;
 }

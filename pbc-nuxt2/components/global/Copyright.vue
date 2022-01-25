@@ -42,8 +42,8 @@
     <p>
         <a href="https://legal.patternbased.com/privacy-policy/" target="_blank">Privacy Policy</a>
         <a href="https://legal.patternbased.com/license-agreement/" target="_blank">License Agreement</a>
-        <br/>
         © Copyright 2022 PatternBased Corp
+        <br/><br/>
     </p>
 </div>
 </template>
@@ -57,16 +57,23 @@ export default {
 
 <style scoped>
 .channels {
-    margin: 0 0 20px 0;
+    margin: 0 0 10px 0;
 }
 p {
     font-size: 0.9em;
 }
 p a {
-    margin: 0 20px 0 0;
+    margin: 10px 0 0 0;
+    width: auto;
+    display: block;
 }
 p a:last-of-type {
     margin: 0;
+}
+p a:hover {
+    color: #0092C5;
+    border: none;
+    line-height: 1.4em;
 }
 .PBlogo {
     width: 200px;

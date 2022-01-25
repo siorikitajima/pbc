@@ -9,6 +9,7 @@ let licenseUrl = baseURL + '/license'
 let featArtistsUrl = baseURL + '/featartists'
 
 export const state = () => ({
+    windowWidth: null,
     songs: [],
     albums: [],
     artists: [],
@@ -75,6 +76,9 @@ export const state = () => ({
 });
 
 export const mutations = {
+    SET_WINDOWWIDTH: (state, num) => {
+        state.windowWidth = num
+    },
     SET_SONGS: (state, payload) => {
         state.songs = payload;
     },
@@ -103,8 +107,15 @@ export const mutations = {
         state.sqQueue.push(id)
         } 
     },
+    CLOSE_QUEUE: (state) => {
+        state.queuePanel = false
+    },
     TOGGLE_QUEUE: (state) => {
         state.queuePanel = !state.queuePanel
+        if(state.similarPanel && state.windowWidth <= 600) {
+            state.similarPanel = false
+            state.queuePanel = true
+        }
         if(state.sideNavOpen) {
             state.sideNavOpen = false
             state.queuePanel = true
@@ -674,10 +685,13 @@ export const actions = {
     
     /// This actuion is currently used in Single Song Page, but should be merged to 'OpenSingSonP'
     async OpenSimSong({ commit, state, getters }, id) {
+        if(state.queuePanel && state.windowWidth <= 600) {
+            commit('CLOSE_QUEUE')
+        }
         if(state.singleSongPanel) {
             commit('CLOSE_SING_SONG')
         }
-        if(state.similarPanel) {
+        if(state.similarPanel && id !== state.simOG[0].ID) {
             commit('CLOSE_SIMSON')
             let og = await getters.GET_SONG(id)
             let data = await getters.SIM_SON_PANEL_DATA(id)
@@ -685,6 +699,7 @@ export const actions = {
                 commit('SET_SIMOGP', og)
                 commit('OPEN_SIMSON', data)
             }, 500)
+        } else if(state.similarPanel && id == state.simOG[0].ID) {
         } else {
             let og = await getters.GET_SONG(id)
             let data = await getters.SIM_SON_PANEL_DATA(id)
@@ -941,8 +956,23 @@ export const getters = {
         }
     },
     FEATART_LINK: (state) => (FeatArtist) => {
-        let theFA = state.featArtists.filter((artist) => artist.ArtistName == FeatArtist )
-        return ' ft. <a href="' + theFA[0].URL + '" target="_blank">' + theFA[0].ArtistName + '</a>'
+        if(FeatArtist.includes(',')) {
+            let parts = FeatArtist.split(', ');
+            let finalStr = ' ft. ';
+            for(let a = 0; a < parts.length; a++) {
+                let theFA = state.featArtists.filter((artist) => artist.ArtistName == parts[a] )
+                let linkStr = '<a href="' + theFA[0].URL + '" target="_blank">' + theFA[0].ArtistName + '</a>'
+                if (a == parts.length-1) {
+                    finalStr = finalStr + linkStr
+                } else {
+                    finalStr = finalStr + linkStr + ', '
+                }
+            }
+            return finalStr
+        } else {
+            let theFA = state.featArtists.filter((artist) => artist.ArtistName == FeatArtist )
+            return ' ft. <a href="' + theFA[0].URL + '" target="_blank">' + theFA[0].ArtistName + '</a>'
+        }
     },
     GENERATE_NEXT_SONG: (state) => (id) => {
         let len = state.songs.length;
