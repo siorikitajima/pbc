@@ -95,6 +95,7 @@
 import { mapState } from 'vuex'
 import axios from 'axios';
 import baseURL from '~/assets/api-url.js'
+import paypalID from '~/assets/paypal-clientID.js'
 
 export default {
     name: 'Checkout',
@@ -140,9 +141,8 @@ export default {
     },
     mounted: function() {
         const script = document.createElement("script");
-        script.src =
-        // "https://www.paypal.com/sdk/js?client-id=AcK1yMYj4iJE3qpAxgFvijhJndg50pzy50-z1hqpVaXeI0CfsGvdafCQn40RWd0GCxem-XL8DWqBI2iq";//// Prod
-        "https://www.paypal.com/sdk/js?client-id=AXU22huezulbE7ARZkVaZuKYLsKYzN6AvnwQBF5bBToKqj_GlMl-qvRMN-tQx1fZFq8BGoq5fN6m7eYu";//// Dev Sandbox
+        script.src = paypalID;
+        console.log(paypalID)
         script.addEventListener("load", this.setLoaded);
         document.body.appendChild(script);
     },
