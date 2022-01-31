@@ -1,6 +1,5 @@
 const axios = require('axios');
 import baseURL from '~/assets/api-url.js'
-// import * as Filters from '~/helpers/filters'
 
 let songsUrl = baseURL + `/songs`
 let albumsUrl = baseURL + '/albums'
@@ -16,10 +15,8 @@ export const state = () => ({
     featArtists: [],
     ogSongID: '',
     tempSongIDs: [],
-    // rangeSlider: false,
 
     filteredSongs: [],
-    // aSong: {},
     filter: {
         artist: [],
         project: [],
@@ -335,20 +332,6 @@ export const mutations = {
         state.density.min = min
         state.density.max = max
     },
-
-    // SET_SEARCH: (state, value) => {
-    //     state.search = value
-    // },
-    // SET_ALL_SEARCH: (state, value) => {
-    //     state.allSearch = value
-    // },
-    // ADD_ALL_SEARCH: (state, value) => {
-    //     state.allSearch.push(value)
-    // },
-    // SPLICE_ALL_SEARCH: (state, { id, num }) => {
-    //     state.allSearch.splice( id, num )
-    // },
-
     SET_PRESETS_OG(state, { rhyMin, rhyMax, spdMin, spdMax, expMin, expMax, modMin, modMax, orgMin, orgMax }) {
         state.rhythm.min = rhyMin
         state.rhythm.max = rhyMax
@@ -376,12 +359,6 @@ export const mutations = {
     SET_SONG_IDS(state, ids) {
         state.tempSongIDs = ids
     },
-    // OPEN_RANGE_SLIDER(state) {
-    //     state.rangeSlider = true
-    // },
-    // CLOSE_RANGE_SLIDER(state) {
-    //     state.rangeSlider = false
-    // },
     HIDE_PLAYER(state) {
         state.playerBar = false
     },
@@ -448,8 +425,6 @@ export const mutations = {
         state.cartPanel = !state.cartPanel
     },
 
-    // setFilteredSongs(state, songs) { state.filteredSongs = [songs] },
-    
     setFilterSong(state, song) { state.filter.song = [song] },
     rmFilterSong(state, song) { 
         let index = state.filter.song.findIndex(a => a.id == song)
@@ -539,30 +514,6 @@ export const mutations = {
         state.filter.search = search
         state.filter.order = order
     },
-
-    // SET_ALL_SEARCH: (state, value) => {
-    //     state.filter.allSearch = value
-    // },
-    // ADD_ALL_SEARCH: (state, value) => {
-    //     state.filter.allSearch.push(value)
-    // },
-    // SPLICE_ALL_SEARCH: (state, id ) => {
-    //     state.filter.allSearch.splice( id, 1 )
-    // },
-  
-    // filterSongs (state) {
-    //   const songs = [...state.songs]
-    //   state.filteredSongs = songs
-    //   state.filteredSongs = Filters.filterSongs(state.filter, songs)
-    // },
-    // PBfilterSongs (state) {
-    //     const songs = [...state.filteredSongs]
-    //     state.filteredSongs = Filters.PBfilterSongs(state.rhythm, state.speed, state.experimental, state.mood, state.organic, songs)
-    //   },
-    // orderSongs (state) {
-    //   const songs = [...state.filteredSongs]
-    //   state.filteredSongs = Filters.orderSongs(state.filter.order, songs)
-    // }
 }
 
 export const actions = {
@@ -606,7 +557,6 @@ export const actions = {
     PlayAllIDs({ commit }, ids) {
         let song1 = ids[0]
         commit('PLAY_THIS', song1)
-        // console.log('started playing')
     },
     setRange({ commit, dispatch }, { data, ids }) {
         if(data.type == 'PLAY') {
@@ -616,10 +566,6 @@ export const actions = {
                 let thelen = rangeIDs.length
                 let theRest = rangeIDs.splice(1, thelen - 1)
                 commit('ADD_ALL_AFTER_PLAY', theRest)
-                // let leng = Number(data.to - data.from)
-                // setTimeout(() => {
-                //     dispatch('addedQPanel', leng -1)
-                // }, 1000)
             }, 3000)
         } else {
             let rangeIDs = ids.slice(data.from, data.to)
@@ -632,31 +578,13 @@ export const actions = {
     },
     playThemAction({ commit, dispatch }, ids ) {
         let rangeIDs = ids
-        // console.log(ids)
         dispatch('PlayAllIDs', rangeIDs)
         setTimeout(()=> {
             let thelen = rangeIDs.length
             let theRest = rangeIDs.splice(1, thelen - 1)
             commit('ADD_ALL_AFTER_PLAY', theRest)
-            // setTimeout(() => {
-            //     dispatch('addedQPanel', thelen)
-            // }, 1000)
         }, 3000)
     },
-    // async playThemPlaylist({ state, commit, dispatch }) {
-    //     let rangeIDs = state.playlist
-    //     let thelen = rangeIDs.length
-    //     let theRest = rangeIDs.splice(1, thelen - 1)
-    //     await dispatch('PlayAllIDs', rangeIDs)
-    //     setTimeout(()=> {
-    //         console.log(theRest)
-    //         commit('ADD_ALL', theRest)
-    //         // let leng = state.playlist.length
-    //         setTimeout(() => {
-    //             dispatch('addedQPanel', thelen)
-    //         }, 1000)
-    //     }, 3000)
-    // },
     AddThemAction({ commit, dispatch }, ids ) {
         commit('ADD_ALL', ids)
         let leng = ids.length
@@ -664,26 +592,8 @@ export const actions = {
             dispatch('addedQPanel', leng)
         }, 1000)
     },
-    // AddThemPlaylist({ state, commit, dispatch }) {
-    //     commit('ADD_ALL', state.playlist)
-    //     let leng = state.playlist.length
-    //     setTimeout(() => {
-    //         dispatch('addedQPanel', leng)
-    //     }, 1000)
-    // },
-    // AddAllIDs({ commit }, ids) {
-    //     let thelen = ids.length
-    //     let theRest = ids.splice(1, thelen - 1)
-    //     let steps = Math.floor(theRest/10)
-    //     for(let l = 0; l < steps; l++) {
-    //         commit('ADD_ALL', theRest.slice(10 * l, 10 * l + 9))
-    //         console.log('setRange 10 added')
-    //     }
-    //     commit('ADD_ALL', theRest.slice(10 * steps, thelen - 1))
-    //     console.log('finished adding')
-    // },
     
-    /// This actuion is currently used in Single Song Page, but should be merged to 'OpenSingSonP'
+    /// This actuion is currently used in Single Song Page, but should be merged to 'OpenSingSonP'??
     async OpenSimSong({ commit, state, getters }, id) {
         if(state.queuePanel && state.windowWidth <= 600) {
             commit('CLOSE_QUEUE')
@@ -793,40 +703,7 @@ export const actions = {
             return item.songID == id
           });
         commit('DELETE_FROM_CART', index)
-    },
-    // setPresets({ commit }, { rhy, spd, exp, mod, org }) {
-    //     commit('SET_PRESET_RHY', rhy)
-    //     commit('SET_PRESET_SPD', spd)
-    //     commit('SET_PRESET_EXP', exp)
-    //     commit('SET_PRESET_MOD', mod)
-    //     commit('SET_PRESET_ORG', org)
-    // }
-    // async filterOrder ({ commit }, order) {
-    //     await commit('setOrder', order)
-    //     await commit('orderSongs')
-    //     console.log( state.filter )
-    // },
-    // async filterAlbum ({ commit, dispatch }, album) {
-    //     await commit('setFilterAlbum', album)
-    //     dispatch('filterSongs')
-    // },
-    // async filterArtist ({ commit, dispatch }, artist) {
-    //     await commit('setFilterArtist', artist)
-    //     dispatch('filterSongs')
-    // },
-    // async filterProject ({ commit, dispatch }, project) {
-    //     await commit('setFilterProject', project)
-    //     dispatch('filterSongs')
-    // },
-    // async filterSearch ({ commit, dispatch }, search) {
-    //     await commit('setFilterSearch', search)
-    //     dispatch('filterSongs')
-    // },
-    // async filterSongs ({ state, commit }) {
-    //     await commit('filterSongs')
-    //     // await commit('PBfilterSongs')
-    //     console.log( state.filter )
-    // }
+    }
 }
 
 export const getters = {
@@ -885,15 +762,9 @@ export const getters = {
     },
     PLAYING_DATA: (state) => {
         let filtered
-        // if(state.sqPlaying.length == 0) {
-        //     filtered = state.songs.filter((song) => {
-        //         return song.ID.match(state.sqPlaying[0])
-        //     })
-        // } else {
             filtered = state.songs.filter((song) => {
                 return song.ID.match(state.sqPlaying[0])
             })
-        // }
             return filtered[0]
     },
     AUDIO_SRC: (state, getters) => {
@@ -1014,6 +885,7 @@ export const getters = {
     },
     FILTERED_SONGS_SEARCH: (state, getters) => {
         let filteredList = getters.PB_FILTERED_SONGS
+
         // Filter song
             if(state.filter.song.length !== 0) {
                 const songList = []
@@ -1024,6 +896,7 @@ export const getters = {
                         songList.push(filteredList[i])
                     }}})}
                 filteredList = songList }
+
         // Filter search
             if (state.filter.search.length !== 0 && filteredList.length > 0) {
             const searchList = []
@@ -1034,7 +907,7 @@ export const getters = {
                     searchList.push(filteredList[i])
                 }}})}
             filteredList = searchList } 
-  
+
         // Filter album
             if (state.filter.album.length !== 0 && filteredList.length > 0) {
                 const albumList = []
@@ -1132,6 +1005,7 @@ export const getters = {
     },
     SONGS_SEARCH: (state) => {
         let filteredList = [...state.songs]
+
         // Filter song
             if(state.filter.song.length !== 0) {
                 const songList = []
@@ -1142,6 +1016,7 @@ export const getters = {
                         songList.push(filteredList[i])
                     }}})}
                 filteredList = songList }
+                
         // Filter search
             if (state.filter.search.length !== 0 && filteredList.length > 0) {
             const searchList = []

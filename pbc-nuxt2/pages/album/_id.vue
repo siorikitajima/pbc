@@ -75,21 +75,9 @@ export default {
             slug: 'SLUG',
             SearchedSongs: 'SONGS_SEARCH'
         }),
-        // albumSongList: function() {
-        //     if (this.singalbum.Type == 'Album') {
-        //         return this.$store.state.songs.filter((song) => {
-        //             return song.CatNum == this.theId[0]
-        //         }).sort((a, b) => a.Seq - b.Seq)
-        //     } else {
-        //         return this.$store.state.songs.filter((song) => {
-        //             return song.CatNum == this.theId[0]
-        //         })
-        //     }
-        // }
     },
     mounted() {
         this.$store.commit('clearFilter')
-        // let theId = this.$route.params.id.split("-");
         this.$store.commit('setFilterAlbum', {id: this.theId[0]})
         this.$store.commit('setOrder', 'Seq')
         this.dataLoad = true

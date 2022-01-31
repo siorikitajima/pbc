@@ -26,7 +26,6 @@
     <div class="theforms songName" v-bind:class="{ dimmed: inquery4Song }">
         <label for="song">Specific song in your mind?</label>
         <input type="text" id="song" name="song" autocomplete="off" :value="songName" @focus="searchPanel = true" @input="e => songName = e.target.value" >
-        <!-- <div class="dropdown" v-if="shownNames.length > 0 && songName != ''"> -->
         <div class="dropdown" v-if="shownNames.length > 0 && searchPanel">
             <ul class="searchKeys">
                 <li class="searchKey" 

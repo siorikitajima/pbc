@@ -86,7 +86,6 @@ export default {
     background: none;
     border-radius: 5px;
     padding: 10px 20px;
-    /* position: fixed; */
     display: inline-block;
     color: #0092c5;
     margin: 0 10px;
@@ -111,48 +110,4 @@ export default {
     border-radius: 5px;
 }
 }
-/* .rangeSelector div {
-    display: flex;
-    justify-content: space-between; */
-/* }
-.rangeSelector input {
-    width: 60px;
-    height: 40px;
-    margin: auto 0;
-    font-size: 1.2em;
-    color: #ddd;
-    border: none;
-    text-align: center;
-    padding: 0;
-    font-weight: bold;
-}
-.rangeSelector img {
-    width: 40px;
-    height: 40px;
-    padding: 10px;
-    cursor: pointer;
-} */
-
-/* .trackCount {
-    color: #fff;
-    margin-top: 10px;
-    font-size: 1.1em;
-}
-.trackCount.dark {
-    font-size: 1.2em;
-    margin: 20px;
-}
-.trackCount span {
-    font-size: 0.9em;
-}
-
-@media (max-width: 600px) {
-    .rangeSelector {
-        display: none;
-    }
-    .resultIcon .trackCount {
-        color: #222;
-        font-size: 1.4em;
-    }
-} */
 </style>

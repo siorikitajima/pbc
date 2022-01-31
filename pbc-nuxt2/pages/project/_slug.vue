@@ -106,11 +106,6 @@ export default {
         ...mapGetters({
             SearchedSongs: 'SONGS_SEARCH'
         }),
-        // featuredTracks: function() {
-        //     return this.$store.state.songs.filter((song) => {
-        //         return song.ArtistName.match(this.singproj.ArtistName)
-        //     })
-        // },
         projectsAlbums: function() {
         return this.$store.state.albums.filter((album) => {
             return album.Project === this.singproj.ArtistName 

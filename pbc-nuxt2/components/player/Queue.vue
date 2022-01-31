@@ -66,9 +66,6 @@
             </div>
           </div>
         </div>
-        <!-- <div v-else>
-            <p>No Song in Queue</p>
-        </div> -->
       </div>
   </div>
     <div v-if="name4Share" class="sharePanelScreen" @click="closeShareP"></div> 
@@ -174,7 +171,6 @@ export default {
   border-radius: 5px 0 0 0;
   font-size: 0.9em;
   color: #FFFFFF88;
-  /* z-index: -1; */
 }
 .queuePanel.toTheRight {
     right: 275px;
@@ -217,19 +213,13 @@ export default {
     transform: translateX(15px);
     cursor: pointer;
 }
-/* .queueSong.upcoming:first-of-type .song-actions {
-    display: none;
-} */
 .song-actions img {
     width: 28px;
     height: 28px;
 }
-
 .queueSong:hover .song-actions {
     opacity: 1;
 }
-
-
 .coverSm {
     width: 40px;
     height: 40px;

@@ -5,7 +5,6 @@
             <p>// PB Playlist //</p>
             <h1>{{ PlaylistName }}</h1>
         <div class="channels pl">
-            <!-- <img :src="require('~/assets/images/actions/playSong_light.svg')" alt="Play All" @click="playAll()"> -->
             <button class="playlist" @click="playAll()">PLAY ALL</button> 
             <img :src="require('~/assets/images/actions/addToQueue_light.svg')" alt="Add All to Queue" @click="addAll()">
             <img :src="require('~/assets/images/actions/Share_Icon_white.svg')" alt="Share" @click="shareURL()">
@@ -16,18 +15,13 @@
 </template>
 
 <script>
-// import { mapState } from 'vuex';
 import GlobalRangeSlider from "~/components/global/rangeSlider"
 
 export default {
     name: 'SinglePlaylist',
     props: [ 'PlaylistName', 'playlist' ],
     components: { GlobalRangeSlider },
-    // computed:{
-    //     ...mapState(['playlist']),
-    // },
     data(){
-        // console.log(this.playlist)
         return {
             actionType: '',
             rangeSlider: false
@@ -35,27 +29,12 @@ export default {
     },
     methods: {
         playAll() {
-            // if(this.playlist.length < 11) {
                 let ids = JSON.parse(JSON.stringify(this.playlist))
-                // console.log(this.playlist, ids)
                 this.$store.dispatch('playThemAction', ids)      
-                // let payload = { data: {type: 'PLAY', from: 0, to: this.playlist.length }, ids: this.playlist }
-                // this.$store.dispatch('setRange', payload)
-            // } else {
-            //     this.actionType = 'PLAY'
-            //     this.rangeSlider = true
-            // }
         },
         addAll() {
-            // if(this.playlist.length < 11) {
                 let ids = JSON.parse(JSON.stringify(this.playlist))
                 this.$store.dispatch('AddThemAction', ids)
-                // let payload = { data: {type: 'ADD', from: 0, to: this.playlist.length }, ids: this.playlist }
-                // this.$store.dispatch('setRange', payload)
-            // } else {
-            //     this.actionType = 'ADD TO QUEUE'
-            //     this.rangeSlider = true
-            // }
         },
         shareURL() {
             let url = window.location.href
@@ -89,7 +68,6 @@ export default {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    /* opacity: 0; */
     z-index: -1;
 }
 @media screen and (max-width: 600px) {

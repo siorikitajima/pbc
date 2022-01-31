@@ -64,8 +64,6 @@ export default {
     width: calc(100% - 20px);
     height: fit-content;
     padding: 20px 10px;
-    /* display: flex;
-    justify-content: space-between; */
     border-bottom: #ccc solid 1px;
 }
 .cartItem div {
@@ -75,16 +73,7 @@ export default {
 .cartItem div.songInfo {
     margin: 5px 0;
     justify-content: left;
-    /* justify-content: space-between; */
 }
-/* .cartItem div.songInfo.wider {
-    justify-content: left;
-    position: relative;
-} */
-/* .cartItem div.songInfo.wider div.right {
-    position: absolute;
-    right: 0;
-} */
 .cartItem div.right {
     justify-content: right;
 }
@@ -105,7 +94,6 @@ export default {
     background: #666;
     transition-duration: 200ms;
 }
-
 .cartItem .cover {
     width: 40px;
     height: 40px;

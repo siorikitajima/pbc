@@ -60,20 +60,6 @@
         </div>
 
         <div class="btnbox">
-            <!-- <button class="large payment" @click="downloadFiles(orderedSongIds, 'wav')">
-                <img src="~/assets/images/license/audio-file.svg" alt="download">
-                <p>Download .WAV</p>
-            </button> -->
-            <!-- <a :href="mp3Url" target="_blank" download>
-            <button class="large payment" v-if="downloadable">
-                <img src="~/assets/images/license/audio-file.svg" alt="download">
-                <p>Download .MP3</p>
-            </button>
-            <button class="large payment" v-else>
-                <img src="~/assets/images/license/Loading_icon.svg" alt="download">
-                <p>Prepping MP3...</p>
-            </button>
-            </a> -->
             <NuxtLink :to="'/invoice/' + finalOrder.pbId">
             <button class="large payment">
                 <img src="~/assets/images/license/invoice.svg" alt="download">
@@ -143,7 +129,6 @@ export default {
             order: {},
             finalOrder: {},
             mp3Url: '',
-            // downloadable: false
         }
     },
     async asyncData() {
@@ -156,10 +141,10 @@ export default {
     mounted: function() {
         const script = document.createElement("script");
         script.src =
-        "https://www.paypal.com/sdk/js?client-id=Aef10JETQP3lyt5svy9xxkpxC5qNpKvKWeq0XShiVmwURTg9MG1FQPEIoPnzYtPGP2Z-F34rN6ijBKWf";
+        // "https://www.paypal.com/sdk/js?client-id=AcK1yMYj4iJE3qpAxgFvijhJndg50pzy50-z1hqpVaXeI0CfsGvdafCQn40RWd0GCxem-XL8DWqBI2iq";//// Prod
+        "https://www.paypal.com/sdk/js?client-id=AXU22huezulbE7ARZkVaZuKYLsKYzN6AvnwQBF5bBToKqj_GlMl-qvRMN-tQx1fZFq8BGoq5fN6m7eYu";//// Dev Sandbox
         script.addEventListener("load", this.setLoaded);
         document.body.appendChild(script);
-        // console.log(this.cart)
     },
     computed: {
         ...mapState(['cart']),
@@ -212,21 +197,6 @@ export default {
                 return ''
             }
         },
-        // orderData() {
-        //     if(this.order !== {}) {
-        //         let theorder = {
-        //             date: this.date,
-        //             pbId: this.orderId,
-        //             paymentId: this.order.id,
-        //             payer: this.order.payer,
-        //             purchase_units: this.order.purchase_units,
-        //             status: this.order.status
-        //         }
-        //         return theorder
-        //     } else {
-        //         return ''
-        //     }
-        // },
         orderedSongIds() {
             let ids = []
             for(let c = 0; c < this.cart.length; c++) {
@@ -286,10 +256,11 @@ export default {
                 this.data;
                 this.paidFor = true;
                 this.order = order;
-                // console.log('approved')
                 await this.postOrder(order)
                 this.$store.commit('EMPTY_CART')
-                this.emailConf()
+                setTimeout(()=>{
+                    this.emailConf()
+                }, 10000)
                 this.$store.dispatch('orderPanel')
             },
             onError: err => {
@@ -325,10 +296,7 @@ export default {
         },
         set_mp3Url(data){
             this.mp3Url = data
-            console.log(this.mp3Url)
-            // setTimeout(()=>{
-            //     this.downloadable = true
-            // }, 10000)
+            // console.log(this.mp3Url)
         },
         async emailConf() {
             let url = baseURL + '/order-conf'
@@ -350,10 +318,6 @@ export default {
                 console.log(error);
             });
         },
-        // async downloadWav(ids) {
-        //     let url = baseURL + '/dlwav'
-        //     console.log(ids, url)
-        // },
         async downloadFiles(ids, type) {
             let url = baseURL + '/files'
             let da = { ids: ids, orderId: this.orderId, type: type }
@@ -398,68 +362,10 @@ h2.first {
     text-align: center;
     transform: scale(0.8);
 }
-/* .cartItem {
-    width: calc(100% - 20px);
-    height: fit-content;
-    padding: 20px 10px;
-    /* display: flex;
-    justify-content: space-between; 
-    border-bottom: #ccc solid 1px;
-}
-*/
 .cartItem.head {
     border-bottom: #666 solid 2px;
     padding: 20px 0;
 }
-/*.cartItem div {
-    display: flex;
-    justify-content: space-between;
-}
-.cartItem div.promoHeight {
-    height: 30px;
-    margin-bottom: 5px;
-}
-.cartItem div.right {
-    justify-content: right;
-}
-.cartItem div.right p {
-    background: #aaa;
-    color: #fff;
-    padding: 5px 10px;
-    margin: 5px 0 5px 10px;
-    border-radius: 5px;
-}
-.cartItem div.right p:hover {
-    background: #666;
-    transition-duration: 200ms;
-}
-*/
- /* .cartItem.total {
-    border-top: #666 solid 2px;
-    border-bottom: none;
-}  */
-/*
-.cartItem h4 {
-    margin: 5px 0;
-}
-.cartItem p {
-    font-size: 0.9em;
-}
-.cartItem .warning {
-    color: #F94144;
-    font-weight: bold;
-    line-height: 2.2em;
-    border-bottom: #F94144 1px solid;
-}
-.cartItem .price {
-    text-align: right;
-}
-.cartItem .price p {
-    font-size: 0.8em;
-}
-.cartItem .price p:hover {
-    color: #0092c5;
-} */
 .btnbox {
     display: flex;
     justify-content: center;
@@ -484,19 +390,6 @@ button.promo.apply.active {
     pointer-events: unset;
     opacity: 1;
 }
-
-/* .cartItem .cover {
-    width: 40px;
-    height: 40px;
-    margin-right: 10px;
-    flex-shrink: 0;
-}
-.cartItem .cover img {
-    width: 40px;
-    aspect-ratio: 1/1;
-    height: 40px;
-    width: 100%;
-} */
 .points {
     display: flex;
     background: #eee;

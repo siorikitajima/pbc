@@ -4,11 +4,10 @@
     <div v-if="playlistInfo">
         <SinglePlaylist :PlaylistName="playlistInfo.PlaylistName" :playlist="singplaylist" />
     </div>
-
-        <div v-if="playlistData.length">
-            <TableSongList :fltdsongs="playlistData.slice(0, loadNum.loadTo)" :dist="'song'" />
-        </div>
-        <div v-else><TableLoading /></div>
+    <div v-if="playlistData.length">
+        <TableSongList :fltdsongs="playlistData.slice(0, loadNum.loadTo)" :dist="'song'" />
+    </div>
+    <div v-else><TableLoading /></div>
     </div>
 </div>
 </template>
@@ -24,16 +23,16 @@ export default {
         return {
         title: 'Playlist #' + this.theNum + ' ' + this.playlistInfo.PlaylistName + ' || PatternBased Catalog',
         meta: [
-        {
-            hid: 'og:title',
-            name: 'og:title',
-            content: 'Playlist #' + this.theNum + ' ' + this.playlistInfo.PlaylistName + ' || PatternBased Catalog'
-        },
-        {
-            hid: 'og:url',
-            name: 'og:url',
-            content: 'https://dev-catalog.patternbased.com/playlist/' + this.theId
-        }
+            {
+                hid: 'og:title',
+                name: 'og:title',
+                content: 'Playlist #' + this.theNum + ' ' + this.playlistInfo.PlaylistName + ' || PatternBased Catalog'
+            },
+            {
+                hid: 'og:url',
+                name: 'og:url',
+                content: 'https://dev-catalog.patternbased.com/playlist/' + this.theId
+            }
         ]
         }
     },

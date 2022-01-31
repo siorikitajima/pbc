@@ -41,9 +41,6 @@
         <a :href="album.TidalURL" v-if="album.TidalURL" target="_blank">
             <img :src="require('~/assets/images/singles/Single-Song_Tidal.svg')" alt="Tidal">   
         </a>
-        <!-- <a :href="album.SpotifyURL" v-if="album.SpotifyURL" target="_blank">
-            <img :src="require('~/assets/images/singles/Single-Song_GooglePlay.svg')" alt="Google Play">
-        </a> -->
         <a :href="album.SoundcloudURL" v-if="album.SoundcloudURL" target="_blank">
             <img :src="require('~/assets/images/singles/Single-Song_SoundCloud.svg')" alt="SoundCloud">
         </a>
@@ -65,7 +62,6 @@
 </template>
 
 <script>
-
 export default {
     name: 'AlbumInfoPage',
     props: ['album']

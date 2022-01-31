@@ -150,7 +150,6 @@ export default {
         },
     licenseThis(id) {
         this.$store.dispatch('OpenLicenseP', id)
-        // this.$store.commit('OPEN_LICENSE_PANEL', id)
         }
     },
     mounted() {
@@ -162,7 +161,6 @@ export default {
 <style scoped>
 .asong {
     width: 800px;
-    /* min-height: 60px; */
     height: fit-content;
     max-width: 90%;
     margin: 5px auto;
@@ -214,7 +212,6 @@ export default {
 }
 .asname {
     padding-left: 10px;
-    /* margin-top: -10px; */
     width: 200px;
     height: fit-content;
     flex-shrink: 0;
@@ -294,7 +291,6 @@ export default {
         height: fit-content;
         margin: 12px 20px 0 20px;
         position: relative;
-        /* flex-shrink: 0; */
     }
 .actions.mobile .actionBtn {
     position: absolute;
@@ -327,9 +323,6 @@ export default {
     .actions.mobile {
         display: block;
     }
-    /* .asflow, .askey, .asvalues {
-       display: none;
-    } */
 }
 
 @media (hover: none) {
@@ -377,7 +370,6 @@ export default {
     }
     .asname {
         flex-shrink: 0;
-        /* width: fit-content; */
     }
 }
 @media (max-width: 650px) {

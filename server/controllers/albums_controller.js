@@ -32,10 +32,8 @@ const readAlbumData = (req, res) => {
     let tempAlbum = data[0].toObject();
     let slugProject = tempAlbum.Project.toLowerCase().replace(/\s+/g, '-');
     let coverArt = tempAlbum.AlbumArt.toLowerCase().replace(/\s+/g, '-');
-    // const theartist = Artist.findOne({ 'ArtistSlug': coverArt, 'Type': 'V' });
     Artist.countDocuments({ 'ArtistSlug': coverArt, 'Type': 'V' }, function (err, count){ 
       if( count > 0 ){
-    // if (theartist) {
       Artist.findOne({ 'ArtistSlug': coverArt, 'Type': 'V'} )
         .then((vdata) => {
           let url = vdata.URL || '#' ;

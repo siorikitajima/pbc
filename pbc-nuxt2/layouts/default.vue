@@ -6,13 +6,8 @@
     <Nuxt />
     <GlobalCliNav :cart="cart" />
 
-    <!-- <transition name="slideFRBottom"> -->
-      <PlayerQueue v-if="queuePanel" />
-    <!-- </transition>
-    <transition name="slideFRBottom"> -->
-      <PlayerSimilar v-if="similarPanel" />
-    <!-- </transition> -->
-
+    <PlayerQueue v-if="queuePanel" />
+    <PlayerSimilar v-if="similarPanel" />
     <PlayerBar :class="{ 'hidePlayer' : !playerBar }" />
 
     <PanelCart v-if="cartPanel" />
@@ -37,7 +32,6 @@ import PanelLicense from "~/components/panel/License"
 import PanelCart from "~/components/cart/main"
 
 export default {
-  // transition: 'slideFRBottom',
   components: {
     GlobalCliNav, GlobalCliLeftNav, PlayerBar, PlayerQueue, PlayerSimilar, PanelSingleSong, 
     PanelFlash, PanelLicense, PanelCart

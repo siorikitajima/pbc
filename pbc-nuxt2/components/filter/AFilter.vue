@@ -112,7 +112,6 @@ export default {
                 this.$store.commit('SET_ORG_MIN', 9.75)
               }
             }
-            // this.$store.commit('PBfilterSongs')
             this.setLocalStorage()
         }
     },
@@ -180,28 +179,8 @@ export default {
             }
           }
           this.setLocalStorage()
-          // this.$store.commit('PBfilterSongs')
         }
       },
-      // minPreset: {
-      //   get () { 
-      //     if(this.type == 'rhythm') return this.presetRhy.min
-      //     else if(this.type == 'speed') return this.presetSpd.min
-      //     else if(this.type == 'experimental') return this.presetExp.min
-      //     else if(this.type == 'mood') return this.presetMod.min
-      //     else if(this.type == 'organic') return this.presetOrg.min
-      //    }
-      // },
-      // maxPreset: {
-      //   get () { 
-      //     if(this.type == 'rhythm') return this.presetRhy.max
-      //     else if(this.type == 'speed') return this.presetSpd.max
-      //     else if(this.type == 'experimental') return this.presetExp.max
-      //     else if(this.type == 'mood') return this.presetMod.max
-      //     else if(this.type == 'organic') return this.presetOrg.max
-      //    }
-      // },
-
     minSpace() {
       if(this.minV == 0) {
         return { "width": 0 } 
@@ -217,84 +196,8 @@ export default {
           let leftSpace = (240 - (24 * this.maxV) - (6 - (6 * this.maxV / 10))) + 'px'
           return { "width": leftSpace }
       }
-      },
-    // filterName() {
-    //     if (this.type == 'speed') { return 'Speed'}
-    //     else if (this.type == 'rhythm') { return 'Rhythm'}
-    //     else if (this.type == 'experimental') { return 'Experimental'}
-    //     else if (this.type == 'mood') { return 'Mood'}
-    //     else if (this.type == 'organic') { return 'Organic'}
-    // },
-    // backgroundimg() {
-    //     if (this.type == 'speed') { return 'speed'}
-    //     else if (this.type == 'rhythm') { return 'rhythm'}
-    //     else if (this.type == 'experimental') { return 'experimental'}
-    //     else if (this.type == 'mood') { return 'mood'}
-    //     else if (this.type == 'organic') { return 'organic'}
-    // }
-  // },
-  // methods: {
-  //   setMinValu(val) {
-  //     if(this.type == 'rhythm') { 
-  //       this.$store.commit('SET_RHY_MIN', val)
-  //     } else if(this.type == 'speed') { 
-  //       this.$store.commit('SET_SPD_MIN', val)
-  //     } else if(this.type == 'experimental') { 
-  //       this.$store.commit('SET_EXP_MIN', val)
-  //     } else if(this.type == 'mood') { 
-  //       this.$store.commit('SET_MOD_MIN', val)
-  //     } else if(this.type == 'organic') { 
-  //       this.$store.commit('SET_ORG_MIN', val)
-  //     }
-  //   },
-  //   setMaxValu(val) {
-  //     if(this.type == 'rhythm') { 
-  //       this.$store.commit('SET_RHY_MAX', val)
-  //     } else if(this.type == 'speed') { 
-  //       this.$store.commit('SET_SPD_MAX', val)
-  //     } else if(this.type == 'experimental') { 
-  //       this.$store.commit('SET_EXP_MAX', val)
-  //     } else if(this.type == 'mood') { 
-  //       this.$store.commit('SET_MOD_MAX', val)
-  //     } else if(this.type == 'organic') { 
-  //       this.$store.commit('SET_ORG_MAX', val)
-  //     }
-  //   }
+    },
   }
-  
-  // watch: {
-  //   minPreset: {
-  //     handler: function(newV, oldV) {
-  //       if (this.type == 'speed') { 
-  //         this.$store.commit('SET_SPD_MIN', newV) 
-  //       } else if (this.type == 'rhythm') { 
-  //         this.$store.commit('SET_RHY_MIN', newV) 
-  //       } else if (this.type == 'experimental') { 
-  //         this.$store.commit('SET_EXP_MIN', newV) 
-  //       } else if (this.type == 'mood') { 
-  //         this.$store.commit('SET_MOD_MIN', newV) 
-  //       } else if (this.type == 'organic') { 
-  //         this.$store.commit('SET_ORG_MIN', newV) 
-  //       }
-  //     }
-  //   },
-  //   maxPreset: {
-  //     handler: function(newV, oldV) {
-  //       if (this.type == 'speed') { 
-  //         this.$store.commit('SET_SPD_MAX', newV) 
-  //       } else if (this.type == 'rhythm') { 
-  //         this.$store.commit('SET_RHY_MAX', newV) 
-  //       } else if (this.type == 'experimental') { 
-  //         this.$store.commit('SET_EXP_MAX', newV) 
-  //       } else if (this.type == 'mood') { 
-  //         this.$store.commit('SET_MOD_MAX', newV) 
-  //       } else if (this.type == 'organic') { 
-  //         this.$store.commit('SET_ORG_MAX', newV) 
-  //       }
-  //     }
-  //   }
-  
-  // }
 }
 </script>
 
@@ -355,8 +258,6 @@ input[type=range]:focus {
 input[type=range]::-webkit-slider-runnable-track {
   width: 100%;
   height: 38px;
-  /* cursor: pointer; */
-  /* animate: 0.2s; */
   border-radius: 1px;
   box-shadow: none;
   border: 0;
@@ -373,7 +274,6 @@ input[type=range]::-moz-range-track {
   background: none;
   width: 100%;
   height: 38px;
-  /* border-radius: 1px; */
   box-shadow: none;
   border: 0;
   pointer-events: none;
@@ -387,8 +287,6 @@ input[type=range]::-moz-range-track {
   left: 0;
   background-repeat: no-repeat;
   pointer-events: none;
-  /* background-position-y: 5px; */
-  /* border: orange 1px solid; */
 }
 
 .sliderBG.speed {
@@ -402,69 +300,15 @@ input[type=range]::-moz-range-track {
 .sliderBG.experimental {
   background-image: url('~/assets/images/filter/experimental.png');
   background-size: cover;
-  /* mix-blend-mode: multiply; */
 }
 .sliderBG.mood {
   background-image: url('~/assets/images/filter/mood.png');
   background-size: cover;
-  /* mix-blend-mode: multiply; */
 }
 .sliderBG.organic {
   background-image: url('~/assets/images/filter/organic.png');
   background-size: cover;
-  /* mix-blend-mode: multiply;*/
 } 
-
-/* input[type=range].speed::-webkit-slider-runnable-track {
-  background-image: url('~/assets/images/filter/speed.png');
-  background-size: cover;
-}
-input[type=range].speed::-moz-range-track {
-  background-image: url('~/assets/images/filter/speed.png');
-  background-size: cover;
-}
-
-input[type=range].rhythm::-webkit-slider-runnable-track {
-  background-image: url('~/assets/images/filter/rhythm.png');
-  background-size: cover;
-}
-input[type=range].rhythm::-moz-range-track {
-  background-image: url('~/assets/images/filter/rhythm.png');
-  background-size: cover;
-}
-
-input[type=range].experimental::-webkit-slider-runnable-track {
-  background-image: url('~/assets/images/filter/experimental.png');
-  background-size: cover;
-  mix-blend-mode: multiply;
-}
-input[type=range].experimental::-moz-range-track {
-  background-image: url('~/assets/images/filter/experimental.png');
-  background-size: cover;
-  mix-blend-mode: multiply;
-}
-
-input[type=range].mood::-webkit-slider-runnable-track {
-  background-image: url('~/assets/images/filter/mood.png');
-  background-size: cover;
-  mix-blend-mode: multiply;
-}
-input[type=range].mood::-moz-range-track {
-  background-image: url('~/assets/images/filter/mood.png');
-  background-size: cover;
-  mix-blend-mode: multiply;
-}
-
-input[type=range].organic::-webkit-slider-runnable-track {
-  background-image: url('~/assets/images/filter/organic.png');
-  background-size: cover;
-  mix-blend-mode: multiply;
-}
-input[type=range].organic::-moz-range-track {
-  background-image: url('~/assets/images/filter/organic.png');
-  background-size: cover;
-  mix-blend-mode: multiply;
-} */
 
 input[type=range]::-webkit-slider-thumb {
   z-index: 2;
@@ -480,7 +324,7 @@ input[type=range]::-webkit-slider-thumb {
   appearance: none;
   pointer-events: auto;
 }
-input[type=range]::-moz-range-thumb{/*Firefox*/
+input[type=range]::-moz-range-thumb{ /*Firefox*/
   z-index: 2;
   position: relative;
   height: 46px;

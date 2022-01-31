@@ -9,7 +9,6 @@ const s3Zip = require('s3-zip');
 const aws = require('aws-sdk');
 const stream = require("stream");
 const pdfService = require('../service/pdf-service.js');
-// const fs = require('fs');
 
 const s3 = new aws.S3({
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,

@@ -94,7 +94,6 @@ export default {
 .trackCount.dark {
     font-size: 1.2em;
     margin: 20px;
-    /* color: #444; */
 }
 .trackCount span {
     font-size: 0.9em;

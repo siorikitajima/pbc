@@ -49,18 +49,10 @@ export default {
     name: 'CliNav',
     components: { GlobalCopyright },
     props: ['cart'],
-    // data() {
-    //     return {
-    //         sideNavOpen: false
-    //     }
-    // },
     computed: {
         ...mapState(['sideNavOpen']),
     },
     methods: {
-        // sideNavHandler() {
-        //     this.sideNavOpen = !this.sideNavOpen
-        // },
         setLocalStorage() {
             localStorage.setItem("cart", JSON.stringify(this.cart))
         },
@@ -133,7 +125,6 @@ export default {
         bottom: unset;
         vertical-align: unset;
         width: 100%;
-        /* width: calc(100% - 0); */
         margin: 70px -20px 50px -20px;
     }
 }
@@ -146,7 +137,6 @@ export default {
         bottom: unset;
         vertical-align: unset;
         width: 100%;
-        /* width: calc(100% - 0); */
         margin: 70px -20px 0 -20px;
     }
 }

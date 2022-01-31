@@ -60,13 +60,6 @@ export default {
         },
         addAll() {
             if(this.album.Type == 'Album') {
-                // let songIDs = []
-                // let leng = (this.album.Type == 'Album') ? this.albumSongs.length : 10
-                
-                // for (let t = 0; t < leng; t++) {
-                //     let id = this.albumSongs[t].ID
-                //         songIDs.push(id)
-                // }
                 this.$store.commit('ADD_ALL', this.songIDs)
             } else {
                 this.actionType = 'ADD TO QUEUE'
@@ -77,28 +70,6 @@ export default {
             let payload = { data: data, ids: this.songIDs }
             this.$store.dispatch('setRange', payload)
         },
-        // setRange(data) {
-        //     if(data.type == 'PLAY') {
-        //         let rangeIDs = this.songIDs.slice(data.from, data.to)
-        //         this.$store.dispatch('PlayAllIDs', rangeIDs)
-        //         setTimeout(()=> {
-        //             let thelen = rangeIDs.length
-        //             let theRest = rangeIDs.splice(1, thelen - 1)
-        //             this.$store.commit('ADD_ALL', theRest)
-        //             let leng = Number(data.to - data.from)
-        //             setTimeout(() => {
-        //                 this.$store.dispatch('addedQPanel', leng)
-        //             }, 1000)
-        //         }, 3000)
-        //     } else {
-        //         let rangeIDs = this.songIDs.slice(data.from, data.to)
-        //         let leng = Number(data.to - data.from)
-        //         this.$store.commit('ADD_ALL', rangeIDs)
-        //         setTimeout(() => {
-        //             this.$store.dispatch('addedQPanel', leng)
-        //         }, 1000)
-        //     }
-        // },
         shareURL() {
                 let url = window.location.href
                 this.$store.dispatch('CopyURL', url)

@@ -87,25 +87,8 @@ export default {
         if (localStorage.getItem("searchKeys")) {
             const va = JSON.parse(localStorage.getItem("searchKeys"))
             this.$store.commit('setAllFilter', { album: va.album, artist: va.artist, project: va.project, song: va.song, instrument: va.instrument, genre: va.genre, tag: va.tag, mood: va.mood, search: va.search, order: va.order })
-                // if(va.search.length !== 0) {
-                //     //// Save searchkeys from localstrage to $Store
-                // }
-        // } else {
-        //         this.$store.commit('setAllFilter', { album: '', artist: '', project: '', song: '', instrument: '', genre: '', tag: '', mood: '', search: '', order: 'Rate' })
         }
         this.componentLoaded = true
-        // this.$store.dispatch('filterSongs')
-
-        //// Debug Log
-        // let query = {
-        //     rhythm: { min: this.rhythm.min, max: this.rhythm.max },
-        //     speed: { min: this.speed.min, max: this.speed.max },
-        //     experimental: { min: this.experimental.min, max: this.experimental.max },
-        //     mood: { min: this.mood.min, max: this.mood.max },
-        //     organic: { min: this.organic.min, max: this.organic.max },
-        //     search: this.filter 
-        // }
-        // console.log('Filter Value on Mounted:', query)
     },
     computed: {
         ...mapState(['rhythm', 'speed', 'experimental', 'mood', 'organic', 'filter']),
@@ -114,72 +97,6 @@ export default {
             SearchedSongs: 'FILTERED_SONGS_SEARCH',
             SearchedIDs: 'FILTERED_SONGS_IDS'
         }),
-        // SearchedIDs() {
-        //     let ids = []
-        //     for (let s = 0; s < this.SearchedSongs.length; s++ ) {
-        //         ids.push(this.SearchedSongs[s].ID)
-        //     }
-        // return ids
-        // },
-
-        // fltBySearch() {
-        //     if( !this.componentLoaded || !this.songs ) {
-        //         return null } else {
-            // return this.songs.filter((song) => {
-            //     //// Match to the Slider Value
-            //     if ( song.PBRhythm >= this.rhythm.min && song.PBRhythm <= this.rhythm.max && song.PBSpeed >= this.speed.min && song.PBSpeed <= this.speed.max && song.PBExperimental >= this.experimental.min && song.PBExperimental <= this.experimental.max && song.PBMood >= this.mood.min && song.PBMood <= this.mood.max && song.PBOrganic >= this.organic.min && song.PBOrganic <= this.organic.max ) {
-            //         //// If there is no other item, that's the result
-            //         if( this.allSearch.length == 0 ) { 
-            //             return true
-            //         } else {
-            //             const query = {
-            //                 rhythm: { min: this.rhythm.min, max: this.rhythm.max },
-            //                 speed: { min: this.speed.min, max: this.speed.max },
-            //                 experimental: { min: this.experimental.min, max: this.experimental.max },
-            //                 mood: { min: this.mood.min, max: this.mood.max },
-            //                 organic: { min: this.organic.min, max: this.organic.max },
-            //                 search: this.allSearch 
-            //             }
-            //             localStorage.setItem("filterValues", JSON.stringify(query))
-                        
-            //             //// If Search keywords exist
-            //             for(let s = 0; s < this.allSearch.length; s++ ) {
-            //                 //// Song is searched by name by itself
-            //                 if( this.allSearch[s].type == 'song') {
-            //                     if ( song.Title.toLowerCase().match(this.allSearch[s].key.toLowerCase())) { return true }
-            //                 }
-            //                 if( this.allSearch[s].type == 'instrument') {
-            //                     if ( song.Instruments && song.Instruments.toLowerCase().includes(this.allSearch[s].key.toLowerCase())) { return true }
-            //                 }
-            //                 if( this.allSearch[s].type == 'album') {
-            //                     if ( song.AlbumTitle.toLowerCase().match(this.allSearch[s].key.toLowerCase())) { return true }
-            //                 }
-            //                 if( this.allSearch[s].type == 'project') {
-            //                     if ( song.ArtistName.toLowerCase().match(this.allSearch[s].key.toLowerCase())) { return true }
-            //                 }
-            //                 if( this.allSearch[s].type == 'artist') {
-            //                     if ( song.Writers.toLowerCase().includes(this.allSearch[s].key.toLowerCase())) { return true }
-            //                 }
-
-            //                 if( this.allSearch[s].type == 'genre') {
-            //                     if ( song.Genre && song.Genre.toLowerCase().match(this.allSearch[s].key.toLowerCase()) || song.SubGenreA && song.SubGenreA.toLowerCase().match(this.allSearch[s].key.toLowerCase()) || song.SubGenreB && song.SubGenreB.toLowerCase().match(this.allSearch[s].key.toLowerCase())) { return true }
-            //                 }
-            //                 if( this.allSearch[s].type == 'tag') {
-            //                     if ( song.Tags && song.Tags.toLowerCase().includes(this.allSearch[s].key.toLowerCase())) { return true }
-            //                 }
-            //                 if( this.allSearch[s].type == 'mood') {
-            //                     if ( song.PrimaryMood && song.PrimaryMood.toLowerCase().match(this.allSearch[s].key.toLowerCase()) || song.SecondaryMoods && song.SecondaryMoods.toLowerCase().match(this.allSearch[s].key.toLowerCase())) { return true }
-            //                 }
-            //                 if( this.allSearch[s].type == 'search') {
-            //                     if ( song.Title.toLowerCase().match(this.allSearch[s].key.toLowerCase()) || song.Description && song.Description.toLowerCase().includes(this.allSearch[s].key.toLowerCase())) { return true }
-            //                 }
-            //             }
-            //             return false
-            //         }
-            //     }
-            // })
-            // }
-        // },
         songCount() {
             if( !this.componentLoaded || !this.SearchedSongs ) {
                 return null } else {
@@ -226,50 +143,6 @@ export default {
                 }
             }
         },
-        // getList4Queue(data) {
-        //     if(data.type == 'playThem') {
-        //         let songIds = []
-        //         for(let s = 0; s < this.SearchedSongs.length; s++) {
-        //             let id = this.SearchedSongs[s].ID
-        //             songIds.push(id)
-        //         }
-        //         // this.$store.commit('PLAY_ALL', songIds)
-        //         let song1 = songIds[0]
-        //         songIds.splice(songIds.length -1, 1)
-        //         this.$store.commit('PLAY_THIS', song1)
-        //         this.$store.commit('ADD_ALL', songIds)
-        //         console.log('Playing All', song1, songIds)
-        //     } else if (data.type == 'addThem') {
-        //         let songIds = []
-        //         for(let s = 0; s < this.SearchedSongs.length; s++) {
-        //             let id = this.SearchedSongs[s].ID
-        //             songIds.push(id)
-        //         }
-        //         this.$store.commit('ADD_ALL', songIds)
-        //     } 
-        // },
-
-        // updateResult(data) { //// need to move to store
-        //     let alreadyHaveIt = false
-        //     for(let s = 0; s < this.allSearch.length; s++) {
-        //         if (this.allSearch[s].key.match(data.key)) {
-        //             alreadyHaveIt = true
-        //         }
-        //     }
-        //     if(!alreadyHaveIt) {
-        //         this.$store.commit('ADD_ALL_SEARCH', data)
-        //         }
-        //     if(this.searchPanel) {this.searchPanel = false}
-        // },
-        // toggleSearchPanel() {
-        //     this.searchPanel = !this.searchPanel
-        // },
-        // toggleSliderPanel() {
-        //     this.sliderPanel = !this.sliderPanel
-        // },
-        // togglePresetPanel() {
-        //     this.presetPanel = !this.presetPanel
-        // },
         updateFilter() {
             this.presetPanel = false
             if(this.isMobile) {
@@ -290,15 +163,6 @@ export default {
             this.loadNum.loadTo = (leftOvers < (offset + 20)) ? this.songCount : offset + 20
         }
     }
-    // watch: {
-    //     SearchedSongs(newV, oldV) {
-    //         let ids = []
-    //         for (let s = 0; s < this.SearchedSongs.length; s++ ) {
-    //             ids.push(this.SearchedSongs[s].ID)
-    //         }
-    //         this.$store.commit('SET_SONG_IDS', ids)
-    //     }
-    // }
 }
 
 </script>

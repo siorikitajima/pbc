@@ -85,25 +85,6 @@ export default {
         ...mapGetters({
             SearchedSongs: 'SONGS_SEARCH'
         }),
-        // featuredTracks() {
-        //     let matching = this.songs.find((song) => song.ArtistName.match('Taka'))
-        //     if(matching !== undefined) {
-        //         return matching;
-        //     } 
-        // },
-        //     // let fltrdSongs = [];
-        //     // for(let s = 0; s < this.songs.length; s++ ) {
-        //     //     let witers = this.songs[s].WritersSlug.split(',')
-        //     //     for(let w = 0; w < witers.length; w++ ) {
-        //     //         if( witers[w] == this.theSlug) { 
-        //     //             fltrdSongs.push(this.songs[s]) 
-        //     //         }
-        //     //     }
-        //     // }
-        //     let result = this.songs.filter( song => 
-        //        song.WriterSlug == 'joseph-minadeo')
-        //     return result
-        // },
 
         songIDs() {
             let songIDs = []

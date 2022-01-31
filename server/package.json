@@ -1,7 +1,7 @@
 {
   "name": "pbc-server",
   "version": "1.0.0",
-  "description": "Express.js template",
+  "description": "PatternBased Catalog API",
   "main": "server.js",
   "scripts": {
     "dev": "node server.js",

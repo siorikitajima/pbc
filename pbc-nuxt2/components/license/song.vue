@@ -80,7 +80,6 @@ export default {
 }
 .asname {
     padding: 0 0 20px 0;
-    /* margin-top: -10px; */
     width: fit-content;
     height: fit-content;
     flex-shrink: 0;

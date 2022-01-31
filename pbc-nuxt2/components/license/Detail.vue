@@ -33,8 +33,6 @@ export default {
         },
         addToCart(license) {
             let data = {
-                // licenseName: license.name,
-                // licensePrice: license.price,
                 license:license,
                 songID: this.licenseSong[0].ID,
                 songName: this.licenseSong[0].Title,

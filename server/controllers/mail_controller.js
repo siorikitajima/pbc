@@ -1,6 +1,7 @@
 const nodemailer = require('nodemailer');
 const { all } = require('../routes/license_api');
 const Invoice = require('../models/invoice_schema');
+const thedomain = process.env.DOMAIN;
 
 const form_post = (req, res) => {
     const GMAIL_USER = process.env.GMAIL_USER;
@@ -40,7 +41,7 @@ const form_post = (req, res) => {
       cc: `${req.body.email}`,
       subject: '[PBC] Thank You for Your Request',
       html: `<div style="width: 100%; height: 100%; text-align: center; background: #222; color: #fff; padding-bottom: 30px;">
-      <a href="https://dev-catalog.patternbased.com/"><img src="https://pblibrary.s3.us-east-2.amazonaws.com/emailImages/PatternBased_Catalog_logo.png" alt="PatternBased Catalog" style="width: 200px; margin: 30px auto;"></a>
+      <a href="${thedomain}"><img src="https://pblibrary.s3.us-east-2.amazonaws.com/emailImages/PatternBased_Catalog_logo.png" alt="PatternBased Catalog" style="width: 200px; margin: 30px auto;"></a>
       <div style="width: auto; max-width: 600px; background: #f2f2f2; color:#222; text-align: center; font-family:GCentra,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif; margin: 0 auto; border-radius: 5px; line-height: 1.4em; padding: 30px 20px;">
       <h2>THANK YOU FOR YOUR REQUEST<h2/>
       <p">Dear ${req.body.name}, <br/> Thank you for your request. We will get back to you shortly.<br/><br/>
@@ -54,7 +55,7 @@ const form_post = (req, res) => {
             <a href="https://patternbased.com/" style="text-decoration: underline; color: #ddd;">PatternBased </a>
             <span style="width:10px; display: inline-block;"></span>
             <a href="https://legal.patternbased.com/privacy-policy/" style="text-decoration: underline; color: #ddd;"> Privacy Policy</a><br/><br/>
-            &copy; Copyright 2021 PatternBased Corp
+            &copy; Copyright 2022 PatternBased Corp
         </p>
     </div>`
     }
@@ -68,9 +69,9 @@ const form_post = (req, res) => {
 const order_comfirmation = (req, res) => {
   Invoice.find({ orderIdPB: req.body.pbId})
   .then((data) => {
-    // console.log(req.body.pbId)
+    console.log(req.body.pbId)
     // console.log(data)
-    // console.log(data[0].mp3Url)
+    console.log(data[0].mp3Url)
 
   const GMAIL_USER = process.env.GMAIL_USER;
   const GMAIL_PASS = process.env.GMAIL_PASS;
@@ -104,11 +105,11 @@ const order_comfirmation = (req, res) => {
 
   const mailHtml = {
     from: GMAIL_USER,
-    to: EMAIL_RECEIVER,
-    cc: `${req.body.email}`,
+    to: `${data[0].email}`,
+    cc: EMAIL_RECEIVER,
     subject: `[PBC] Order Confirmation #${req.body.pbId}`,
     html: `<div style="width: 100%; height: 100%; text-align: center; background: #222; color: #fff; padding-bottom: 30px;">
-    <a href="https://dev-catalog.patternbased.com/"><img src="https://pblibrary.s3.us-east-2.amazonaws.com/emailImages/PatternBased_Catalog_logo.png" alt="PatternBased Catalog" style="width: 200px; margin: 30px auto;"></a>
+    <a href="${thedomain}"><img src="https://pblibrary.s3.us-east-2.amazonaws.com/emailImages/PatternBased_Catalog_logo.png" alt="PatternBased Catalog" style="width: 200px; margin: 30px auto;"></a>
     <div style="width: auto; max-width: 600px; background: #f2f2f2; color:#222; text-align: center; font-family:GCentra,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif; margin: 0 auto; border-radius: 5px; line-height: 1.4em; padding: 40px 20px;">
     <h2>ORDER CONFIRMATION</h2>
     <p">Dear ${req.body.payer.name.given_name + ' ' + req.body.payer.name.surname}, <br/> We have received your order, thank you!<br/><br/></p>
@@ -121,10 +122,10 @@ const order_comfirmation = (req, res) => {
     <div style="width: 460px; height: auto; margin: 10px auto; padding: 10px 20px; background: #444; color: #fff; border-radius: 5px; font-size: 1.1em; text-decoration: none;">Download MP3</div>
     </a>
 
-    <a href="https://dev-catalog.patternbased.com/invoice/${req.body.pbId}">
+    <a href="${thedomain}invoice/${req.body.pbId}">
     <div style="width: 460px; height: auto; margin: 10px auto; padding: 10px 20px; background: #444; color: #fff; border-radius: 5px; font-size: 1.1em; text-decoration: none;">View Invoice</div>
     </a>
-    <a href="https://dev-catalog.patternbased.com/requests?type=stems&order=${req.body.pbId}">
+    <a href="${thedomain}requests?type=stems&order=${req.body.pbId}">
     <div style="width: 460px; height: auto; margin: 10px auto; padding: 10px 20px; background: #444; color: #fff; border-radius: 5px; font-size: 1.1em; text-decoration: none;">Request Stems</div>
     </a>
 
@@ -138,14 +139,14 @@ const order_comfirmation = (req, res) => {
 
     <div style="width: 500px; display: flex; justify-content: space-between; margin: 0 auto 10px auto; padding: 10px 0;">
     <img src="https://pblibrary.s3.us-east-2.amazonaws.com/emailImages/email_icon_blue.png" alt="PatternBased Catalog" style="width: 40px; height: 40px; margin: 10px 10px 10px 0;">
-    <p style="width: 400px; text-align: left; margin: 10px 0;">Download Links will expire in 7 days. Please <a href="https://dev-catalog.patternbased.com/requests?type=other&order=${req.body.pbId}">contact us</a> with your Order# to re-issue download links.</p></div>
+    <p style="width: 400px; text-align: left; margin: 10px 0;">Download Links will expire in 7 days. Please <a href="${thedomain}requests?type=other&order=${req.body.pbId}">contact us</a> with your Order# to re-issue download links.</p></div>
 
     </div>
       <p style="padding: 30px 0 0 0; color: #ddd;">
           <a href="https://patternbased.com/" style="text-decoration: underline; color: #ddd;">PatternBased.com</a>
           <span style="width:10px; display: inline-block;"></span>
           <a href="https://legal.patternbased.com/privacy-policy/" style="text-decoration: underline; color: #ddd;"> Privacy Policy</a><br/><br/>
-          &copy; Copyright 2021 PatternBased Corp
+          &copy; Copyright 2022 PatternBased Corp
       </p>
   </div>`
   }
@@ -155,7 +156,9 @@ const order_comfirmation = (req, res) => {
       if (error) { res.json(error) }
       else { res.json(response);  }
     })
+    console.log('Email sent')
   }, 300000)
+  // }, 3000)// Dev Email Test
   })
   .catch((err) => {
     console.error(err);
@@ -193,7 +196,7 @@ const stem_request = (req, res) => {
     cc: `${req.body.payer.email_address}`,
     subject: '[PBC] Thank You for Your Request',
     html: `<div style="width: 100%; height: 100%; text-align: center; background: #222; color: #fff; padding-bottom: 30px;">
-    <a href="https://dev-catalog.patternbased.com/"><img src="https://pblibrary.s3.us-east-2.amazonaws.com/emailImages/PatternBased_Catalog_logo.png" alt="PatternBased Catalog" style="width: 200px; margin: 30px auto;"></a>
+    <a href="${thedomain}"><img src="https://pblibrary.s3.us-east-2.amazonaws.com/emailImages/PatternBased_Catalog_logo.png" alt="PatternBased Catalog" style="width: 200px; margin: 30px auto;"></a>
     <div style="width: auto; max-width: 600px; background: #f2f2f2; color:#222; text-align: center; font-family:GCentra,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif; margin: 0 auto; border-radius: 5px; line-height: 1.4em; padding: 30px 20px;">
     <h2>THANK YOU FOR YOUR REQUEST<h2/>
     <p">Dear ${req.body.payer.name.given_name + ' ' + req.body.payer.name.surname}, <br/> Thank you for your request. We will get back to you shortly.<br/><br/>
@@ -206,7 +209,7 @@ const stem_request = (req, res) => {
           <a href="https://patternbased.com/" style="text-decoration: underline; color: #ddd;">PatternBased </a>
           <span style="width:10px; display: inline-block;"></span>
           <a href="https://legal.patternbased.com/privacy-policy/" style="text-decoration: underline; color: #ddd;"> Privacy Policy</a><br/><br/>
-          &copy; Copyright 2021 PatternBased Corp
+          &copy; Copyright 2022 PatternBased Corp
       </p>
   </div>`
   }

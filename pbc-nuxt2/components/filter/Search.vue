@@ -44,7 +44,6 @@ export default {
     props: ['search', 'searchKeys', 'focus'],
     data() {
         return {
-            // searchKey: props.allSearch,
             tempSearch: '',
             filteredKeys: [],
             searchPanel: true
@@ -77,13 +76,6 @@ export default {
         this.$emit('loadSearch')
       },
       setKey(data) {
-        // let alreadyHaveIt = false
-        // for(let s = 0; s < this.filter.length; s++) {
-        //   if (this.filteredKeys[s].key.match(data.key)) {
-        //     alreadyHaveIt = true
-        //   }
-        // }
-        // if(!alreadyHaveIt) {
           if(window.innerWidth <= 600) {
               this.$store.commit('SHOW_PLAYER')
           }
@@ -108,11 +100,7 @@ export default {
           } else if (data.type == 'search') {
             this.$store.commit('addFilterSearch', data)
           }
-        // this.$store.dispatch('filterSongs')
         this.tempSearch = ''
-        // } else {
-        //   this.$store.dispatch('flashPanel', 'This keyword is already used')
-        // }
         localStorage.setItem("searchKeys", JSON.stringify(this.filter))
       }
     },
@@ -140,7 +128,6 @@ export default {
   left: 0;
   background: #f2f2f2aa;
   border-bottom: #44444444 1px solid;
-  /* z-index: -1; */
 }
 
 input.searchBox {

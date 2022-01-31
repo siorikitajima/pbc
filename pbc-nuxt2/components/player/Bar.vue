@@ -13,7 +13,6 @@
     <div class="info">
         <p>{{ sqPData.ID }} // <NuxtLink :to="'/song/' + sqPData.ID + '-' + slug(sqPData.Title)">{{ sqPData.Title }}</NuxtLink> <span> by <NuxtLink :to="'/project/' + slug(sqPData.ArtistName)">{{ sqPData.ArtistName }}</NuxtLink></span><span v-if="sqPData.FeatArtist" v-html="featArtURL(sqPData.FeatArtist)"></span></p>
         <div class="progress_bar_flex">
-            <!-- <div class="progress__duration">{{ duration }}</div> -->
             <div class="duration progress__bar" ref="progressBar" @click="clickProgress">
                 <div class="progress__current" :style="{ width : barWidth }"></div>
             </div>
@@ -119,7 +118,6 @@ export default {
             barWidth: null,
             duration: null,
             currentTime: null,
-            // isTimerPlaying: null,
             mobileAction: false
         }
     },
@@ -134,21 +132,15 @@ export default {
             songSrc: 'AUDIO_SRC',
             featArtURL: 'FEATART_LINK'
         })
-        // songSrc() { 
-        //     return 'https://pblibrary.s3.us-east-2.amazonaws.com/' + this.sqPData.CatNum + '/' + this.sqPData.ID  + '.mp3';
-        // }
     },
     methods: {
         play() {
             if (this.audio.paused) {
                 this.resetPlayer()
-                // this.audio.play()
                 this.$store.commit('IS_PLAYING_ON')
-                // this.isTimerPlaying = true;
             } else {
                 this.audio.pause();
                 this.$store.commit('IS_PLAYING_OFF')
-                // this.isTimerPlaying = false;
             }
         },
         generateTime() {
@@ -185,14 +177,12 @@ export default {
             if (percentage < 0) {
                 percentage = 0;
             }
-            // console.log(position, progress.clientWidth, progress.getBoundingClientRect())
             this.barWidth = percentage + "%";
             this.circleLeft = percentage + "%";
             this.audio.currentTime = (maxduration * percentage) / 100;
             this.audio.play();
         },
         clickProgress(e) {
-            // this.isTimerPlaying = true;
             this.audio.pause();
             this.updateBar(e.pageX);
         },
@@ -207,7 +197,6 @@ export default {
             if (percentageM < 0) {
                 percentageM = 0;
             }
-            // console.log(positionM, progressM.clientWidth, progressM.getBoundingClientRect())
             this.barWidth = percentageM + "%";
             this.circleLeft = percentageM + "%";
             this.audio.currentTime = (maxdurationM * percentageM) / 100;
@@ -215,7 +204,6 @@ export default {
         },
         clickProgressMobile(e) {
             if(e.type == 'touchstart' || e.type == 'touchmove' || e.type == 'touchend' || e.type == 'touchcancel'){
-            // this.isTimerPlaying = true;
             var touch = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];
             this.audio.pause();
             this.updateBar(touch.pageX);
@@ -276,7 +264,6 @@ export default {
     mounted() {
         this.audio = new Audio();
         this.audio.src = this.songSrc
-        // 'https://pblibrary.s3.us-east-2.amazonaws.com/' + this.sqPData.CatNum + '/' + this.sqPData.ID  + '.mp3';
         this.audio.ontimeupdate = ()=> {
             this.generateTime()
         };
@@ -310,13 +297,8 @@ export default {
         sqQData(newV, oldV) { 
             this.setLocalStorage()
         },
-        // sqEData(newV, oldV) { 
-        //     this.setLocalStorage()
-        // },
         alsoPlay(newV, oldV) {
-            // setTimeout(() => {
-                this.resetPlayer()
-            // }, 100)
+            this.resetPlayer()
         }
       }
 }
@@ -369,7 +351,6 @@ export default {
 .thePlayer .info {
     margin: 0 20px;
     width: inherit;
-    /* max-width: calc(100% - 687px); */
     flex-shrink: 2;
 }
 .thePlayer .info p {

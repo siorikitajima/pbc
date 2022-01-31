@@ -6,24 +6,7 @@
             <p class="trackCount"><b>{{ songCount }}</b>
             <span> Tracks</span></p>
           </div>
-          <!-- <GlobalRangeSelector class="rangeSelector" :songCount="songCount" :ids="ids" /> -->
           <GlobalRangeSlider v-if="rangeSlider" :songCount="songCount" :type="actionType" @setRange="rangeAction($event)" @close="rangeSlider=false" />
-        <!-- <div class="rangeSelector">
-            <div v-if="songCount > 10">
-                <input type="number" min="1" :max="songTo-1" v-model="songFrom"/>
-                <p class="trackCount dark"><span> - </span></p>
-                <input type="number" :min="songFrom+1" :max="songCount" v-model="songTo"/>
-                <p class="trackCount dark"><span> Tracks</span></p>
-                <img :src="require('~/assets/images/actions/playSong_light.svg')" alt="Play" @click="playThem()">
-                <img :src="require('~/assets/images/actions/addToQueue_light.svg')" alt="Add to Queue" @click="addThem()">
-            </div>
-            <div v-else>
-                <p class="trackCount dark"><b>{{ songCount }}</b>
-                <span> Tracks</span></p>
-                <img :src="require('~/assets/images/actions/playSong_light.svg')" alt="Play" @click="playAll()">
-                <img :src="require('~/assets/images/actions/addToQueue_light.svg')" alt="Add to Queue" @click="addAll()">
-            </div>
-        </div> -->
       </div>
 
       <div class="resultQuery">
@@ -33,8 +16,6 @@
           <span @click="clearValue('experimental')" :class="{ active: expActive }">EXP <b>{{ expValue }}</b></span>
           <span @click="clearValue('mood')" :class="{ active: modActive }">MOD <b>{{ modValue }}</b></span>
           <span @click="clearValue('organic')" :class="{ active: orgActive }">ORG <b>{{ orgValue }}</b></span>
-          <!-- </p>
-          <p> -->
         <br class="linebreak" />
           <span v-for="searchKey in searchKeys" :key="searchKey.key" class="searchWords" @click="clearSearchValue( searchKey )" :data-col="searchKey.type">{{ searchKey.key }}</span>
           <span v-if="anythingActive" class="searchWords clearAll" @click="clearAll()" >CLEAR ALL</span>
@@ -70,23 +51,6 @@
             <p>Share the Search Result</p>
         </li>
     </ul>
-
-    <!-- <div class="mobileSldr" v-if="rngsldr">
-        <div class='range-slider'>
-            <div class="sliderTitle">
-                <div><b>Select Songs</b></div>
-                <div>#{{songFrom}} - #{{songTo}}</div>
-            </div>
-            <input type="range" min="0" :max="songCount" step="1" v-model="songFrom" @change="changed = true">
-            <input type="range" min="0" :max="songCount" step="1" v-model="songTo" @change="changed = true">
-        </div>
-        <div class="setIcon panelNav" @click="rangesldr(), openAction()" v-if="changed">
-            <img :src="require('~/assets/images/global/Set_Icon_blue.svg')" alt="Close">
-        </div>
-        <div class="closeIcon panelNav" @click="rangesldr(), openAction()" v-else>
-            <img :src="require('~/assets/images/global/Close_Icon_dark.svg')" alt="Close">
-        </div>
-    </div> -->
 </div>
 </template>
 
@@ -105,15 +69,10 @@ export default {
             actionType: '',
             mobileAction: false,
             rangeSlider: false
-            // rngsldr: false,
-            // changed: false
         }
     },
     computed: {
         ...mapState(['rhythm', 'speed', 'experimental', 'mood', 'organic', 'filter']),
-        // ...mapGetters({
-        //     ids: 'FILTERED_SONGS_IDS'
-        // }),
         rthActive() {
             if (this.rhythm.min == 0 && this.rhythm.max == 10) {
                 return false } else { return true }
@@ -255,9 +214,6 @@ export default {
         closeAction() {
             this.mobileAction = false
         },
-        // rangesldr() {
-        //     this.rngsldr = !this.rngsldr
-        // },
         copyURL() {
             let searches = ''
             let query
@@ -350,7 +306,6 @@ export default {
 .trackCount.dark {
     font-size: 1.2em;
     margin: 20px;
-    /* color: #444; */
 }
 .trackCount span {
     font-size: 0.9em;
@@ -528,9 +483,4 @@ div.mobileActions {
         right: 10px;
     }
 }
-/* @media (max-width: 400px) {
-    div.mobileActions {
-        right: 0;
-    }
-} */
 </style>

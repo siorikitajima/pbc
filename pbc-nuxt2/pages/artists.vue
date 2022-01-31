@@ -90,7 +90,6 @@ h2.first {
     }
     .artistList {
         height: calc(100% - 220px);
-        /* padding: 0 0 120px 0; */
     }
 }
 </style>

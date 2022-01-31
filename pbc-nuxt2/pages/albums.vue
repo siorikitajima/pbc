@@ -68,9 +68,6 @@ h2.first {
 }
 
 @media(max-width:600px) {
-    /* .albumList {
-        margin: 30px auto 140px auto;
-    } */
     .albumList {
         height: calc(100% - 220px);
         padding: 0 0 120px 0;

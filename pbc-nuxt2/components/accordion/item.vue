@@ -22,10 +22,6 @@
 <script>
 export default {
   name: 'AccordionItem',
-  //   data() {
-  //   return {
-
-  // }},
   props: ['item', 'multiple', 'groupId'],
   methods: {
     toggle(event) {
@@ -82,7 +78,6 @@ export default {
   border-right: 2px solid #363636;
   border-bottom: 2px solid #363636;
   transform: translateY(-2px) rotate(45deg);
-  /* transition: transform 0.2s ease; */
 }
   
   .accordion-item.is-active .accordion-item-trigger-icon {

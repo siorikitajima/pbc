@@ -174,30 +174,9 @@ ul li span {
     margin: 10px 0 0 0;
 }
 .actions {
-/*     height: fit-content;
-    margin: 10px 0;
-    padding: 10px 0 5px 0;
-    position: relative;*/
     border-top: #ddd 1px solid;
     border-bottom: #ddd 1px solid;
 }
-/*.actions img, .channels img {
-    width: 32px;
-    height: 32px;
-    margin: 0 10px 0 0;
-    cursor: pointer;
-    display: inline-block;
-}
-.actions img {
-    margin: 0 16px 0 0;
-}
-.actions button.small {
-    display: inline-block;
-    position: absolute;
-    top: 2px;
-    margin-left: 5px;
-    margin: 10px 16px 0 0;
-} */
 .flowWrapper {
     display: flex;
     justify-content: left;
@@ -238,7 +217,6 @@ img.flow {
         max-width: calc(100% - 20px);
         margin: 10px auto;
         text-align: left;
-        /* gap: 10px; */
     }
 
     .flex.singleScreen {

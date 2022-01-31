@@ -13,7 +13,6 @@
           </div>
           <div class="asname" @click="$store.dispatch('OpenSingSonP', simOG[0].ID)">
             <p><b>{{ simOG[0].Title }}</b>
-            <!-- <img src="~/assets/images/table/eye_white.svg" alt="See More"> -->
             </p>
             <p>by {{ simOG[0].ArtistName }}<span v-if="simOG[0].FeatArtist"> ft. {{ simOG[0].FeatArtist }}</span></p>
           </div>
@@ -29,7 +28,6 @@
             </div>
             <div class="asname" @click="$store.dispatch('OpenSingSonP', song.ID)">
                 <p><b>{{ song.Title }}</b>
-                <!-- <img src="~/assets/images/table/eye.svg" alt="See More"> -->
                 </p>
                 <p>by {{ song.ArtistName }}<span v-if="song.FeatArtist"> ft. {{ song.FeatArtist }}</span></p>
             </div>
@@ -130,7 +128,6 @@ export default {
   border-top: #44444444 1px solid;
   border-radius: 5px 0 0 0;
   font-size: 0.9em;
-  /* z-index: -1; */
 }
 .similarList {
   height: calc(100% - 120px);
