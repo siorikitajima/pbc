@@ -142,7 +142,7 @@ export default {
     mounted: function() {
         const script = document.createElement("script");
         script.src = paypalID;
-        console.log(paypalID)
+        console.log(paypalID);
         script.addEventListener("load", this.setLoaded);
         document.body.appendChild(script);
     },
