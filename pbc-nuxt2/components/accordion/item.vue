@@ -2,7 +2,8 @@
   <div :id="groupId + '-' + item.id" class="accordion-item" :class="{'is-active': item.active}">
     <dt class="accordion-item-title">
       <button @click="toggle" class="accordion-item-trigger">
-        <h4 class="accordion-item-title-text">{{item.title}}</h4>
+        <img v-if="item.img" :src="require(`~/assets/images/${item.img}.svg`)" alt="Icon">
+        <h4 class="accordion-item-title-text" :class="{leftIcon: leftIcon}">{{item.title}}</h4>
         <span class="accordion-item-trigger-icon"></span>
       </button>
     </dt>
@@ -23,6 +24,11 @@
 export default {
   name: 'AccordionItem',
   props: ['item', 'multiple', 'groupId'],
+  computed: {
+    leftIcon: function() { if(this.item.img !== null) { return true }
+    else { return false }
+    }
+  },
   methods: {
     toggle(event) {
       if (this.multiple) this.item.active = !this.item.active
@@ -57,7 +63,12 @@ export default {
 
 .accordion-item-title-text {
   font-size: 1.2em;
-  color: #222;
+  color: #666;
+  mix-blend-mode: multiply;
+}
+
+.accordion-item-title-text.leftIcon {
+  margin-left: 40px;
 }
 
 .accordion-item-trigger {
@@ -66,6 +77,16 @@ export default {
   background-color: transparent;
   border: none;
   margin: 0 0 5px 0;
+}
+
+.accordion-item-trigger img {
+  position: absolute;
+  left: 15px;
+  top: 15px;
+  width: 30px;
+  height: 30px;
+  z-index: 100;
+  mix-blend-mode: multiply;
 }
 
 .accordion-item-trigger-icon {

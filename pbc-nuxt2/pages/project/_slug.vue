@@ -13,7 +13,7 @@
 
     <div v-if="projectsAlbums.length > 1">
         <div class="bggray">
-            <h2 class="short">// ALBUMS //</h2>
+            <!-- <h2 class="short">// ALBUMS //</h2> -->
             <SingleProjectAlbums v-if="projectsAlbums" :projectsAlbums="projectsAlbums" />
         </div>
 

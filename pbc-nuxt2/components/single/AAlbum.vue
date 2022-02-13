@@ -61,9 +61,9 @@ export default {
 
 @media (max-width: 600px) {
     .albumBox {
-    width: 140px;
-    height: 140px;
-    margin: 10px;
+    width: calc(50vw - 20px);
+    height: calc(50vw - 20px);
+    margin: 5px;
     }
 }
 </style>

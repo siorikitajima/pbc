@@ -77,7 +77,7 @@ export default {
 }
 @media (max-width: 600px) {
     .artistBox {
-    width: 150px;
+    width: calc(50vw - 20px);
     height: 80px;
     margin: 5px;
     }
