@@ -81,10 +81,10 @@
                 <img src="~/assets/images/license/Stems_icon_blue.svg" alt="Stems">
                 <p> Stems are available for most of our music upon request. Click on <b>'Request Stems'</b> above now, or request later from <NuxtLink :to="'/requests?type=stems&order=' + orderId">Request form</NuxtLink>.</p>
             </div>
-            <div class="points">
+            <!-- <div class="points">
                 <img src="~/assets/images/license/email_icon_blue.svg" alt="Stems">
                 <p> Download Links will expire in <b>7 days</b>. Please <NuxtLink :to="'/requests?type=other&order=' + orderId">contact us</NuxtLink> with your Order# to re-issue download links.</p>
-            </div>
+            </div> -->
         </div>
     </div>
     <div ref="paypal" class="paypal" v-if="!paidFor"></div>
@@ -111,7 +111,7 @@ export default {
         {
             hid: 'og:url',
             name: 'og:url',
-            content: 'https://dev-catalog.patternbased.com/checkout'
+            content: 'https://catalog.patternbased.com/checkout'
         }
         ]
         }

@@ -37,6 +37,7 @@ export default {
                 songID: this.licenseSong[0].ID,
                 songName: this.licenseSong[0].Title,
                 songBy: this.licenseSong[0].ArtistName,
+                AlbumTitle: this.licenseSong[0].AlbumTitle,
                 CatNum: this.licenseSong[0].CatNum
             }
             this.$emit('addToCart', data)

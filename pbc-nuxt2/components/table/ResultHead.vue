@@ -442,8 +442,6 @@ div.mobileActions {
     .resultQuery {
         width: calc(100% - 120px);
     }
-}
-@media (max-width: 600px) {
     .resultHead {
         display: block;
     }

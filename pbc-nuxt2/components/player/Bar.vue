@@ -32,7 +32,7 @@
         <NuxtLink :to="{ path: '/requests', query: { song: sqPData.ID }}">
         <img :src="require('~/assets/images/actions/inquery_white.svg')" alt="Inquery">
         </NuxtLink>
-        <img :src="require('~/assets/images/actions/CustomWork_white.svg')" alt="License" @click="licenseThis(sqPData.ID)">
+        <img :src="require('~/assets/images/actions/License_icon_white.svg')" alt="License" @click="licenseThis(sqPData.ID)">
         <img class="actionBtn" :src="require('~/assets/images/actions/Actions_Icon_white.svg')" alt="Actions" @click="toggleAction()">
         <img :src="require('~/assets/images/actions/PlayList_Icon.svg')" class="queueBtn" alt="Playlist" @click="$store.commit('TOGGLE_QUEUE')">
     </div>
@@ -54,13 +54,18 @@
     </div>
 
     <div class="info">
-        <div class="mobilesonginfo">
-            <p>{{ sqPData.Title }} <span> by {{ sqPData.ArtistName }}</span></p>
-            <div class="progress__time">{{ currentTime }} / {{ duration }}</div>
+        <div class="cover">
+            <img :src="coverImg(sqPData.CatNum, sqPData.ID)" :alt="sqPData.AlbumTitle">
         </div>
-        <div class="progress_bar_flex">
-            <div class="duration progress__bar" ref="progressBarMobile" @click="clickProgressMobile">
-                <div class="progress__current" :style="{ width : barWidth }"></div>
+        <div class="mobilecontent">
+            <div class="mobilesonginfo">
+                <p>{{ sqPData.Title }} <span> by {{ sqPData.ArtistName }}</span></p>
+                <div class="progress__time">{{ currentTime }} / {{ duration }}</div>
+            </div>
+            <div class="progress_bar_flex">
+                <div class="duration progress__bar" ref="progressBarMobile" @click="clickProgressMobile">
+                    <div class="progress__current" :style="{ width : barWidth }"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -68,7 +73,7 @@
         <div class="panelScreen" v-show="mobileAction" @click="closeAction()"></div>
         <ul class="mobileActions" v-show="mobileAction" @click="closeAction()">
             <li class="actionHead">
-                <img :src="'https://pblibrary.s3.us-east-2.amazonaws.com/' + sqPData.CatNum +'/cover-thumb.jpg'" :alt="sqPData.AlbumTitle">
+                <img :src="coverImg(sqPData.CatNum, sqPData.ID)" :alt="sqPData.AlbumTitle">
                 <p>{{sqPData.Title}}</p>
             </li>
             <li @click="$store.dispatch('OpenSimSong', sqPData.ID)">
@@ -98,7 +103,7 @@
             </li>
             </NuxtLink>
             <li @click="licenseThis(sqPData.ID)">
-                <img :src="require('~/assets/images/actions/CustomWork_dark.svg')" alt="License">
+                <img :src="require('~/assets/images/actions/License_icon_dark.svg')" alt="License">
                 <p>License</p>
             </li>
         </ul>
@@ -339,7 +344,7 @@ export default {
 .thePlayer .cover {
     width: 40px;
     height: 40px;
-    margin-left: 20px;
+    margin-left: 10px;
     flex-shrink: 0;
 }
 .thePlayer .cover img {
@@ -349,7 +354,7 @@ export default {
     width: 100%;
 }
 .thePlayer .info {
-    margin: 0 20px;
+    margin: 0 10px;
     width: inherit;
     flex-shrink: 2;
 }
@@ -394,8 +399,21 @@ img.actionBtn {
 .mobilePlayer {
         display: none;
     }
+.mobilePlayer .info .mobilecontent {
+    width: 100%;
+    padding-left: 10px;
+}
 
 @media (hover: none) {
+    .thePlayer .icons img {
+        display: none;
+    }
+    .thePlayer .icons img.actionBtn, .thePlayer .icons img.queueBtn {
+    display: inline-block;
+    }
+}
+
+@media (max-width: 1024px) {
     .thePlayer .icons img {
         display: none;
     }
@@ -408,6 +426,9 @@ img.actionBtn {
     .thePlayer .cover {
         display: none;
     }
+    .thePlayer.mobilePlayer .cover {
+        display: block;
+    }
     .thePlayer {
         display: none;
     }
@@ -418,7 +439,9 @@ img.actionBtn {
     .mobilePlayer .info {
         margin: 0;
         width: 100%;
-        max-width: unset;
+        max-width: calc(100% - 10px);
+        display: flex;
+        justify-content: space-between;
     }
     .mobileController, .mobilesonginfo {
         display: flex;
@@ -435,6 +458,12 @@ img.actionBtn {
         border-right: none;
     }
     .progress__time {
+        display: none;
+    }
+}
+
+@media (max-width: 500px) {
+    .thePlayer.mobilePlayer .cover {
         display: none;
     }
 }

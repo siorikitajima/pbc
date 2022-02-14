@@ -2,7 +2,7 @@
 <div class="wrapper">
     <div class="song">
         <div class="ascover" v-if="song" @click="$store.commit('PLAY_THIS', song.ID)">
-            <img :src="'https://pblibrary.s3.us-east-2.amazonaws.com/' + song.CatNum +'/cover-thumb.jpg'" :alt="song.AlbumTitle">
+            <img :src="coverImg(song.CatNum, song.ID)" :alt="song.AlbumTitle">
             <div class="playing" v-if="sqPlaying[0] === song.ID">
                 <img :src="require('~/assets/images/global/play-active.svg')" alt="Playing">
             </div>
@@ -19,13 +19,16 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 
 export default {
     name: 'LicenseSong',
     props: [ 'song' ],
     computed: {
-        ...mapState(['sqPlaying'])
+        ...mapState(['sqPlaying']),
+        ...mapGetters({
+            coverImg: 'COVER_IMG',
+        })
     }
 }
 </script>

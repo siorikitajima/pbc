@@ -31,7 +31,7 @@
                 <li class="searchKey" 
                 v-for="song in shownNames" 
                 @click="setKey(song.Title)" :key="song.ID">
-                <span class="cover" @click="$store.commit('PLAY_THIS', song.ID)"><img :src="'https://pblibrary.s3.us-east-2.amazonaws.com/' + song.CatNum +'/cover-thumb.jpg'" :alt="song.ID"></span><span><b>{{song.Title}}</b> by {{song.ArtistName}}</span>
+                <span class="cover" @click="$store.commit('PLAY_THIS', song.ID)"><img :src="coverImg(song.CatNum, song.ID)" :alt="song.ID"></span><span><b>{{song.Title}}</b> by {{song.ArtistName}}</span>
                 </li>
             </ul>
         </div>
@@ -54,6 +54,7 @@
 <script>
 import axios from 'axios';
 import baseURL from '~/assets/api-url.js'
+import { mapGetters } from 'vuex'
 
 export default {
     name: 'Requests',
@@ -69,7 +70,7 @@ export default {
         {
             hid: 'og:url',
             name: 'og:url',
-            content: 'https://dev-catalog.patternbased.com/requests'
+            content: 'https://catalog.patternbased.com/requests'
         }
         ]
         }
@@ -136,6 +137,11 @@ export default {
         if(this.$route.query.order) {
             this.orderNum = this.$route.query.order
         }
+    },
+    computed: {
+        ...mapGetters({
+            coverImg: 'COVER_IMG',
+        })
     }
 }
 </script>

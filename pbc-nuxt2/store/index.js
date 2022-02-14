@@ -1,5 +1,6 @@
 const axios = require('axios');
 import baseURL from '~/assets/api-url.js'
+import storageURL from '~/assets/storage-url.js'
 
 let songsUrl = baseURL + `/songs`
 let albumsUrl = baseURL + '/albums'
@@ -769,7 +770,7 @@ export const getters = {
     },
     AUDIO_SRC: (state, getters) => {
         let thedata = getters.PLAYING_DATA
-        return 'https://pblibrary.s3.us-east-2.amazonaws.com/' + thedata.CatNum + '/' + thedata.ID  + '.mp3';
+        return storageURL + thedata.CatNum + '/mp3/' + thedata.ID  + '.mp3';
     },
     ENDED_DATA: (state) => {
         if(state.sqEnded.length < 1) {
@@ -805,25 +806,29 @@ export const getters = {
         return title.toLowerCase().replace(/\s+/g, '-')
     },
     COVER_IMG: () => (CatNum, SongID) => {
-        if (CatNum == 'PB26') {
-            return 'https://pblibrary.s3.us-east-2.amazonaws.com/PB26/' + SongID +'_thumb.jpg'
+        if (SongID == null) {
+            return storageURL + CatNum +'/asset/cover-thumb.jpg'
+        } else if (CatNum == 'PB26') {
+            return storageURL + 'PB26/' + 'asset/' + SongID +'_thumb.jpg'
         } else if (CatNum == 'PB36') {
-            return 'https://pblibrary.s3.us-east-2.amazonaws.com/PB36/' + SongID +'_thumb.jpg'
+            return storageURL + 'PB36/' + 'asset/' + SongID +'_thumb.jpg'
         } else if (CatNum == 'PB37') {
-            return 'https://pblibrary.s3.us-east-2.amazonaws.com/PB37/' + SongID +'_thumb.jpg'
+            return storageURL + 'PB37/' + 'asset/' + SongID +'_thumb.jpg'
         } else {
-            return 'https://pblibrary.s3.us-east-2.amazonaws.com/' + CatNum +'/cover-thumb.jpg'
+            return storageURL + CatNum +'/asset/cover-thumb.jpg'
         }
     },
     COVER_IMG_L: () => (CatNum, SongID) => {
-        if (CatNum == 'PB26') {
-            return 'https://pblibrary.s3.us-east-2.amazonaws.com/PB26/' + SongID +'.jpg'
+        if (SongID == null) {
+            return storageURL + CatNum +'/asset/cover.jpg'
+        } else if (CatNum == 'PB26') {
+            return storageURL + 'PB26/' + 'asset/' + SongID +'.jpg'    
         } else if (CatNum == 'PB36') {
-            return 'https://pblibrary.s3.us-east-2.amazonaws.com/PB36/' + SongID +'.jpg'
+            return storageURL + 'PB36/' + 'asset/' + SongID +'.jpg'
         } else if (CatNum == 'PB37') {
-            return 'https://pblibrary.s3.us-east-2.amazonaws.com/PB37/' + SongID +'.jpg'
+            return storageURL + 'PB37/' + 'asset/' + SongID +'.jpg'
         } else {
-            return 'https://pblibrary.s3.us-east-2.amazonaws.com/' + CatNum +'/cover.jpg'
+            return storageURL + CatNum +'/asset/cover.jpg'
         }
     },
     FEATART_LINK: (state) => (FeatArtist) => {

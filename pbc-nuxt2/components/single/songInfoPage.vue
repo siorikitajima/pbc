@@ -6,7 +6,7 @@
                 <div class="aWriter">
                     <NuxtLink :to="'/project/' + slug(song.ArtistName)">
                     <div class="artistThumb">
-                        <img :src="'https://pblibrary.s3.us-east-2.amazonaws.com/artists/' + song.ArtistImage" :alt="song.ArtistName"/>
+                        <img :src="storageURL + 'artists/' + song.ArtistImage" :alt="song.ArtistName"/>
                     </div>
                     <p>{{ song.ArtistName }}</p>
                     </NuxtLink>
@@ -17,7 +17,7 @@
                 <div class="aAlbum">
                     <NuxtLink :to="'/album/' + song.CatNum + '-' + slug(song.AlbumTitle)">
                     <div class="albumThumb" v-if="song">
-                        <img :src="'https://pblibrary.s3.us-east-2.amazonaws.com/' + song.CatNum +'/cover-thumb.jpg'" :alt="song.AlbumTitle"/>
+                        <img :src="coverImg(song.CatNum, song.ID)" :alt="song.AlbumTitle"/>
                     </div>
                     <p>{{ song.AlbumTitle }} ({{ song.Year }})</p>
                     </NuxtLink>
@@ -31,7 +31,7 @@
             <div class="aWriter" v-for="(writer, i) in song.Writers || []" :key="i">
                 <NuxtLink :to="'/artist/' + writer.slug">
                 <div class="artistThumb">
-                    <img :src="'https://pblibrary.s3.us-east-2.amazonaws.com/artists/' + writer.img" :alt="writer.name"/>
+                    <img :src="storageURL + 'artists/' + writer.img" :alt="writer.name"/>
                 </div>
                 <p>{{ writer.name }}</p>
                 </NuxtLink>
@@ -71,13 +71,18 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import storageURL from '~/assets/storage-url.js'
 
 export default {
     name: 'SongInfoPage',
     props: ['song'],
+    data(){
+        return { storageURL: storageURL }
+    },
     computed: {
     ...mapGetters({
-        slug: 'SLUG'
+        slug: 'SLUG',
+        coverImg: 'COVER_IMG',
     })
     }
 }

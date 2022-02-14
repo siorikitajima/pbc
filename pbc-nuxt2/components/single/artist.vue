@@ -1,6 +1,6 @@
 <template>
     <div class="artistTop" v-if="artist">
-        <img v-if="artist.Img" class="cover" :src="'https://pblibrary.s3.us-east-2.amazonaws.com/artists/' + artist.Img" :alt="artist.ArtistName">
+        <img v-if="artist.Img" class="cover" :src="storageURL + 'artists/' + artist.Img" :alt="artist.ArtistName">
         <div class="info">
         <p v-if="artist.Type == 'P'">// PB Project //</p>
         <p v-else>// PB Artist //</p>
@@ -38,6 +38,7 @@
 
 <script>
 import GlobalRangeSlider from "~/components/global/rangeSlider"
+import storageURL from '~/assets/storage-url.js'
 
 export default {
     name: 'SingleArtist',
@@ -46,7 +47,8 @@ export default {
     data(){
         return {
             actionType: '',
-            rangeSlider: false
+            rangeSlider: false,
+            storageURL: storageURL
         }
     },
     methods: {

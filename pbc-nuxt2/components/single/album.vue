@@ -2,7 +2,7 @@
   <div class="wrapper">
     <div class="flex">
         <div class="div400" v-if="album">
-            <img v-if="album.AlbumID" class="albumArt" :src="'https://pblibrary.s3.us-east-2.amazonaws.com/' + album.AlbumID +'/cover.jpg'" :alt="album.Title">
+            <img v-if="album.AlbumID" class="albumArt" :src="coverImg(album.AlbumID, null)" :alt="album.Title">
         </div>
         <div class="div400">
           <p>// PB {{ album.Type }} //</p>
@@ -27,6 +27,7 @@
 
 <script>
 import GlobalRangeSlider from "~/components/global/rangeSlider"
+import { mapGetters } from 'vuex'
 
 export default {
     name: 'SingleAlbum',
@@ -39,6 +40,9 @@ export default {
         }
     },
     computed: {
+        ...mapGetters({
+            coverImg: 'COVER_IMG_L',
+        }),
         songIDs() {
             let songIDs = []
             let leng = this.albumSongs.length

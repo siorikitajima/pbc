@@ -17,6 +17,7 @@
 import { mapGetters } from 'vuex';
 import axios from 'axios';
 import baseURL from '~/assets/api-url.js'
+import storageURL from '~/assets/storage-url.js'
 
 export default {
     name: 'SingleAlbumPage',
@@ -42,12 +43,12 @@ export default {
         {
             hid: 'og:url',
             name: 'og:url',
-            content: 'https://dev-catalog.patternbased.com/album/' + this.singalbum.AlbumID
+            content: 'https://catalog.patternbased.com/album/' + this.singalbum.AlbumID
         },
         {
             hid: 'og:image',
             name: 'og:image',
-            content: 'https://pblibrary.s3.us-east-2.amazonaws.com/' + this.singalbum.AlbumID + '/cover.jpg'
+            content: storageURL + this.singalbum.AlbumID + '/asset/cover.jpg'
         }
         ]
         }

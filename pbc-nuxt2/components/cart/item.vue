@@ -6,7 +6,7 @@
             </div>
             <div class="songInfo" :class="{ 'wider' : page }" v-if="!summary">
                 <div class="cover">
-                    <img :src="'https://pblibrary.s3.us-east-2.amazonaws.com/' + item.CatNum +'/cover-thumb.jpg'" :alt="item.songName">
+                    <img :src="coverImg(item.CatNum, item.ID)" :alt="item.songName">
                 </div>
                 <div>
                     <p class="songInfoText" :class="{ 'wider' : page }"><i>{{ item.songName }}</i> by {{ item.songBy }}</p>
@@ -39,6 +39,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 
 export default {
     name: 'CartItem',
@@ -47,6 +48,11 @@ export default {
         return {
             details: false
         }
+    },
+    computed: {
+        ...mapGetters({
+            coverImg: 'COVER_IMG',
+        })
     },
     methods: {
         deleteCart(id) {

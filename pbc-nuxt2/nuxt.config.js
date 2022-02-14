@@ -1,3 +1,4 @@
+import storageURL from './assets/storage-url.js'
 // let development = process.env.NODE_ENV !== 'production'
 
 export default {
@@ -34,12 +35,12 @@ export default {
     {
         hid: 'og:url',
         name: 'og:url',
-        content: 'https://dev-catalog.patternbased.com/'
+        content: 'https://catalog.patternbased.com/'
     },
     {
         hid: 'og:image',
         name: 'og:image',
-        content: 'https://pblibrary.s3.us-east-2.amazonaws.com/global/patternbased-catalog.jpg'
+        content: storageURL + 'global/patternbased-catalog.jpg'
     }
     ],
     link: [

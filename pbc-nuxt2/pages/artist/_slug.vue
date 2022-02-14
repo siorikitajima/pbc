@@ -29,6 +29,7 @@
 import { mapGetters } from 'vuex';
 import axios from 'axios';
 import baseURL from '~/assets/api-url.js'
+import storageURL from '~/assets/storage-url.js'
 
 export default {
     name: 'SingleArtistPage',
@@ -54,12 +55,12 @@ export default {
         {
             hid: 'og:url',
             name: 'og:url',
-            content: 'https://dev-catalog.patternbased.com/artist/' + this.singartist.ArtistSlug
+            content: 'https://catalog.patternbased.com/artist/' + this.singartist.ArtistSlug
         },
         {
             hid: 'og:image',
             name: 'og:image',
-            content: 'https://pblibrary.s3.us-east-2.amazonaws.com/artists/' + this.singartist.Img
+            content: storageURL + 'artists/' + this.singartist.Img
         }
         ]
         }

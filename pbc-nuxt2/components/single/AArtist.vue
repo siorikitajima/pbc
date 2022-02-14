@@ -2,14 +2,14 @@
 <div>
     <div class="artistBox" v-if="RelatedArtist" >
         <NuxtLink :to="'/project/' + artist.slug">
-        <img v-if="artist.img" :src="'https://pblibrary.s3.us-east-2.amazonaws.com/artists/' + artist.img" :alt="artist.name">
+        <img v-if="artist.img" :src="storageURL + 'artists/' + artist.img" :alt="artist.name">
         <div class="screen"></div>
         <h3>{{ artist.name }}</h3>
         </NuxtLink>
     </div>
     <div class="artistBox" v-else >
         <NuxtLink :to="'/' + artistType + '/' + artist.ArtistSlug">
-        <img v-if="artist.Img" :src="'https://pblibrary.s3.us-east-2.amazonaws.com/artists/' + artist.Img" :alt="artist.ArtistName">
+        <img v-if="artist.Img" :src="storageURL + 'artists/' + artist.Img" :alt="artist.ArtistName">
         <div class="screen"></div>
         <h3>{{ artist.ArtistName }}</h3>
         </NuxtLink>
@@ -18,8 +18,13 @@
 </template>
 
 <script>
+import storageURL from '~/assets/storage-url.js'
+
 export default {
     name: 'AArtist',
+    data() {return {
+        storageURL: storageURL
+    }},
     props: { artist: Object, location: String },
     computed: {
         artistType() {
@@ -30,7 +35,6 @@ export default {
         }
     }
 }
-
 </script>
 
 <style scoped>

@@ -1,7 +1,7 @@
 <template>
   <div class="albumBox" v-if="album">
         <NuxtLink :to="'/album/' + album.AlbumID + '-'  + album.SlugName">
-        <img v-if="album.AlbumID" :src="'https://pblibrary.s3.us-east-2.amazonaws.com/' + album.AlbumID +'/cover.jpg'" :alt="album.Title">
+        <img v-if="album.AlbumID" :src="coverImg(album.AlbumID, null)" :alt="album.Title">
         <div class="screen"></div>
         <h3>{{ album.Title }}</h3>
         </NuxtLink>
@@ -9,9 +9,16 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
     name: 'AAlbum',
-    props: { album: Object }
+    props: { album: Object },
+    computed: {
+        ...mapGetters({
+            coverImg: 'COVER_IMG_L',
+        })
+    }
 }
 
 </script>

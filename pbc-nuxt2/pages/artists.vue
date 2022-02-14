@@ -29,7 +29,7 @@ export default {
         {
             hid: 'og:url',
             name: 'og:url',
-            content: 'https://dev-catalog.patternbased.com/artists'
+            content: 'https://catalog.patternbased.com/artists'
         }
         ]
         }

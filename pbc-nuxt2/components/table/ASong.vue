@@ -53,7 +53,8 @@
         <NuxtLink :to="{ path: '/requests', query: { song: song.ID }}">
         <img :src="require('~/assets/images/actions/inquery_dark.svg')" alt="Inquery">
         </NuxtLink>
-        <button class="small" @click="licenseThis(song.ID)">LICENSE</button> 
+        <img :src="require('~/assets/images/actions/License_icon_dark.svg')" alt="License" @click="licenseThis(song.ID)">
+        <!-- <button class="small" @click="licenseThis(song.ID)">LICENSE</button>  -->
     </div>
     <div class="actions mobile">
         <img class="actionBtn" :src="require('~/assets/images/actions/Actions_Icon.svg')" alt="Actions" @click="openAction()">
@@ -62,7 +63,7 @@
     <div class="panelScreen" v-show="mobileAction" @click="closeAction()"></div>
         <ul class="mobileActions" v-show="mobileAction" @click="closeAction()">
             <li class="actionHead">
-                <img :src="'https://pblibrary.s3.us-east-2.amazonaws.com/' + song.CatNum +'/cover-thumb.jpg'" :alt="song.AlbumTitle">
+                <img :src="coverImg(song.CatNum, song.ID)" :alt="song.AlbumTitle">
                 <p>{{song.Title}}</p>
             </li>
             <li @click="$store.commit('PLAY_THIS', song.ID)">
@@ -100,7 +101,7 @@
             </li>
             </NuxtLink>
             <li @click="licenseThis(song.ID)">
-                <img :src="require('~/assets/images/actions/CustomWork_dark.svg')" alt="License">
+                <img :src="require('~/assets/images/actions/License_icon_dark.svg')" alt="License">
                 <p>License</p>
             </li>
         </ul>
@@ -172,6 +173,7 @@ export default {
     font-size: 0.9em;
     line-height: 1.4em;
     overflow: hidden;
+    position: relative;
 }
 @media (hover: hover) {
 .asong:hover {
@@ -276,11 +278,16 @@ export default {
 }
 .actions {
     margin: 0;
-    height: fit-content;
-    width: fit-content;
+    height: 100%;
+    width: calc(100% - 60px);
     padding: 5px 0 0 0;
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translateY(-30%);
     display: none;
     margin: auto 10px;
+    text-align: right;
 }
 .actions button {
     display: inline;
@@ -289,7 +296,7 @@ export default {
 .actions.mobile {
         display: none;
         height: fit-content;
-        margin: 12px 20px 0 20px;
+        margin: -15px 20px 0 20px;
         position: relative;
     }
 .actions.mobile .actionBtn {

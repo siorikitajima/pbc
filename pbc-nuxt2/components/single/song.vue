@@ -22,7 +22,9 @@
             <NuxtLink :to="{ path: '/requests', query: { song: song.ID }}">
             <img :src="require('../../assets/images/actions/inquery_dark.svg')" alt="Inquery" @click="$store.commit('CLOSE_SING_SONG')">
             </NuxtLink>
-            <button class="small" @click="licenseThis(song.ID)">LICENSE</button> 
+            <img :src="require('~/assets/images/actions/License_icon_dark.svg')" alt="License" @click="licenseThis(song.ID)">
+
+            <!-- <button class="small" @click="licenseThis(song.ID)">LICENSE</button>  -->
           </div>
           <p>{{ song.Description }}</p>
 

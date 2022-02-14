@@ -51,16 +51,19 @@ const getOrderData = (req, res) => {
 
 const postOrderData = async (req, res) => {
   const region = process.env.AWS_REGION;
-  const bucket = 'pblibrary';
+  const bucket = 'pbcatalog';
 
   ////// MP3s & Wav
-  const types = [ 'mp3' ]; // Add 'wav' once available
+  const types = [ 'mp3', 'wav' ]; // Add 'wav' once available
   for(let t = 0; t < types.length; t++) {
       const zipName = 'downloads/PBCatalog_' + req.body.pbId + '_' + types[t] + '.zip';
       let files = [];
+      let fileNames = [];
       for(let i = 0; i < req.body.items.length; i++) {
-        let file = req.body.items[i].CatNum + '/' + req.body.items[i].songID + '.' + types[t]
+        let file = req.body.items[i].CatNum + '/' + types[t] + '/' + req.body.items[i].songID + '.' + types[t]
+        let fileName = { name: req.body.items[i].songID + ' - ' + req.body.items[i].songBy + ' - ' + req.body.items[i].AlbumTitle + ' - ' + req.body.items[i].songName + '.' + types[t] }
         files.push(file)
+        fileNames.push(fileName)
       }
       const uploadFromStream = (s3client) => {
         const pass = new stream.PassThrough()
@@ -78,7 +81,7 @@ const postOrderData = async (req, res) => {
       }
       
       await s3Zip
-      .archive({ region: region, bucket: bucket, debug: true }, '', files)
+      .archive({ region: region, bucket: bucket, debug: true }, '', files, fileNames)
       .pipe(uploadFromStream(s3, zipName));
       // console.log('Uploaded ' + types[t] + ' to S3')
     }
@@ -91,9 +94,11 @@ const postOrderData = async (req, res) => {
       Key: 'downloads/PBCatalog_' + req.body.pbId + '_' + 'mp3.zip',
       Expires: signedUrlExpireSeconds
   }) 
-  /// Duplicate above for wavurl if(wav = true), once available
-  /// Key: 'https://pblibrary.s3.us-east-2.amazonaws.com/downloads/PBCatalog_' + req.body.pbId + '_' + 'wav.zip'
-
+  const wavurl = await s3.getSignedUrl('getObject', {
+    Bucket: bucket,
+    Key: 'downloads/PBCatalog_' + req.body.pbId + '_' + 'wav.zip',
+    Expires: signedUrlExpireSeconds
+}) 
   const invoiceData = new Invoice({
     date: req.body.date,
     orderIdPB: req.body.pbId,
@@ -104,8 +109,8 @@ const postOrderData = async (req, res) => {
     discount: req.body.discount,
     mp3Url: mp3url,
     name: req.body.payer.name.given_name + ' ' + req.body.payer.name.surname,
-    email: req.body.payer.email_address
-    //wavUrl: wavurl
+    email: req.body.payer.email_address,
+    wavUrl: wavurl
   });
   invoiceData.save((err) => {
     if(err) {  console.error(err); }});
@@ -123,14 +128,14 @@ const postOrderData = async (req, res) => {
     discount: req.body.discount,
     status: req.body.status,
     mp3Url: mp3url,
-    //wavUrl: wavurl
+    wavUrl: wavurl
   });
   orderData.save((err) => {
       if(err) { 
           console.error(err); 
           res.status(500).json(err);
       } else {
-          res.status(200).json(mp3url)
+          res.status(200).json({ mp3: mp3url, wav: wavurl})
       }
   });
 };
@@ -138,10 +143,10 @@ const postOrderData = async (req, res) => {
 const downloadMp3s = (req, res) => {
   // res.header("Access-Control-Allow-Origin", "*");
   const region = process.env.AWS_REGION;
-  const bucket = 'pblibrary';
+  const bucket = 'pbcatalog';
   let files = [];
   for(let i = 0; i < req.body.ids.length; i++) {
-    let file = req.body.ids[i].CatNum + '/' + req.body.ids[i].songID + '.mp3'
+    let file = req.body.ids[i].CatNum + '/' + 'mp3/' + '/' + req.body.ids[i].songID + '.mp3'
     files.push(file)
   }
   s3Zip

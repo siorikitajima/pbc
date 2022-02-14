@@ -18,14 +18,14 @@
         <a v-if="album.coverLink !== '#'" :href="album.coverLink" target="_blank">
             <div class="aWriter">
                 <div class="artistThumb" v-if="album">
-                <img :src="'https://pblibrary.s3.us-east-2.amazonaws.com/' + album.AlbumID +'/cover.jpg'" :alt="album.Title">
+                <img :src="coverImg(album.AlbumID, null)" :alt="album.Title">
                 </div>
                 <p>{{ album.AlbumArt }}</p>
             </div>
         </a>
         <div v-else class="aWriter">
             <div class="artistThumb" v-if="album">
-            <img :src="'https://pblibrary.s3.us-east-2.amazonaws.com/' + album.AlbumID +'/cover.jpg'" :alt="album.Title">
+            <img :src="coverImg(album.AlbumID, null)" :alt="album.Title">
             </div>
             <p>{{ album.AlbumArt }}</p>
         </div>
@@ -62,9 +62,16 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
     name: 'AlbumInfoPage',
-    props: ['album']
+    props: ['album'],
+    computed: {
+        ...mapGetters({
+            coverImg: 'COVER_IMG',
+        })
+    }
 }
 </script>
 

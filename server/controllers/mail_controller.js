@@ -41,7 +41,7 @@ const form_post = (req, res) => {
       cc: `${req.body.email}`,
       subject: '[PBC] Thank You for Your Request',
       html: `<div style="width: 100%; height: 100%; text-align: center; background: #222; color: #fff; padding-bottom: 30px;">
-      <a href="${thedomain}"><img src="https://pblibrary.s3.us-east-2.amazonaws.com/emailImages/PatternBased_Catalog_logo.png" alt="PatternBased Catalog" style="width: 200px; margin: 30px auto;"></a>
+      <a href="${thedomain}"><img src="https://pbcatalog.s3.amazonaws.com/emailImages/PatternBased_Catalog_logo.png" alt="PatternBased Catalog" style="width: 200px; margin: 30px auto;"></a>
       <div style="width: auto; max-width: 600px; background: #f2f2f2; color:#222; text-align: center; font-family:GCentra,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif; margin: 0 auto; border-radius: 5px; line-height: 1.4em; padding: 30px 20px;">
       <h2>THANK YOU FOR YOUR REQUEST<h2/>
       <p">Dear ${req.body.name}, <br/> Thank you for your request. We will get back to you shortly.<br/><br/>
@@ -109,7 +109,7 @@ const order_comfirmation = (req, res) => {
     cc: EMAIL_RECEIVER,
     subject: `[PBC] Order Confirmation #${req.body.pbId}`,
     html: `<div style="width: 100%; height: 100%; text-align: center; background: #222; color: #fff; padding-bottom: 30px;">
-    <a href="${thedomain}"><img src="https://pblibrary.s3.us-east-2.amazonaws.com/emailImages/PatternBased_Catalog_logo.png" alt="PatternBased Catalog" style="width: 200px; margin: 30px auto;"></a>
+    <a href="${thedomain}"><img src="https://pbcatalog.s3.amazonaws.com/emailImages/PatternBased_Catalog_logo.png" alt="PatternBased Catalog" style="width: 200px; margin: 30px auto;"></a>
     <div style="width: auto; max-width: 600px; background: #f2f2f2; color:#222; text-align: center; font-family:GCentra,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif; margin: 0 auto; border-radius: 5px; line-height: 1.4em; padding: 40px 20px;">
     <h2>ORDER CONFIRMATION</h2>
     <p">Dear ${req.body.payer.name.given_name + ' ' + req.body.payer.name.surname}, <br/> We have received your order, thank you!<br/><br/></p>
@@ -122,6 +122,10 @@ const order_comfirmation = (req, res) => {
     <div style="width: 460px; height: auto; margin: 10px auto; padding: 10px 20px; background: #444; color: #fff; border-radius: 5px; font-size: 1.1em; text-decoration: none;">Download MP3</div>
     </a>
 
+    <a href="${data[0].wavUrl}">
+    <div style="width: 460px; height: auto; margin: 10px auto; padding: 10px 20px; background: #444; color: #fff; border-radius: 5px; font-size: 1.1em; text-decoration: none;">Download WAV</div>
+    </a>
+
     <a href="${thedomain}invoice/${req.body.pbId}">
     <div style="width: 460px; height: auto; margin: 10px auto; padding: 10px 20px; background: #444; color: #fff; border-radius: 5px; font-size: 1.1em; text-decoration: none;">View Invoice</div>
     </a>
@@ -130,15 +134,15 @@ const order_comfirmation = (req, res) => {
     </a>
 
     <div style="width: 500px; display: flex; justify-content: space-between; margin: 10px auto 0 auto; padding: 10px 0;">
-    <img src="https://pblibrary.s3.us-east-2.amazonaws.com/emailImages/audio-file_blue.png" alt="PatternBased Catalog" style="width: 40px; height: 40px; margin: 10px 10px 10px 0;">
-    <p style="width: 400px; text-align: left; margin: 10px 0;">Click on 'Download MP3' above to download MP3. We will send you wav format file(s) within 24 hours via Email.</p></div>
+    <img src="https://pbcatalog.s3.amazonaws.com/emailImages/audio-file_blue.png" alt="PatternBased Catalog" style="width: 40px; height: 40px; margin: 10px 10px 10px 0;">
+    <p style="width: 400px; text-align: left; margin: 10px 0;">Click on 'Download MP3/WAV' above to download audio files. Please <a href="${thedomain}requests?type=other&order=${req.body.pbId}">contact us</a> if you need other formats.</p></div>
 
     <div style="width: 500px; display: flex; justify-content: space-between; margin: 0 auto; padding: 0;">
-    <img src="https://pblibrary.s3.us-east-2.amazonaws.com/emailImages/Stems_icon_blue.png" alt="PatternBased Catalog" style="width: 40px; height: 40px; margin: 10px 10px 10px 0;">
+    <img src="https://pbcatalog.s3.amazonaws.com/emailImages/Stems_icon_blue.png" alt="PatternBased Catalog" style="width: 40px; height: 40px; margin: 10px 10px 10px 0;">
     <p style="width: 400px; text-align: left; margin: 10px 0;">Stems are available for most of our music upon request. Click on 'Request Stems' above.</p></div>
 
     <div style="width: 500px; display: flex; justify-content: space-between; margin: 0 auto 10px auto; padding: 10px 0;">
-    <img src="https://pblibrary.s3.us-east-2.amazonaws.com/emailImages/email_icon_blue.png" alt="PatternBased Catalog" style="width: 40px; height: 40px; margin: 10px 10px 10px 0;">
+    <img src="https://pbcatalog.s3.amazonaws.com/emailImages/email_icon_blue.png" alt="PatternBased Catalog" style="width: 40px; height: 40px; margin: 10px 10px 10px 0;">
     <p style="width: 400px; text-align: left; margin: 10px 0;">Download Links will expire in 7 days. Please <a href="${thedomain}requests?type=other&order=${req.body.pbId}">contact us</a> with your Order# to re-issue download links.</p></div>
 
     </div>
@@ -196,7 +200,7 @@ const stem_request = (req, res) => {
     cc: `${req.body.payer.email_address}`,
     subject: '[PBC] Thank You for Your Request',
     html: `<div style="width: 100%; height: 100%; text-align: center; background: #222; color: #fff; padding-bottom: 30px;">
-    <a href="${thedomain}"><img src="https://pblibrary.s3.us-east-2.amazonaws.com/emailImages/PatternBased_Catalog_logo.png" alt="PatternBased Catalog" style="width: 200px; margin: 30px auto;"></a>
+    <a href="${thedomain}"><img src="https://pbcatalog.s3.amazonaws.com/emailImages/PatternBased_Catalog_logo.png" alt="PatternBased Catalog" style="width: 200px; margin: 30px auto;"></a>
     <div style="width: auto; max-width: 600px; background: #f2f2f2; color:#222; text-align: center; font-family:GCentra,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif; margin: 0 auto; border-radius: 5px; line-height: 1.4em; padding: 30px 20px;">
     <h2>THANK YOU FOR YOUR REQUEST<h2/>
     <p">Dear ${req.body.payer.name.given_name + ' ' + req.body.payer.name.surname}, <br/> Thank you for your request. We will get back to you shortly.<br/><br/>
