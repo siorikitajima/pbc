@@ -193,7 +193,7 @@ export default {
             coverImg: 'COVER_IMG',
         }),
         length() {
-            return this.song ? this.song.Length.slice(2) : ''
+            return this.song.Length ? this.song.Length.slice(2) : ''
         },
         showProjectLink() {
             if(this.dist == 'project') { return false }

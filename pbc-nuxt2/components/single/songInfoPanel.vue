@@ -3,10 +3,18 @@
     <div class="flex">
         <div class="div400 group">
             <p><b>Instruments</b></p>
-            <p>
+            <p v-if="onSearch">
                 <span class="underlined" v-for="(instrument, i) in instList || []" :key="i" 
                 @click="addInst(instrument)">
                     {{ instrument }}
+                </span>
+            </p>
+            <p v-else>
+                <span class="underlined" v-for="(instrument, i) in instList || []" :key="i" 
+                @click="addInst(instrument)">
+                <NuxtLink :to="'/'">
+                    <b style="font-weight: normal;">{{ instrument }}</b> 
+                </NuxtLink>
                 </span>
             </p>
         </div>
@@ -19,7 +27,8 @@
                 </span>
             </p>
             <p v-else>
-                <span class="underlined" v-for="(genmood, i) in genreMoodList || []" :key="i" @click="addGenMood(genmood)">
+                <span class="underlined" v-for="(genmood, i) in genreMoodList || []" :key="i" 
+                @click="addGenMood(genmood)">
                     <NuxtLink :to="'/'">
                     <b style="font-weight: normal;">{{ genmood.key }}</b> 
                     </NuxtLink>
@@ -89,11 +98,15 @@ export default {
     },
     methods: {
         addInst(inst) {
-            this.$store.commit('addFilterInstrument', {type: 'instrument', key: inst})
+            if (!localStorage.getItem("searchKeys") || !this.onSearch) {
+                this.$store.commit('clearFilter')
+            }
+            this.$store.commit('addFilterInstrument', { type: 'instrument', key: inst })
+            localStorage.setItem("searchKeys", JSON.stringify(this.filter))
             this.$store.commit('CLOSE_SING_SONG')
         },
         addGenMood(genmood) {
-            if (!localStorage.getItem("searchKeys")) {
+            if (!localStorage.getItem("searchKeys") || !this.onSearch) {
                 this.$store.commit('clearFilter')
             }
             if (genmood.type == 'genre') {
