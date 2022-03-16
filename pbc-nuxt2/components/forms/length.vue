@@ -60,7 +60,7 @@ export default {
         async submitForm(event) {
             const {name, email, company, project, length, details, term} = Object.fromEntries(new FormData(event.target))
             let data = {
-                inqueryType: 'Length',
+                inquiryType: 'Length',
                 song: this.song,
                 name: name,
                 email: email,

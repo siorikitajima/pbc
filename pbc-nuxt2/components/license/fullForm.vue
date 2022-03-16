@@ -53,7 +53,7 @@ export default {
         async submitForm(event) {
             const {name, email, company, project, url, details, term} = Object.fromEntries(new FormData(event.target))
             let data = {
-                inqueryType: 'FullCatalogLicense',
+                inquiryType: 'FullCatalogLicense',
                 category: this.category,
                 type: this.type,
                 subType: this.subType,

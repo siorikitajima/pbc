@@ -26,6 +26,8 @@
         <GlobalCopyright></GlobalCopyright>
 
         <p class="smallFont">Created by <a href="https://patternbased.com" target="_blank">PatternBased</a></p>
+        <p class="smallFont">Music Production + Data by <a href="https://josephminadeo.com/" target="_blank">Joseph Minadeo</a></p>
+        <p class="smallFont">Design + Code by <a href="https://www.siorikitajima.com/" target="_blank">Siori Kitajima</a></p>
         <p class="smallFont">Beautiful photos by amazing photographers from <a href="https://unsplash.com/" target="_blank">Unsplash.com</a> 
         </p>
     </div>
@@ -65,10 +67,10 @@ export default {
     },
     methods: {
         dimSong() {
-            if(this.inquery == 'suggestion' || this.inquery == 'compose' || this.inquery == 'fullcatalog' || this.inquery == 'customlicense' || this.inquery == 'other') {
-                this.inquery4Song = true
+            if(this.inquiry == 'suggestion' || this.inquiry == 'compose' || this.inquiry == 'fullcatalog' || this.inquiry == 'customlicense' || this.inquiry == 'other') {
+                this.inquiry4Song = true
             } else {
-                this.inquery4Song = false
+                this.inquiry4Song = false
             }
         },
       filterKeys() {

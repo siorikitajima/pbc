@@ -8,7 +8,8 @@ const presetSchema = new Schema(
     PBSpeed: { type: String },
     PBMood: { type: String },
     PBExperimental: { type: String },
-    PBOrgnc: { type: String },
+    PBOrganic: { type: String },
+    PBDensity: { type: String },
     Image: { type: String }
 },
   { timestamps: true },

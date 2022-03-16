@@ -21,20 +21,66 @@
     </div>
     <client-only>
     <div class="icons" v-if="sqPData">
-        <img :src="require('~/assets/images/actions/SimilarSong_Icon_white.svg')" alt="Similar Songs" @click="$store.dispatch('OpenSimSong', sqPData.ID)">
-        <NuxtLink :to="'/song/' + sqPData.ID + '-' + slug(sqPData.Title)">
-        <img :src="require('~/assets/images/actions/seeSong_Icon_white.svg')" alt="Track">
-        </NuxtLink>
-        <NuxtLink :to="'/project/' + slug(sqPData.ArtistName)">
-        <img :src="require('~/assets/images/actions/seeArtist_Icon_white.svg')" alt="Artist">
-        </NuxtLink>
-        <img :src="require('~/assets/images/actions/Share_Icon_white.svg')" alt="Share" @click="shareURL()">
-        <NuxtLink :to="{ path: '/requests', query: { song: sqPData.ID }}">
-        <img :src="require('~/assets/images/actions/inquery_white.svg')" alt="Inquery">
-        </NuxtLink>
-        <img :src="require('~/assets/images/actions/License_icon_white.svg')" alt="License" @click="licenseThis(sqPData.ID)">
+        <div class="oneIcon">
+            <img :src="require('~/assets/images/actions/SimilarSong_Icon_white.svg')" 
+            alt="Similar Songs" @click="$store.dispatch('OpenSimSong', sqPData.ID)"
+            @mouseover="showInfo['act1'] = true" @mouseleave="showInfo['act1'] = false">
+            <transition name="bounce">
+                <div class="ttinfo" v-if="showInfo['act1']"><p>Similar Songs</p></div>
+            </transition>
+        </div>
+        <div class="oneIcon">
+            <NuxtLink :to="'/song/' + sqPData.ID + '-' + slug(sqPData.Title)">
+            <img :src="require('~/assets/images/actions/seeSong_Icon_white.svg')" alt="Track"
+            @mouseover="showInfo['act2'] = true" @mouseleave="showInfo['act2'] = false">
+            </NuxtLink>
+            <transition name="bounce">
+                    <div class="ttinfo" v-if="showInfo['act2']"><p>See Song Page</p></div>
+                </transition>
+        </div>
+        <div class="oneIcon">
+            <NuxtLink :to="'/project/' + slug(sqPData.ArtistName)">
+            <img :src="require('~/assets/images/actions/seeArtist_Icon_white.svg')" alt="Artist"
+            @mouseover="showInfo['act3'] = true" @mouseleave="showInfo['act3'] = false">
+            </NuxtLink>
+            <transition name="bounce">
+                <div class="ttinfo" v-if="showInfo['act3']"><p>See Artist Page</p></div>
+            </transition>
+        </div>
+        <div class="oneIcon">
+            <img :src="require('~/assets/images/actions/Share_Icon_white.svg')" 
+            alt="Share" @click="shareURL()"
+            @mouseover="showInfo['act4'] = true" @mouseleave="showInfo['act4'] = false">
+            <transition name="bounce">
+                <div class="ttinfo" v-if="showInfo['act4']"><p>Share</p></div>
+            </transition>
+        </div>
+        <div class="oneIcon">
+            <NuxtLink :to="{ path: '/requests', query: { song: sqPData.ID }}">
+            <img :src="require('~/assets/images/actions/inquiry_white.svg')" alt="Inquiry"
+            @mouseover="showInfo['act5'] = true" @mouseleave="showInfo['act5'] = false">
+            </NuxtLink>
+            <transition name="bounce">
+                <div class="ttinfo" v-if="showInfo['act5']"><p>Inquiry</p></div>
+            </transition>
+        </div>
+        <div class="oneIcon">
+            <img :src="require('~/assets/images/actions/License_icon_white.svg')" 
+            alt="License" @click="licenseThis(sqPData.ID)"
+            @mouseover="showInfo['act6'] = true" @mouseleave="showInfo['act6'] = false">
+            <transition name="bounce">
+                <div class="ttinfo" v-if="showInfo['act6']"><p>License</p></div>
+            </transition>
+        </div>
         <img class="actionBtn" :src="require('~/assets/images/actions/Actions_Icon_white.svg')" alt="Actions" @click="toggleAction()">
-        <img :src="require('~/assets/images/actions/PlayList_Icon.svg')" class="queueBtn" alt="Playlist" @click="$store.commit('TOGGLE_QUEUE')">
+        <div class="oneIcon">
+            <img :src="require('~/assets/images/actions/PlayList_Icon.svg')" class="queueBtn" 
+            alt="Playlist" @click="$store.commit('TOGGLE_QUEUE')"
+            @mouseover="showInfo['act7'] = true" @mouseleave="showInfo['act7'] = false">
+            <transition name="bounce">
+                <div class="ttinfo" v-if="showInfo['act7']"><p>Queue</p></div>
+            </transition>
+        </div>
     </div>
     </client-only>
 </div>
@@ -98,7 +144,7 @@
             </li>
             <NuxtLink :to="{ path: '/requests', query: { song: sqPData.ID }}">
             <li>
-                <img :src="require('~/assets/images/actions/inquery_dark.svg')" alt="Inquery">
+                <img :src="require('~/assets/images/actions/inquiry_dark.svg')" alt="Inquiry">
                 <p>Custom Work</p>
             </li>
             </NuxtLink>
@@ -123,7 +169,17 @@ export default {
             barWidth: null,
             duration: null,
             currentTime: null,
-            mobileAction: false
+            mobileAction: false,
+            showInfo:
+            {
+            'act1': false,
+            'act2': false,
+            'act3': false,
+            'act4': false,
+            'act5': false,
+            'act6': false,
+            'act7': false
+            }
         }
     },
     computed: {
@@ -391,7 +447,19 @@ export default {
 .thePlayer .icons{
     width: fit-content;
     flex-shrink: 0;
+    display: flex;
 }
+.thePlayer .icons .oneIcon {
+    position: relative;
+}
+.ttinfo{
+    background: #333333cc;
+    color: #ccc !important;
+    border: #ccc 1px solid;
+  }
+  .ttinfo p {
+      color: #ccc;
+  }
 
 img.actionBtn {
     display: none;

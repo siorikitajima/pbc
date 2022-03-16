@@ -2,7 +2,7 @@
 <div>
     <div class="titlewrp">
         <h2 class="short">// ALBUMS //</h2>
-        <div class="toggle">
+        <div class="toggle" v-if="projectsAlbums.length > 3">
             <img class="toggleIcon" v-if="expandAlbums" :src="require('~/assets/images/global/Fold_Icon.svg')" alt="See More Albums" @click="toggleExpand">
             <img class="toggleIcon" v-else :src="require('~/assets/images/global/Expand_Icon.svg')" alt="See More Albums" @click="toggleExpand">
         </div>

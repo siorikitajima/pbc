@@ -15,7 +15,6 @@
 <script>
 export default {
     name: 'Presets',
-
     emits: ['loadPreset'],
     props: ['presets'],
     methods: {
@@ -29,18 +28,20 @@ export default {
             const spd = this.presets[id].PBSpeed.split(/\s*\-\s*/g)
             const exp = this.presets[id].PBExperimental.split(/\s*\-\s*/g)
             const mod = this.presets[id].PBMood.split(/\s*\-\s*/g)
-            const org = this.presets[id].PBOrgnc.split(/\s*\-\s*/g)
+            const org = this.presets[id].PBOrganic.split(/\s*\-\s*/g)
+            const dns = this.presets[id].PBDensity.split(/\s*\-\s*/g)
 
-            console.log('PRESET VALUES:::', 'rhy', rhy[0],rhy[1], 'spd', spd[0], spd[1], 'exp', exp[0], exp[1], 'mod', mod[0], mod[1], 'org', org[0], org[1])
+            console.log('PRESET VALUES:::', 'rhy', rhy[0],rhy[1], 'spd', spd[0], spd[1], 'exp', exp[0], exp[1], 'mod', mod[0], mod[1], 'org', org[0], org[1], 'dns', dns[0], dns[1])
 
-            this.$store.commit('SET_PRESETS_OG', {rhyMin: rhy[0], rhyMax:rhy[1], spdMin:spd[0], spdMax:spd[1], expMin:exp[0], expMax:exp[1], modMin:mod[0], modMax:mod[1], orgMin:org[0], orgMax:org[1]})
+            this.$store.commit('SET_PRESETS_OG', {rhyMin: rhy[0], rhyMax:rhy[1], spdMin:spd[0], spdMax:spd[1], expMin:exp[0], expMax:exp[1], modMin:mod[0], modMax:mod[1], orgMin:org[0], orgMax:org[1], dnsMin:dns[0], dnsMax:dns[1]})
 
             const query = {
                 rhythm: { min: rhy[0], max: rhy[1] },
                 speed: { min: spd[0], max: spd[1] },
                 experimental: { min: exp[0], max: exp[1] },
                 mood: { min: mod[0], max: mod[1] },
-                organic: { min: org[0], max: org[1] }
+                organic: { min: org[0], max: org[1] },
+                density: { min: dns[0], max: dns[1] }
             }
             localStorage.setItem("filterValues", JSON.stringify(query))         
         }

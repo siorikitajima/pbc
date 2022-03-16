@@ -30,13 +30,14 @@ export default {
             speed: this.speed,
             experimental: this.experimental,
             mood: this.mood,
-            organic: this.organic
+            organic: this.organic,
+            desnsity: this.desnsity
         }
         localStorage.setItem("filterValues", JSON.stringify(query))
       }
   },
   computed: {
-    ...mapState(['rhythm', 'speed', 'experimental', 'mood', 'organic']),
+    ...mapState(['rhythm', 'speed', 'experimental', 'mood', 'organic', 'density']),
     minV: {
         get () { 
           if(this.type == 'rhythm') return this.rhythm.min
@@ -44,6 +45,7 @@ export default {
           else if(this.type == 'experimental') return this.experimental.min
           else if(this.type == 'mood') return this.mood.min
           else if(this.type == 'organic') return this.organic.min
+          else if(this.type == 'density') return this.density.min
          },
         set (value) { 
         //   let tmp = Number(value) + 0.25
@@ -112,6 +114,17 @@ export default {
                 this.$store.commit('SET_ORG_MIN', 9.75)
               }
             }
+            else if(this.type == 'density') { 
+              if(value < 9.75) {
+                if (value >= this.density.max) {
+                  this.$store.commit('SET_DNS_MAX', tmp)
+                }
+                this.$store.commit('SET_DNS_MIN', value) 
+              } else if(value >= 9.75) {
+                this.$store.commit('SET_DNS_MAX', 10)
+                this.$store.commit('SET_DNS_MIN', 9.75)
+              }
+            }
             this.setLocalStorage()
         }
     },
@@ -122,6 +135,7 @@ export default {
           else if(this.type == 'experimental') return this.experimental.max
           else if(this.type == 'mood') return this.mood.max
           else if(this.type == 'organic') return this.organic.max
+          else if(this.type == 'density') return this.density.max
          },
         set (value) { 
           let tmp = Number(value) - 0.25
@@ -176,6 +190,15 @@ export default {
               this.$store.commit('SET_ORG_MAX', value) 
             } else if(value <= 0.25) {
               this.$store.commit('SET_ORG_MIN', 0)
+            }
+          } else if(this.type == 'density') { 
+            if(value > 0.25) {
+              if (this.density.min >= value) {
+                this.$store.commit('SET_DNS_MIN', tmp)
+              }
+              this.$store.commit('SET_DNS_MAX', value) 
+            } else if(value <= 0.25) {
+              this.$store.commit('SET_DNS_MIN', 0)
             }
           }
           this.setLocalStorage()
@@ -307,6 +330,10 @@ input[type=range]::-moz-range-track {
 }
 .sliderBG.organic {
   background-image: url('~/assets/images/filter/organic.png');
+  background-size: cover;
+} 
+.sliderBG.density {
+  background-image: url('~/assets/images/filter/density.png');
   background-size: cover;
 } 
 

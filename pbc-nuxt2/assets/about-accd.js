@@ -5,7 +5,7 @@ const aboutPBC = [
       img: 'header/Filter_Icon',
       title: 'Filters',
       details: `
-        <p>Use the five sets of sliders to filter the catalog down to what you are looking for based on rhythm, speed, mood, experimental and organic traits associated with the songs. We believe these sliders are an intuitive way to search our particular set of sound & music. You can add traditional keyword filters for artists, projects, instruments, genres, albums/collections and tags by using the magnifying glass icon.</p>
+        <p>Use the six sets of sliders to filter the catalog down to what you are looking for based on rhythm, speed, mood, experimental and organic traits associated with the songs. We believe these sliders are an intuitive way to search our particular set of sound & music. You can add traditional keyword filters for artists, projects, instruments, genres, albums/collections and tags by using the magnifying glass icon.</p>
       `
     },
     {
@@ -20,7 +20,7 @@ const aboutPBC = [
     {
       id: 3,
       active: false,
-      img: 'actions/inquery_dark',
+      img: 'actions/inquiry_dark',
       title: `Request Suggestions`,
       details: `
         <p>Feel free to contact us at any point in your searching and listening if you would like to talk about your project and have us help you find or create exactly what you are looking for. We know our catalog inside and out (and we always have a mountain of unreleased material). Additionally, we are always composing custom music from full scores to short beats to remixes. Anything in the catalog can be thought of as a starting point for something new. Stems for all songs are readily available.</p>
@@ -113,10 +113,67 @@ const aboutPBC = [
         `
       }
   ]
-
+  
+  const tutorialSlides = [
+    {
+      id: 0,
+      icon: 'header/Filter_Icon_white',
+      details: `Filter songs with the six sliders to find the music you are looking for`,
+      img: 'tutorial/PBC-Tuto-Filter.gif',
+    },
+    {
+      id: 1,
+      icon: 'header/Preset_Icon_white',
+      details: `Select a preset to set the sliders automatically and display relevant songs`,
+      img: 'tutorial/PBC-Tuto-Preset.gif',
+    },
+    {
+      id: 2,
+      icon: 'header/Search_Icon_white',
+      details: `Click the magnifying glass for keyword searches including instrument, artist, genre, tag and more`,
+      img: 'tutorial/PBC-Tuto-Search.gif',
+    },
+    {
+      id: 3,
+      icon: 'tutorial/Clear_Icon_white',
+      details: `Click the color-filled filter buttons above the song list to clear the filters`,
+      img: 'tutorial/PBC-Tuto-Clear.gif',
+    },
+    {
+      id: 4,
+      icon: 'tutorial/Catalog_Icon_white',
+      details: `Explore the catalog by project/artist and album/collection using the upper right menu`,
+      img: 'tutorial/PBC-Tuto-ArtistsAlbums.gif',
+    },
+    {
+      id: 5,
+      icon: 'actions/SimilarSong_Icon_white',
+      details: `Click the similar songs icon wherever you see it to open a list of similar songs`,
+      img: 'tutorial/PBC-Tuto-SimilarSongs.gif',
+    },
+    {
+      id: 6,
+      icon: 'actions/PlayList_Icon',
+      details: `In the queue, click the share button to create and name a playlist from that queue`,
+      img: 'tutorial/PBC-Tuto-Playlist.gif',
+    },
+    {
+      id: 7,
+      icon: 'actions/inquiry_white',
+      details: `Click the inquiry button on any individual song or 'requests' from menu for licensing/composing inquiries`,
+      img: 'tutorial/PBC-Tuto-Inquiry.gif',
+    },
+    {
+      id: 8,
+      icon: 'tutorial/Tutorial_Icon_white',
+      details: `Re-open this quick tutorial anytime by clicking 'tutorial' from the upper right menu`,
+      img: 'tutorial/PBC-Tuto-Tutorial.gif',
+    }
+  ]
   
   export {
     aboutPBC,
     aboutMusic,
-    aboutLove
+    aboutLove,
+    tutorialSlides
   }

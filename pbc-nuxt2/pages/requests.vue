@@ -10,7 +10,7 @@
 
     <div class="theforms">
         <label for="type">How can we help?</label>
-        <select ref="type" name="type" id="type" v-model="inquery" @change="dimSong()">
+        <select ref="type" name="type" id="type" v-model="inquiry" @change="dimSong()">
             <option style="font-family: 'Raleway', sans-serif;" disabled selected>--- Select Request Type ---</option>
             <option style="font-family: 'Raleway', sans-serif;" value="suggestion">Suggestions</option>
             <option style="font-family: 'Raleway', sans-serif;" value="stems">Stems</option>
@@ -23,7 +23,7 @@
         </select>
     </div>
 
-    <div class="theforms songName" v-bind:class="{ dimmed: inquery4Song }">
+    <div class="theforms songName" v-bind:class="{ dimmed: inquiry4Song }">
         <label for="song">Specific song in your mind?</label>
         <input type="text" id="song" name="song" autocomplete="off" :value="songName" @focus="searchPanel = true" @input="e => songName = e.target.value" >
         <div class="dropdown" v-if="shownNames.length > 0 && searchPanel">
@@ -38,14 +38,14 @@
     </div>
 
     <div class="main">
-        <FormsSuggestion v-if="inquery == 'suggestion'"/>
-        <FormsStems v-if="inquery == 'stems'" :song="songName" :orderNum="orderNum" />
-        <FormsComposing v-if="inquery == 'compose'"/>
-        <FormsLength v-if="inquery == 'length'" :song="songName" />
-        <FormsRemix v-if="inquery == 'remix'" :song="songName" />
-        <FormsFullcatalog v-if="inquery == 'fullcatalog'" />
-        <FormsCustomLicense v-if="inquery == 'customlicense'" />
-        <FormsOthers v-if="inquery == 'other'" :orderNum="orderNum" />
+        <FormsSuggestion v-if="inquiry == 'suggestion'"/>
+        <FormsStems v-if="inquiry == 'stems'" :song="songName" :orderNum="orderNum" />
+        <FormsComposing v-if="inquiry == 'compose'"/>
+        <FormsLength v-if="inquiry == 'length'" :song="songName" />
+        <FormsRemix v-if="inquiry == 'remix'" :song="songName" />
+        <FormsFullcatalog v-if="inquiry == 'fullcatalog'" />
+        <FormsCustomLicense v-if="inquiry == 'customlicense'" />
+        <FormsOthers v-if="inquiry == 'other'" :orderNum="orderNum" />
     </div>
     
 </div>
@@ -83,20 +83,20 @@ export default {
     },
     data() {
         return {
-            inquery: '',
+            inquiry: '',
             songName: '',
             orderNum: '',
             shownNames: [],
-            inquery4Song: true,
+            inquiry4Song: true,
             searchPanel: false
         }
     },
     methods: {
         dimSong() {
-            if(this.inquery == 'suggestion' || this.inquery == 'compose' || this.inquery == 'fullcatalog' || this.inquery == 'customlicense' || this.inquery == 'other') {
-                this.inquery4Song = true
+            if(this.inquiry == 'suggestion' || this.inquiry == 'compose' || this.inquiry == 'fullcatalog' || this.inquiry == 'customlicense' || this.inquiry == 'other') {
+                this.inquiry4Song = true
             } else {
-                this.inquery4Song = false
+                this.inquiry4Song = false
             }
         },
       filterKeys() {
@@ -123,10 +123,10 @@ export default {
             const thesong = this.songNames.filter(song => { return song.ID == ID})
             const thetitle = thesong[0].Title
             this.songName = thetitle
-            this.inquery4Song = false
+            this.inquiry4Song = false
         }
         if(this.$route.query.type) {
-            this.inquery = this.$route.query.type
+            this.inquiry = this.$route.query.type
             for ( var i = 0, len = this.$refs.type.options.length; i < len; i++ ) {
             let opt = this.$refs.type.options[i];
             if ( opt.value === this.$route.query.type ) {

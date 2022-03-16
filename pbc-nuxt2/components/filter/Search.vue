@@ -102,6 +102,7 @@ export default {
           }
         this.tempSearch = ''
         localStorage.setItem("searchKeys", JSON.stringify(this.filter))
+        console.log(data)
       }
     },
     watch: {

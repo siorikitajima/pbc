@@ -9,21 +9,76 @@
           <h2>{{ song.Title }}</h2>
           <p>by <NuxtLink :to="'/project/' + slug(song.ArtistName)">{{ song.ArtistName }}</NuxtLink><span v-if="song.FeatArtist" v-html="featArtURL(song.FeatArtist)"></span></p>
           <div class="actions">
-            <img :src="require('../../assets/images/actions/playSong_dark.svg')" alt="Play Track" @click="$store.commit('PLAY_THIS', song.ID)">
-            <img :src="require('../../assets/images/actions/addToQueue_dark.svg')" alt="Add to Queue" @click="$store.commit('ADD_QUEUE', song.ID)">
-            <img :src="require('../../assets/images/actions/SimilarSong_Icon_dark.svg')" alt="Similar Songs" @click="$store.dispatch('OpenSimSong', song.ID)">
-            <NuxtLink v-if="panel" :to="'/song/' + song.ID + '-' + slug(song.Title)">
-            <img :src="require('../../assets/images/actions/seeSong_Icon_dark.svg')" alt="Track Page" @click="$store.commit('CLOSE_SING_SONG')">
-            </NuxtLink>
-            <NuxtLink :to="'/project/' + slug(song.ArtistName)">
-            <img :src="require('../../assets/images/actions/seeArtist_Icon_dark.svg')" alt="Artist Page" @click="$store.commit('CLOSE_SING_SONG')">  
-            </NuxtLink>
-            <img :src="require('../../assets/images/actions/Share_Icon_dark.svg')" alt="Share" @click="shareURL()">
-            <NuxtLink :to="{ path: '/requests', query: { song: song.ID }}">
-            <img :src="require('../../assets/images/actions/inquery_dark.svg')" alt="Inquery" @click="$store.commit('CLOSE_SING_SONG')">
-            </NuxtLink>
-            <img :src="require('~/assets/images/actions/License_icon_dark.svg')" alt="License" @click="licenseThis(song.ID)">
-
+            <div class="oneIcon">
+                <img :src="require('../../assets/images/actions/playSong_dark.svg')" 
+                alt="Play Track" @click="$store.commit('PLAY_THIS', song.ID)"
+                @mouseover="showInfo['act1'] = true" @mouseleave="showInfo['act1'] = false">
+                <transition name="bounce">
+                    <div class="ttinfo" v-if="showInfo['act1']"><p>Play Track</p></div>
+                </transition>
+            </div>
+            <div class="oneIcon">
+                <img :src="require('../../assets/images/actions/addToQueue_dark.svg')" 
+                alt="Add to Queue" @click="$store.commit('ADD_QUEUE', song.ID)"
+                @mouseover="showInfo['act2'] = true" @mouseleave="showInfo['act2'] = false">
+                <transition name="bounce">
+                    <div class="ttinfo" v-if="showInfo['act2']"><p>Add to Queue</p></div>
+                </transition>
+            </div>
+            <div class="oneIcon">
+                <img :src="require('../../assets/images/actions/SimilarSong_Icon_dark.svg')" 
+                alt="Similar Songs" @click="$store.dispatch('OpenSimSong', song.ID)"
+                @mouseover="showInfo['act3'] = true" @mouseleave="showInfo['act3'] = false">
+                <transition name="bounce">
+                    <div class="ttinfo" v-if="showInfo['act3']"><p>Similar Songs</p></div>
+                </transition>
+            </div>
+            <div class="oneIcon">
+                <NuxtLink v-if="panel" :to="'/song/' + song.ID + '-' + slug(song.Title)">
+                <img :src="require('../../assets/images/actions/seeSong_Icon_dark.svg')" 
+                alt="Track Page" @click="$store.commit('CLOSE_SING_SONG')"
+                @mouseover="showInfo['act4'] = true" @mouseleave="showInfo['act4'] = false">
+                </NuxtLink>
+                <transition name="bounce">
+                    <div class="ttinfo" v-if="showInfo['act4']"><p>See Song Page</p></div>
+                </transition>
+            </div>
+            <div class="oneIcon">
+                <NuxtLink :to="'/project/' + slug(song.ArtistName)">
+                <img :src="require('../../assets/images/actions/seeArtist_Icon_dark.svg')" 
+                alt="Artist Page" @click="$store.commit('CLOSE_SING_SONG')"
+                @mouseover="showInfo['act5'] = true" @mouseleave="showInfo['act5'] = false">  
+                </NuxtLink>
+                <transition name="bounce">
+                    <div class="ttinfo" v-if="showInfo['act5']"><p>See Artist Page</p></div>
+                </transition>
+            </div>
+            <div class="oneIcon">
+                <img :src="require('../../assets/images/actions/Share_Icon_dark.svg')" 
+                alt="Share" @click="shareURL()"
+                @mouseover="showInfo['act6'] = true" @mouseleave="showInfo['act6'] = false">
+                <transition name="bounce">
+                    <div class="ttinfo" v-if="showInfo['act6']"><p>Share</p></div>
+                </transition>
+            </div>
+            <div class="oneIcon">
+                <NuxtLink :to="{ path: '/requests', query: { song: song.ID }}">
+                <img :src="require('../../assets/images/actions/inquiry_dark.svg')" 
+                alt="Inquiry" @click="$store.commit('CLOSE_SING_SONG')"
+                @mouseover="showInfo['act7'] = true" @mouseleave="showInfo['act7'] = false">
+                </NuxtLink>
+                <transition name="bounce">
+                    <div class="ttinfo" v-if="showInfo['act7']"><p>Inquiry</p></div>
+                </transition>
+            </div>
+            <div class="oneIcon">
+                <img :src="require('~/assets/images/actions/License_icon_dark.svg')" 
+                alt="License" @click="licenseThis(song.ID)"
+                @mouseover="showInfo['act8'] = true" @mouseleave="showInfo['act8'] = false">
+                <transition name="bounce">
+                    <div class="ttinfo" v-if="showInfo['act8']"><p>License</p></div>
+                </transition>
+            </div>
             <!-- <button class="small" @click="licenseThis(song.ID)">LICENSE</button>  -->
           </div>
           <p>{{ song.Description }}</p>
@@ -46,7 +101,7 @@
         </ul>
         <ul class="div260">
             <li><b>Organic</b>{{ song.PBOrganic }}<span>/10</span></li>
-            <li><b>Density</b>5<span>/10</span></li>
+            <li><b>Density</b>{{ song.PBDensity }}<span>/10</span></li>
             <li><b>Stems</b>{{ song.Stems }}</li>
             <li><b>ISRC</b>{{ song.ISRCCode }}</li>
         </ul>
@@ -60,7 +115,7 @@
             <li><b>Experimental</b>{{ song.PBExperimental }}<span>/10</span></li>
             <li><b>Mood</b>{{ song.PBMood }}<span>/10</span></li>
             <li><b>Organic</b>{{ song.PBOrganic }}<span>/10</span></li>
-            <li><b>Density</b>5<span>/10</span></li>
+            <li><b>Density</b>{{ song.PBDensity }}<span>/10</span></li>
         </ul>
         <ul class="div260 right">
             <li><b>Flow</b>{{ song.ShapeArc }}</li>
@@ -80,6 +135,21 @@ import { mapGetters } from 'vuex'
 
 export default {
     name: 'SingleSong',
+    data() {
+        return {
+            showInfo:
+            {
+            'act1': false,
+            'act2': false,
+            'act3': false,
+            'act4': false,
+            'act5': false,
+            'act6': false,
+            'act7': false,
+            'act8': false
+            }
+        }
+    },
     props: ['song', 'panel'],
     computed: {
         length() { return this.song.Length ? this.song.Length.slice(2) : '' },
@@ -178,7 +248,20 @@ ul li span {
 .actions {
     border-top: #ddd 1px solid;
     border-bottom: #ddd 1px solid;
+    display: flex;
 }
+.actions .oneIcon {
+    position: relative;
+}
+.ttinfo{
+    background: #ffffffcc;
+    color: #888 !important;
+    border: #888 1px solid;
+  }
+  .ttinfo p {
+      color: #666;
+      /* font-size: 0.8em; */
+  }
 .flowWrapper {
     display: flex;
     justify-content: left;
@@ -229,6 +312,9 @@ img.flow {
     }
     .flex.singleMobile .div260.right li {
         background: #f2f2f2;
+    }
+    .actions {
+        justify-content: center;
     }
 }
 @media(max-width: 560px) {

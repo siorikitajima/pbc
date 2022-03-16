@@ -6,8 +6,22 @@
             <h1>{{ PlaylistName }}</h1>
         <div class="channels pl">
             <button class="playlist" @click="playAll()">PLAY ALL</button> 
-            <img :src="require('~/assets/images/actions/addToQueue_light.svg')" alt="Add All to Queue" @click="addAll()">
-            <img :src="require('~/assets/images/actions/Share_Icon_white.svg')" alt="Share" @click="shareURL()">
+            <div class="oneIcon">
+                <img :src="require('~/assets/images/actions/addToQueue_light.svg')" 
+                alt="Add All to Queue" @click="addAll()"
+                @mouseover="showInfo['act1'] = true" @mouseleave="showInfo['act1'] = false">
+                <transition name="bounce">
+                    <div class="ttinfo" v-if="showInfo['act1']"><p>Add to Queue</p></div>
+                </transition>
+            </div>
+            <div class="oneIcon">
+                <img :src="require('~/assets/images/actions/Share_Icon_white.svg')" 
+                alt="Share" @click="shareURL()"
+                @mouseover="showInfo['act2'] = true" @mouseleave="showInfo['act2'] = false">
+                <transition name="bounce">
+                    <div class="ttinfo" v-if="showInfo['act2']"><p>Share</p></div>
+                </transition>
+            </div>
         </div>
         </div>
         <GlobalRangeSlider v-if="rangeSlider" :songCount="playlist.length" :type="actionType" @setRange="rangeAction($event)" @close="rangeSlider=false" />
@@ -24,7 +38,12 @@ export default {
     data(){
         return {
             actionType: '',
-            rangeSlider: false
+            rangeSlider: false,
+            showInfo:
+            {
+            'act1': false,
+            'act2': false
+            }
         }
     },
     methods: {
@@ -88,6 +107,18 @@ export default {
     display: flex;
     justify-content: center;
 }
+.channels.pl .oneIcon {
+    position: relative;
+}
+.ttinfo{
+    background: #333333cc;
+    color: #ccc !important;
+    border: #ccc 1px solid;
+  }
+  .ttinfo p {
+      color: #ccc;
+      /* font-size: 0.8em; */
+  }
 button.playlist {
     display: inline-block;
     margin: 0 16px 0 0;

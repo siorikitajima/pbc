@@ -21,17 +21,17 @@ const form_post = (req, res) => {
     })
 
     const mailBody2 = () => {
-      if (req.body.inqueryType == 'Suggestion' || req.body.inqueryType == 'Composing' || req.body.inqueryType == 'FullCatalog' || req.body.inqueryType == 'CustomLicense') {
+      if (req.body.inquiryType == 'Suggestion' || req.body.inquiryType == 'Composing' || req.body.inquiryType == 'FullCatalog' || req.body.inquiryType == 'CustomLicense') {
         return `<b>Project Name: </b>${req.body.project}<br/><br/><b>URL: </b>${req.body.url}<br/><br/><b>Details: </b>${req.body.details}<br/>`
-      } else if (req.body.inqueryType == 'CustomQuote' || req.body.inqueryType == 'FullCatalogLicense') {
+      } else if (req.body.inquiryType == 'CustomQuote' || req.body.inquiryType == 'FullCatalogLicense') {
         return `<b>Project Name: </b>${req.body.project}<br/><br/><b>URL: </b>${req.body.url}<br/><br/><b>Details: </b>${req.body.details}<br/><br/><br/><b>License Category: </b>${req.body.category}<br/><br/><b>License Type: </b>${req.body.type}<br/><br/><b>License Sub-Type: </b>${req.body.subType}<br/><br/><b>License Song ID: </b>${req.body.songID}<br/><br/><b>License Song Title: </b>${req.body.songName}<br/><br/><b>License Song By: </b>${req.body.songBy}<br/>`
-      } else if (req.body.inqueryType == 'Stems') {
+      } else if (req.body.inquiryType == 'Stems') {
         return `<b>Track Name: </b>${req.body.song}<br/><br/><b>Invoice#: </b>${req.body.invoice}<br/><br/><b>Message / Request: </b>${req.body.message}<br/>`
-      } else if (req.body.inqueryType == 'Length') {
+      } else if (req.body.inquiryType == 'Length') {
         return `<b>Track Name: </b>${req.body.song}<br/><br/><b>Project Name: </b>${req.body.project}<br/><br/><b>Length: </b>${req.body.length}<br/><br/><b>Details: </b>${req.body.details}<br/>`
-      } else if (req.body.inqueryType == 'Remix') {
+      } else if (req.body.inquiryType == 'Remix') {
         return `<b>Track Name: </b>${req.body.song}<br/><br/><b>Project Name: </b>${req.body.project}<br/><br/><b>Details: </b>${req.body.details}<br/>`
-      } else if (req.body.inqueryType == 'Other') {
+      } else if (req.body.inquiryType == 'Other') {
         return `<b>Invoice#: </b>${req.body.invoice}<br/><br/><b>Message: </b>${req.body.message}<br/>`
       }
     }
@@ -45,7 +45,7 @@ const form_post = (req, res) => {
       <div style="width: auto; max-width: 600px; background: #f2f2f2; color:#222; text-align: center; font-family:GCentra,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif; margin: 0 auto; border-radius: 5px; line-height: 1.4em; padding: 30px 20px;">
       <h2>THANK YOU FOR YOUR REQUEST<h2/>
       <p">Dear ${req.body.name}, <br/> Thank you for your request. We will get back to you shortly.<br/><br/>
-      <b>Inquery Type: </b>${req.body.inqueryType}<br/><br/>
+      <b>Inquiry Type: </b>${req.body.inquiryType}<br/><br/>
       <b>Name: </b>${req.body.name}<br/><br/>
       <b>Email: </b>${req.body.email}<br/><br/>
       <b>Company: </b>${req.body.company}<br/><br/>
@@ -204,7 +204,7 @@ const stem_request = (req, res) => {
     <div style="width: auto; max-width: 600px; background: #f2f2f2; color:#222; text-align: center; font-family:GCentra,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif; margin: 0 auto; border-radius: 5px; line-height: 1.4em; padding: 30px 20px;">
     <h2>THANK YOU FOR YOUR REQUEST<h2/>
     <p">Dear ${req.body.payer.name.given_name + ' ' + req.body.payer.name.surname}, <br/> Thank you for your request. We will get back to you shortly.<br/><br/>
-    <b>Inquery Type: </b>Stems<br/><br/>
+    <b>Inquiry Type: </b>Stems<br/><br/>
     <b>Name: </b>${req.body.payer.name.given_name + ' ' + req.body.payer.name.surname}<br/><br/>
     <b>Email: </b>${req.body.payer.email_address}<br/><br/>
     ` + mailBody2() + `</p>

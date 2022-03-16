@@ -50,7 +50,7 @@ export default {
         async submitForm(event) {
             const {name, email, company, project, details, term} = Object.fromEntries(new FormData(event.target))
             let data = {
-                inqueryType: 'Remix',
+                inquiryType: 'Remix',
                 song: this.song,
                 name: name,
                 email: email,

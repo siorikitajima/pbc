@@ -49,7 +49,7 @@ export default {
         async submitForm(event) {
             const {name, email, company, project, url, details, term} = Object.fromEntries(new FormData(event.target))
             let data = {
-                inqueryType: 'Suggestion',
+                inquiryType: 'Suggestion',
                 name: name,
                 email: email,
                 company: company,

@@ -26,10 +26,13 @@
                     <li>Albums and Collections</li>
                 </NuxtLink>
                 <NuxtLink to="/about">
-                <li>About PB Catalog</li>
+                <li>About</li>
                 </NuxtLink>
                 <NuxtLink to="/requests">
-                    <li>Request Work</li>
+                    <li>Requests</li>
+                </NuxtLink>
+                <NuxtLink to="/" @click.native="openTut">
+                    <li>Tutorial</li>
                 </NuxtLink>
             </ul>
             </client-only>
@@ -56,6 +59,10 @@ export default {
         setLocalStorage() {
             localStorage.setItem("cart", JSON.stringify(this.cart))
         },
+        openTut() {
+            this.$store.commit('MENU_CLOSE')
+            this.$store.commit('OPEN_TUTORIAL')
+        }
     },
     watch:{
     $route (to, from){

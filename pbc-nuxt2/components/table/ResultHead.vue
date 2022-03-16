@@ -16,15 +16,37 @@
           <span @click="clearValue('experimental')" :class="{ active: expActive }">EXP <b>{{ expValue }}</b></span>
           <span @click="clearValue('mood')" :class="{ active: modActive }">MOD <b>{{ modValue }}</b></span>
           <span @click="clearValue('organic')" :class="{ active: orgActive }">ORG <b>{{ orgValue }}</b></span>
+          <span @click="clearValue('density')" :class="{ active: dnsActive }">DNS <b>{{ dnsValue }}</b></span>
         <br class="linebreak" />
           <span v-for="searchKey in searchKeys" :key="searchKey.key" class="searchWords" @click="clearSearchValue( searchKey )" :data-col="searchKey.type">{{ searchKey.key }}</span>
           <span v-if="anythingActive" class="searchWords clearAll" @click="clearAll()" >CLEAR ALL</span>
           </p>
       </div>
       <div class="actions">
-            <img :src="require('~/assets/images/actions/playSong_dark.svg')" alt="Play Tracks" @click="playThem()">
-            <img :src="require('~/assets/images/actions/addToQueue_dark.svg')" alt="Add to Queue" @click="addThem()">
-            <img :src="require('~/assets/images/actions/Share_Icon_dark.svg')" alt="Share" @click="copyURL()">
+        <div class="oneIcon">
+            <img :src="require('~/assets/images/actions/playSong_dark.svg')" 
+            alt="Play Tracks" @click="playThem()"
+            @mouseover="showInfo['act1'] = true" @mouseleave="showInfo['act1'] = false">
+            <transition name="bounce">
+                <div class="ttinfo" v-if="showInfo['act1']"><p>Play Tracks</p></div>
+            </transition>
+        </div>
+        <div class="oneIcon">
+            <img :src="require('~/assets/images/actions/addToQueue_dark.svg')" 
+            alt="Add to Queue" @click="addThem()"
+            @mouseover="showInfo['act2'] = true" @mouseleave="showInfo['act2'] = false">
+            <transition name="bounce">
+                <div class="ttinfo" v-if="showInfo['act2']"><p>Add to Queue</p></div>
+            </transition>
+        </div>
+        <div class="oneIcon">
+            <img :src="require('~/assets/images/actions/Share_Icon_dark.svg')" 
+            alt="Share" @click="copyURL()"
+            @mouseover="showInfo['act3'] = true" @mouseleave="showInfo['act3'] = false">
+            <transition name="bounce">
+                <div class="ttinfo" v-if="showInfo['act3']"><p>Share</p></div>
+            </transition>
+        </div>
       </div>
 
     <div class="mobileActions">
@@ -35,7 +57,7 @@
     <div class="panelScreen" v-show="mobileAction" @click="closeAction()"></div>
     <ul class="mobileActions" v-show="mobileAction" @click="closeAction()">
         <li class="actionHead">
-            <p>RTM <b>{{ rthValue }}</b>, SPD <b>{{ spdValue }}</b>, EXP <b>{{ expValue }}</b>, MOD <b>{{ modValue }}</b>, ORG <b>{{ orgValue }}</b>, <span v-for="searchKey in searchKeys" :key="searchKey.key">{{ searchKey.key }}, </span></p>
+            <p>RTM <b>{{ rthValue }}</b>, SPD <b>{{ spdValue }}</b>, EXP <b>{{ expValue }}</b>, MOD <b>{{ modValue }}</b>, ORG <b>{{ orgValue }}</b>, DNS <b>{{ dnsValue }}</b>, <span v-for="searchKey in searchKeys" :key="searchKey.key">{{ searchKey.key }}, </span></p>
         </li>
 
         <li @click="playThem()">
@@ -68,11 +90,17 @@ export default {
             songTo: 10,
             actionType: '',
             mobileAction: false,
-            rangeSlider: false
+            rangeSlider: false,
+            showInfo:
+            {
+            'act1': false,
+            'act2': false,
+            'act3': false
+            }
         }
     },
     computed: {
-        ...mapState(['rhythm', 'speed', 'experimental', 'mood', 'organic', 'filter']),
+        ...mapState(['rhythm', 'speed', 'experimental', 'mood', 'organic', 'density', 'filter']),
         rthActive() {
             if (this.rhythm.min == 0 && this.rhythm.max == 10) {
                 return false } else { return true }
@@ -93,6 +121,10 @@ export default {
             if (this.organic.min == 0 && this.organic.max == 10) {
                 return false } else { return true }
         },
+        dnsActive() {
+            if (this.density.min == 0 && this.density.max == 10) {
+                return false } else { return true }
+        },
         rthValue() { 
             return  this.rhythm.min + '-' + this.rhythm.max },
         spdValue() { 
@@ -103,6 +135,8 @@ export default {
             return this.mood.min + '-' + this.mood.max },
         orgValue() { 
             return this.organic.min + '-' + this.organic.max },
+        dnsValue() { 
+            return this.density.min + '-' + this.density.max },
         searchKeys() { 
             let searches = []
             if ( this.filter.album.length !== 0 ) {
@@ -135,7 +169,7 @@ export default {
             return searches
         },
         anythingActive() {
-            if (this.rthActive || this.spdActive || this.expActive || this.modActive || this.orgActive || this.searchKeys.length > 0) {
+            if (this.rthActive || this.spdActive || this.expActive || this.modActive || this.orgActive || this.dnsActive || this.searchKeys.length > 0) {
                 return true
             } else { return false }
         }
@@ -152,13 +186,16 @@ export default {
                 this.$store.commit('SET_MOD', { min: 0, max: 10 })
             } else if (type == 'organic') {
                 this.$store.commit('SET_ORG', { min: 0, max: 10 })
+            } else if (type == 'density') {
+                this.$store.commit('SET_DNS', { min: 0, max: 10 })
             } 
             const query = {
                 rhythm: { min: this.rhythm.min, max: this.rhythm.max },
                 speed: { min: this.speed.min, max: this.speed.max },
                 experimental: { min: this.experimental.min, max: this.experimental.max },
                 mood: { min: this.mood.min, max: this.mood.max },
-                organic: { min: this.organic.min, max: this.organic.max }
+                organic: { min: this.organic.min, max: this.organic.max },
+                density: { min: this.density.min, max: this.density.max }
             }
             localStorage.setItem("filterValues", JSON.stringify(query))
         },
@@ -227,14 +264,13 @@ export default {
                         searches = searches + akey  
                     }
                 }
-                query = '?rth=' + this.rthValue + '&spd=' + this.spdValue + '&exp=' + this.expValue + '&mod=' + this.modValue + '&org=' + this.orgValue + '&keys=' + searches
+                query = '?rth=' + this.rthValue + '&spd=' + this.spdValue + '&exp=' + this.expValue + '&mod=' + this.modValue + '&org=' + this.orgValue + '&dns=' + this.dnsValue + '&keys=' + searches
             } else {
-                query = '?rth=' + this.rthValue + '&spd=' + this.spdValue + '&exp=' + this.expValue + '&mod=' + this.modValue + '&org=' + this.orgValue
+                query = '?rth=' + this.rthValue + '&spd=' + this.spdValue + '&exp=' + this.expValue + '&mod=' + this.modValue + '&org=' + this.orgValue + '&dns=' + this.dnsValue
             }
 
             const url = 'https://' + window.location.hostname + query
             this.$store.dispatch('CopyURL', url)
-            console.log(url)
         },
         clearAll() {
             this.$store.commit('clearFilter')
@@ -244,7 +280,8 @@ export default {
                 speed: { min: this.speed.min, max: this.speed.max },
                 experimental: { min: this.experimental.min, max: this.experimental.max },
                 mood: { min: this.mood.min, max: this.mood.max },
-                organic: { min: this.organic.min, max: this.organic.max }
+                organic: { min: this.organic.min, max: this.organic.max },
+                density: { min: this.density.min, max: this.density.max }
             }
             localStorage.setItem("filterValues", JSON.stringify(query))
             localStorage.setItem("searchKeys", JSON.stringify(this.filter))
@@ -264,10 +301,33 @@ export default {
 }
 .resultHead .actions {
     position: absolute;
+    display: flex;
     margin: 0;
     top: 0;
     right: 0;
 }
+.actions img {
+    margin: 0 0 0 14px;
+}
+.resultHead .actions .oneIcon {
+    position: relative;
+    flex-shrink: 0;
+}
+.resultHead .resultQuery {
+    max-width: calc(100% - 200px);
+    flex-shrink: 2;
+}
+.ttinfo{
+    background: #ffffffcc;
+    color: #888 !important;
+    border: #888 1px solid;
+    bottom: unset;
+    top: 40px;
+  }
+  .ttinfo p {
+      color: #666;
+      font-size: 0.8em;
+  }
 @media (hover: none) {
     .resultHead .actions {
         display: none;
@@ -434,16 +494,19 @@ div.mobileActions {
     div.mobileActions {
         right: 16px;
     }
-}
-@media (max-width: 760px) {
     br.linebreak {
         display: none;
     }
+}
+@media (max-width: 760px) {
     .resultQuery {
         width: calc(100% - 120px);
     }
     .resultHead {
         display: block;
+    }
+    .resultHead .resultQuery {
+    max-width: 100%;
     }
     .resultIcon .rangeSelector {
         display: none;
@@ -474,6 +537,7 @@ div.mobileActions {
     .panelNav.closeIcon, .panelNav.setIcon {
         bottom: 210px;
     }
+    
 }
 @media (max-width: 600px) {
     .panelNav.closeIcon, .panelNav.setIcon {

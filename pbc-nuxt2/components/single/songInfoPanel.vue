@@ -3,26 +3,46 @@
     <div class="flex">
         <div class="div400 group">
             <p><b>Instruments</b></p>
-            <p>{{ song.Instruments }}</p>
+            <p>
+                <span class="underlined" v-for="(instrument, i) in instList || []" :key="i" 
+                @click="addInst(instrument)">
+                    {{ instrument }}
+                </span>
+            </p>
         </div>
         <div class="div400 group">
-            <p><b>Genres/Mood</b></p>
-            <p>{{ song.Genre }}, {{ song.SubGenreA }}</p>
+            <p><b>Genres/Moods</b></p>
+            <p v-if="onSearch">
+                <span class="underlined" v-for="(genmood, i) in genreMoodList || []" :key="i" 
+                @click="addGenMood(genmood)">
+                    {{ genmood.key }}
+                </span>
+            </p>
+            <p v-else>
+                <span class="underlined" v-for="(genmood, i) in genreMoodList || []" :key="i" @click="addGenMood(genmood)">
+                    <NuxtLink :to="'/'">
+                    <b style="font-weight: normal;">{{ genmood.key }}</b> 
+                    </NuxtLink>
+                </span>
+            </p>
         </div>
     </div>
       <div class="flex">
         <div class="div400 group">
             <p><b>Artists</b></p>
-            <p> <span v-for="(writer, i) in song.Writers || []" :key="i" @click="$store.commit('CLOSE_SING_SONG')">
+            <p> <span class="underlined" v-for="(writer, i) in song.Writers || []" :key="i" @click="$store.commit('CLOSE_SING_SONG')">
                 <NuxtLink :to="'/artist/' + writer.slug">
-                <b class="underlined">{{ writer.name }}</b>, 
+                <b style="font-weight: normal;">{{ writer.name }}</b> 
                 </NuxtLink>
             </span> </p>
         </div>
         <div class="div400 group">
             <p><b>Album/Collection</b></p>
                 <p @click="$store.commit('CLOSE_SING_SONG')">
-                    <NuxtLink :to="'/album/'+ song.CatNum + '-' + slug(song.AlbumTitle)"><b class="underlined">{{ song.AlbumTitle }}</b></NuxtLink> ({{ song.Year }})</p>
+                    <NuxtLink :to="'/album/'+ song.CatNum + '-' + slug(song.AlbumTitle)">
+                    <span class="underlined">{{ song.AlbumTitle }} ({{ song.Year }})</span>
+                    </NuxtLink>
+                </p>
             
         </div>
     </div>
@@ -31,15 +51,59 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 
 export default {
     name: 'SongInfoPanel',
     props: ['song'],
     computed: {
-    ...mapGetters({
-        slug: 'SLUG'
-    })
+        ...mapGetters({
+            slug: 'SLUG'
+        }),
+        ...mapState(['filter']),
+        instList() {
+            return (this.song.Instruments) ? this.song.Instruments.split(', ') : []
+        },
+        genreMoodList() {
+            let Genre = [{ type: 'genre', key: this.song.Genre}]
+            let SubGenreA = [{ type: 'genre', key: this.song.SubGenreA}]
+            let SGB = (this.song.SubGenreB) ? this.song.SubGenreB.split(', ') : []
+            let SubGenreB = []
+            if(SGB !== []) { SGB.forEach(B => { SubGenreB.push({ type: 'genre', key: B}) }) }
+            let PrimaryMood = [{ type: 'mood', key: this.song.PrimaryMood}]
+            let SecM = (this.song.SecondaryMoods) ? this.song.SecondaryMoods.split(', ') : []
+            let SecondaryMoods = []
+            if(SecM !== []) { SecM.forEach(B => { SecondaryMoods.push({ type: 'mood', key: B}) }) }
+            let genreMoodArray = Genre.concat(SubGenreA, SubGenreB, PrimaryMood, SecondaryMoods);
+            return genreMoodArray
+        },
+        onSearch() {
+            if (window.location.href == 'https://' + window.location.hostname + '/' || window.location.href == 'http://localhost:3000/') { 
+                console.log('On Search', window.location.href)
+                return true
+            } else {
+                console.log('Not on Search', window.location.href)
+                return false
+            }
+        }
+    },
+    methods: {
+        addInst(inst) {
+            this.$store.commit('addFilterInstrument', {type: 'instrument', key: inst})
+            this.$store.commit('CLOSE_SING_SONG')
+        },
+        addGenMood(genmood) {
+            if (!localStorage.getItem("searchKeys")) {
+                this.$store.commit('clearFilter')
+            }
+            if (genmood.type == 'genre') {
+                this.$store.commit('addFilterGenre', genmood)
+            } else if (genmood.type == 'mood') {
+                this.$store.commit('addFilterMood', genmood)
+            }
+            localStorage.setItem("searchKeys", JSON.stringify(this.filter))
+            this.$store.commit('CLOSE_SING_SONG')
+        }
     }
 }
 </script>
@@ -81,11 +145,13 @@ export default {
     background: #eee;
     border-radius: 5px;
 }
-b.underlined {
+b.underlined, span.underlined {
     font-weight: normal;
     border-bottom: #aaa solid 1px;
+    margin-right: 10px;
+    cursor: pointer;
 }
-b.underlined:hover {
+b.underlined:hover, span.underlined:hover {
     color: #0092c5;
     border-bottom: #0092c5 solid 1px;
     transition-duration: 200ms;

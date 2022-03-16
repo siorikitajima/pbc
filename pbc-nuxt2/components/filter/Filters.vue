@@ -11,6 +11,7 @@
   <FilterAFilter type="experimental" />
   <FilterAFilter type="mood" />
   <FilterAFilter type="organic" />
+  <FilterAFilter type="density" />
 </div>
 
 </template>
@@ -40,13 +41,14 @@ export default {
 <style>
 .filterBar {
   width: 240px;
-  height: calc(100% - 130px);
+  height: calc(100% - 160px);
   position: absolute;
-  padding: 80px 20px 50px 20px;
+  padding: 80px 20px;
   top: 0;
   left: 0;
   background: #e7ecee;
   border-right: #44444444 1px solid;
+  overflow: auto;
 }
 .filterBar .count {
   margin: 0 0 20px 0;
@@ -54,8 +56,9 @@ export default {
   text-align: center;
   padding: 0 ;
   font-weight: bold;
-  visibility: hidden;
-  display: flex;
+  /* visibility: hidden; */
+  display: none;
+  /* display: flex; */
   justify-content: space-between;
 }
 .filterBar .count p {
@@ -77,7 +80,8 @@ export default {
     overflow-y: auto;
     }
     .filterBar .count {
-      visibility: visible;
+      /* visibility: visible; */
+    display: flex;
     }
 }
 </style>

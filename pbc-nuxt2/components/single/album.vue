@@ -9,13 +9,41 @@
           <h2>{{ album.Title }}</h2>
           <p>by <NuxtLink :to="'/project/' + album.ArtistSlug" >{{ album.Project }}</NuxtLink></p>
           <div class="actions">
-            <img :src="require('~/assets/images/actions/playSong_dark.svg')" alt="Play All" @click="playAll()">
-            <img :src="require('~/assets/images/actions/addToQueue_dark.svg')" alt="Add All to Queue" @click="addAll()">
-            <NuxtLink :to="'/project/' + album.ArtistSlug" >
-            <img :src="require('~/assets/images/actions/seeArtist_Icon_dark.svg')" alt="Artist Page">  
-            </NuxtLink>
-            <img :src="require('~/assets/images/actions/Share_Icon_dark.svg')" alt="Share" @click="shareURL()">
-          </div>
+            <div class="oneIcon">
+                <img :src="require('~/assets/images/actions/playSong_dark.svg')" 
+                alt="Play All" @click="playAll()"
+                @mouseover="showInfo['act1'] = true" @mouseleave="showInfo['act1'] = false">
+                <transition name="bounce">
+                    <div class="ttinfo" v-if="showInfo['act1']"><p>Play Tracks</p></div>
+                </transition>
+            </div>
+            <div class="oneIcon">
+                <img :src="require('~/assets/images/actions/addToQueue_dark.svg')" 
+                alt="Add All to Queue" @click="addAll()"
+                @mouseover="showInfo['act2'] = true" @mouseleave="showInfo['act2'] = false">
+                <transition name="bounce">
+                    <div class="ttinfo" v-if="showInfo['act2']"><p>Add to Queue</p></div>
+                </transition>
+            </div>
+            <div class="oneIcon">
+                <NuxtLink :to="'/project/' + album.ArtistSlug" >
+                <img :src="require('~/assets/images/actions/seeArtist_Icon_dark.svg')" 
+                alt="Artist Page"
+                @mouseover="showInfo['act3'] = true" @mouseleave="showInfo['act3'] = false">  
+                </NuxtLink>
+                <transition name="bounce">
+                    <div class="ttinfo" v-if="showInfo['act3']"><p>See Artist Page</p></div>
+                </transition>
+            </div>
+            <div class="oneIcon">
+                <img :src="require('~/assets/images/actions/Share_Icon_dark.svg')" 
+                alt="Share" @click="shareURL()"
+                @mouseover="showInfo['act4'] = true" @mouseleave="showInfo['act4'] = false">
+                <transition name="bounce">
+                    <div class="ttinfo" v-if="showInfo['act4']"><p>Share</p></div>
+                </transition>
+            </div>
+            </div>
           <p>{{ album.Description }}</p>
         </div>
     </div>
@@ -36,7 +64,14 @@ export default {
     data(){
         return {
             actionType: '',
-            rangeSlider: false
+            rangeSlider: false,
+            showInfo:
+            {
+            'act1': false,
+            'act2': false,
+            'act3': false,
+            'act4': false
+            }
         }
     },
     computed: {
@@ -107,7 +142,20 @@ h2 {
 .actions {
     border-top: #ddd 1px solid;
     border-bottom: #ddd 1px solid;
+    display: flex;
 }
+.actions .oneIcon {
+    position: relative;
+}
+.ttinfo{
+    background: #ffffffcc;
+    color: #888 !important;
+    border: #888 1px solid;
+  }
+  .ttinfo p {
+      color: #666;
+      /* font-size: 0.8em; */
+  }
 @media(max-width:800px) {
     .flex {
         display: block;
@@ -115,6 +163,9 @@ h2 {
     }
     .div400 {
         margin: 10px auto;
+    }
+    .actions {
+        justify-content: center;
     }
 }
 </style>

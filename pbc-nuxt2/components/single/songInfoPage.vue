@@ -40,30 +40,78 @@
     </div>
 
     <div class="channels">
-        <a :href="song.BandcampURL" v-if="song.BandcampURL" target="_blank">
-            <img :src="require('~/assets/images/singles/Single-Song_Bandcamp.svg')" alt="Bandcamp">
-        </a>
-        <a :href="song.AppleMusicURL" v-if="song.AppleMusicURL" target="_blank">
-            <img :src="require('~/assets/images/singles/Single-Song_Apple.svg')" alt="Apple Music">
-        </a>
-        <a :href="song.TidalURL" v-if="song.TidalURL" target="_blank">
-            <img :src="require('~/assets/images/singles/Single-Song_Tidal.svg')" alt="Tidal">   
-        </a>
-        <a :href="song.SoundcloudURL" v-if="song.SoundcloudURL" target="_blank">
-            <img :src="require('~/assets/images/singles/Single-Song_SoundCloud.svg')" alt="SoundCloud">
-        </a>
-        <a :href="song.VimeoURL" v-if="song.VimeoURL" target="_blank">
-            <img :src="require('~/assets/images/singles/Single-Song_Vimeo.svg')" alt="Vimeo">   
-        </a>
-        <a :href="song.YoutubeURL" v-if="song.YoutubeURL" target="_blank">
-            <img :src="require('~/assets/images/singles/Single-Song_Youtube.svg')" alt="Youtube">   
-        </a>
-        <a :href="song.DeezerURL" v-if="song.DeezerURL" target="_blank">
-            <img :src="require('~/assets/images/singles/Single-Song_Deezer.svg')" alt="Deezer">   
-        </a>
-        <a :href="song.SpotifyURL" v-if="song.SpotifyURL" target="_blank">
-            <img :src="require('~/assets/images/singles/Single-Song_Spotify.svg')" alt="Spotify"> 
-        </a>  
+        <div class="oneIcon">
+            <a :href="song.BandcampURL" v-if="song.BandcampURL" target="_blank">
+                <img :src="require('~/assets/images/singles/Single-Song_Bandcamp.svg')" 
+                alt="Bandcamp" @mouseover="showInfo['act1'] = true" @mouseleave="showInfo['act1'] = false">
+            </a>
+            <transition name="bounce">
+                <div class="ttinfo" v-if="showInfo['act1']"><p>Bandcamp</p></div>
+            </transition>
+        </div>
+        <div class="oneIcon">
+            <a :href="song.AppleMusicURL" v-if="song.AppleMusicURL" target="_blank">
+                <img :src="require('~/assets/images/singles/Single-Song_Apple.svg')" 
+                alt="Apple Music" @mouseover="showInfo['act2'] = true" @mouseleave="showInfo['act2'] = false">
+            </a>
+            <transition name="bounce">
+                <div class="ttinfo" v-if="showInfo['act2']"><p>Apple Music</p></div>
+            </transition>
+        </div>
+        <div class="oneIcon">
+            <a :href="song.TidalURL" v-if="song.TidalURL" target="_blank">
+                <img :src="require('~/assets/images/singles/Single-Song_Tidal.svg')" 
+                alt="Tidal" @mouseover="showInfo['act3'] = true" @mouseleave="showInfo['act3'] = false">   
+            </a>
+            <transition name="bounce">
+                <div class="ttinfo" v-if="showInfo['act3']"><p>Tidal</p></div>
+            </transition>
+        </div>
+        <div class="oneIcon">
+            <a :href="song.SoundcloudURL" v-if="song.SoundcloudURL" target="_blank">
+                <img :src="require('~/assets/images/singles/Single-Song_SoundCloud.svg')" 
+                alt="SoundCloud" @mouseover="showInfo['act4'] = true" @mouseleave="showInfo['act4'] = false">
+            </a>
+            <transition name="bounce">
+                <div class="ttinfo" v-if="showInfo['act4']"><p>SoundCloud</p></div>
+            </transition>
+        </div>
+        <div class="oneIcon">
+            <a :href="song.VimeoURL" v-if="song.VimeoURL" target="_blank">
+                <img :src="require('~/assets/images/singles/Single-Song_Vimeo.svg')" 
+                alt="Vimeo" @mouseover="showInfo['act5'] = true" @mouseleave="showInfo['act5'] = false">   
+            </a>
+            <transition name="bounce">
+                <div class="ttinfo" v-if="showInfo['act5']"><p>Vimeo</p></div>
+            </transition>
+        </div>
+        <div class="oneIcon">
+            <a :href="song.YoutubeURL" v-if="song.YoutubeURL" target="_blank">
+                <img :src="require('~/assets/images/singles/Single-Song_Youtube.svg')" 
+                alt="Youtube" @mouseover="showInfo['act6'] = true" @mouseleave="showInfo['act6'] = false">   
+            </a>
+            <transition name="bounce">
+                <div class="ttinfo" v-if="showInfo['act6']"><p>Youtube</p></div>
+            </transition>
+        </div>
+        <div class="oneIcon">
+            <a :href="song.DeezerURL" v-if="song.DeezerURL" target="_blank">
+                <img :src="require('~/assets/images/singles/Single-Song_Deezer.svg')" 
+                alt="Deezer" @mouseover="showInfo['act7'] = true" @mouseleave="showInfo['act7'] = false">   
+            </a>
+            <transition name="bounce">
+                <div class="ttinfo" v-if="showInfo['act7']"><p>Deezer</p></div>
+            </transition>
+        </div>
+        <div class="oneIcon">
+            <a :href="song.SpotifyURL" v-if="song.SpotifyURL" target="_blank">
+                <img :src="require('~/assets/images/singles/Single-Song_Spotify.svg')" 
+                alt="Spotify" @mouseover="showInfo['act8'] = true" @mouseleave="showInfo['act8'] = false"> 
+            </a>  
+            <transition name="bounce">
+                <div class="ttinfo" v-if="showInfo['act8']"><p>Spotify</p></div>
+            </transition>
+        </div>
     </div>
   </div>
 
@@ -77,7 +125,20 @@ export default {
     name: 'SongInfoPage',
     props: ['song'],
     data(){
-        return { storageURL: storageURL }
+        return { 
+            storageURL: storageURL,
+            showInfo:
+            {
+            'act1': false,
+            'act2': false,
+            'act3': false,
+            'act4': false,
+            'act5': false,
+            'act6': false,
+            'act7': false,
+            'act8': false
+            }
+        }
     },
     computed: {
     ...mapGetters({
@@ -175,7 +236,21 @@ export default {
     border-top: #ddd 1px solid;
     border-bottom: #ddd 1px solid;
     margin: 10px 0 0 0;
+    display: flex;
+    justify-content: center;
 }
+.channels .oneIcon {
+    position: relative;
+}
+.ttinfo{
+    background: #ffffffcc;
+    color: #888 !important;
+    border: #888 1px solid;
+  }
+  .ttinfo p {
+      color: #666;
+      /* font-size: 0.8em; */
+  }
 
 @media(max-width: 800px) {
     .flex {

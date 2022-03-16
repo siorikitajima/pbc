@@ -34,6 +34,7 @@ a {
     border-bottom: #0092C500 1px solid;
 }
 p a:hover, a p:hover {
+    font-weight: normal;
     color: #0092C5;
     transition-duration: 200ms;
     border-bottom: #0092C5 1px solid;
@@ -127,7 +128,7 @@ h2.sectTitle {
     margin: 0 10px 5px 0;
     cursor: pointer;
     display: inline-block;
-    opacity: 0.7;
+    opacity: 0.6;
 }
 
 @media (hover: hover) {
@@ -389,3 +390,48 @@ span.agreement a {
         text-align: center;
     }
 }
+
+.ttinfo{
+    padding: 8px 10px;
+    border-radius: 5px;
+    width: max-content;
+    position: absolute;
+    bottom: 45px;
+    left: -50%;
+    z-index: 500;
+  }
+.ttinfo p {
+    font-size: 0.9em;
+}
+
+@media (hover: none) {
+    .ttinfo {
+        display: none;
+    }
+}
+@media (hover: hover) {
+    .ttinfo {
+        display: block;
+    }
+}
+  
+  .bounce-enter-active {
+    animation: bounce-in .4s;
+  }
+  .bounce-leave-active {
+    animation: bounce-in .4s reverse;
+  }
+  @keyframes bounce-in {
+    0% {
+      transform: scaleY(0);
+    }
+    50% {
+      transform: scaleY(0);
+    }
+    75% {
+      transform: scaleY(1.1);
+    }
+    100% {
+      transform: scaleY(1);
+    }
+  }

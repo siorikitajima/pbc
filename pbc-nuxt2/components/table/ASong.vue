@@ -38,22 +38,77 @@
         <li class="exp">{{ song.PBExperimental }}</li>
         <li class="mod">{{ song.PBMood }}</li>
         <li class="grd">{{ song.PBOrganic }}</li>
+        <li class="dns">{{ song.PBDensity }}</li>
     </ul>
     <div class="actions">
-        <img :src="require('~/assets/images/actions/playSong_dark.svg')" alt="Play Track" @click="$store.commit('PLAY_THIS', song.ID)">
-        <img :src="require('~/assets/images/actions/addToQueue_dark.svg')" alt="Add to Queue" @click="$store.commit('ADD_QUEUE', song.ID)">
-        <img :src="require('~/assets/images/actions/SimilarSong_Icon_dark.svg')" alt="Similar Songs" @click="$store.dispatch('OpenSimSong', song.ID)">
-        <NuxtLink :to="'/song/' + song.ID + '-' + slug(song.Title)">
-        <img :src="require('~/assets/images/actions/seeSong_Icon_dark.svg')" alt="Track Page" >
-        </NuxtLink>
-        <NuxtLink :to="'/project/' + slug(song.ArtistName)" v-if="showProjectLink && dist !== 'project'" >
-        <img :src="require('~/assets/images/actions/seeArtist_Icon_dark.svg')" alt="Artist Page">  
-        </NuxtLink>
-        <img :src="require('~/assets/images/actions/Share_Icon_dark.svg')" alt="Share" @click="shareURL()">
-        <NuxtLink :to="{ path: '/requests', query: { song: song.ID }}">
-        <img :src="require('~/assets/images/actions/inquery_dark.svg')" alt="Inquery">
-        </NuxtLink>
-        <img :src="require('~/assets/images/actions/License_icon_dark.svg')" alt="License" @click="licenseThis(song.ID)">
+        <div class="oneIcon">
+            <img :src="require('~/assets/images/actions/playSong_dark.svg')" 
+            alt="Play Track" @click="$store.commit('PLAY_THIS', song.ID)"
+            @mouseover="showInfo['act1'] = true" @mouseleave="showInfo['act1'] = false">
+                <transition name="bounce">
+                    <div class="ttinfo" v-if="showInfo['act1']"><p>Play Track</p></div>
+                </transition>
+        </div>
+        <div class="oneIcon">
+            <img :src="require('~/assets/images/actions/addToQueue_dark.svg')" 
+            alt="Add to Queue" @click="$store.commit('ADD_QUEUE', song.ID)"
+            @mouseover="showInfo['act2'] = true" @mouseleave="showInfo['act2'] = false">
+                <transition name="bounce">
+                    <div class="ttinfo" v-if="showInfo['act2']"><p>Add to Queue</p></div>
+                </transition>
+        </div>
+        <div class="oneIcon">
+            <img :src="require('~/assets/images/actions/SimilarSong_Icon_dark.svg')" 
+            alt="Similar Songs" @click="$store.dispatch('OpenSimSong', song.ID)"
+            @mouseover="showInfo['act3'] = true" @mouseleave="showInfo['act3'] = false">
+                <transition name="bounce">
+                    <div class="ttinfo" v-if="showInfo['act3']"><p>Similar Songs</p></div>
+                </transition>
+        </div>
+        <div class="oneIcon">
+            <NuxtLink :to="'/song/' + song.ID + '-' + slug(song.Title)">
+            <img :src="require('~/assets/images/actions/seeSong_Icon_dark.svg')" alt="Track Page" 
+            @mouseover="showInfo['act4'] = true" @mouseleave="showInfo['act4'] = false">
+            </NuxtLink>
+                <transition name="bounce">
+                    <div class="ttinfo" v-if="showInfo['act4']"><p>See Song Page</p></div>
+                </transition>
+        </div>
+        <div class="oneIcon">
+            <NuxtLink :to="'/project/' + slug(song.ArtistName)" v-if="showProjectLink && dist !== 'project'" >
+            <img :src="require('~/assets/images/actions/seeArtist_Icon_dark.svg')" alt="Artist Page"
+            @mouseover="showInfo['act5'] = true" @mouseleave="showInfo['act5'] = false">  
+            </NuxtLink>
+                <transition name="bounce">
+                    <div class="ttinfo" v-if="showInfo['act5']"><p>See Artist Page</p></div>
+                </transition>
+        </div>
+        <div class="oneIcon">
+            <img :src="require('~/assets/images/actions/Share_Icon_dark.svg')" 
+            alt="Share" @click="shareURL()"
+            @mouseover="showInfo['act6'] = true" @mouseleave="showInfo['act6'] = false">
+                <transition name="bounce">
+                    <div class="ttinfo" v-if="showInfo['act6']"><p>Share</p></div>
+                </transition>
+        </div>
+        <div class="oneIcon">
+            <NuxtLink :to="{ path: '/requests', query: { song: song.ID }}">
+            <img :src="require('~/assets/images/actions/inquiry_dark.svg')" alt="Inquiry"
+            @mouseover="showInfo['act7'] = true" @mouseleave="showInfo['act7'] = false">
+            </NuxtLink>
+                <transition name="bounce">
+                    <div class="ttinfo" v-if="showInfo['act7']"><p>Inquiry</p></div>
+                </transition>
+        </div>
+        <div class="oneIcon">
+            <img :src="require('~/assets/images/actions/License_icon_dark.svg')" 
+            alt="License" @click="licenseThis(song.ID)"
+            @mouseover="showInfo['act8'] = true" @mouseleave="showInfo['act8'] = false">
+                <transition name="bounce">
+                    <div class="ttinfo" v-if="showInfo['act8']"><p>License</p></div>
+                </transition>
+        </div>
+        
         <!-- <button class="small" @click="licenseThis(song.ID)">LICENSE</button>  -->
     </div>
     <div class="actions mobile">
@@ -96,7 +151,7 @@
             </li>
             <NuxtLink :to="{ path: '/requests', query: { song: song.ID }}">
             <li>
-                <img :src="require('~/assets/images/actions/inquery_dark.svg')" alt="Inquery">
+                <img :src="require('~/assets/images/actions/inquiry_dark.svg')" alt="Inquiry">
                 <p>Custom Work</p>
             </li>
             </NuxtLink>
@@ -117,7 +172,18 @@ export default {
     data() {
         return {
             mobileAction: false,
-            windowWidth: null
+            windowWidth: null,
+            showInfo:
+            {
+            'act1': false,
+            'act2': false,
+            'act3': false,
+            'act4': false,
+            'act5': false,
+            'act6': false,
+            'act7': false,
+            'act8': false
+            },
         }
     },
     computed: {
@@ -172,7 +238,7 @@ export default {
     text-align: left;
     font-size: 0.9em;
     line-height: 1.4em;
-    overflow: hidden;
+    /* overflow: hidden; */
     position: relative;
 }
 @media (hover: hover) {
@@ -249,11 +315,11 @@ export default {
 .asvalues li {
     list-style: none;
     display: inline-block;
-    width: 35px;
+    width: 36px;
     height: 20px;
     margin: auto 3px auto 0;
     text-align: center;
-    padding: 10px 0;
+    padding: 8px 0;
     color: #FFF;
 }
 .asvalues li.rtm {
@@ -276,27 +342,36 @@ export default {
     background: url('../../assets/images/table/grd.png');
     background-size: cover;
 }
+.asvalues li.dns {
+    background: url('../../assets/images/table/dns.png');
+    background-size: cover;
+}
 .actions {
     margin: 0;
-    height: 100%;
-    width: calc(100% - 60px);
+    height: fit-content;
+    width: fit-content;
     padding: 5px 0 0 0;
     position: absolute;
     top: 50%;
     right: 0;
-    transform: translateY(-30%);
+    transform: translateY(-50%);
     display: none;
     margin: auto 10px;
     text-align: right;
+    background: none;
 }
-.actions button {
+.actions .oneIcon {
+    position: relative;
+}
+/* .actions button {
     display: inline;
     margin-left: 5px;
-}
+} */
 .actions.mobile {
         display: none;
         height: fit-content;
-        margin: -15px 20px 0 20px;
+        margin: 0 20px;
+        transform: translateY(15px);
         position: relative;
     }
 .actions.mobile .actionBtn {
@@ -307,6 +382,15 @@ export default {
 .actions.mobile img.actionBtn {
     margin: 0;
 }
+
+.ttinfo{
+    background: #ddddddcc;
+    color: #666 !important;
+    border: #666 1px solid;
+  }
+  .ttinfo p {
+      color: #666;
+  }
 
 @media (hover: hover) and (min-width: 900px) {
     .asname:hover {
@@ -320,7 +404,7 @@ export default {
         display: none;
     }
     .asong:hover .actions{
-        display: block;
+        display: flex;
     }
     .asong:hover .actions.mobile{
         display: none;
@@ -354,7 +438,13 @@ export default {
         position: absolute;
         right: 0;
         flex-shrink: 0;
+                top: unset;
+        display: block;
     }
+    /* .actions {
+        top: unset;
+        display: block;
+    } */
     .asvalues {
         position: absolute;
         right: 80px;

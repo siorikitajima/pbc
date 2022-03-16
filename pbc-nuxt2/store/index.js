@@ -70,7 +70,9 @@ export const state = () => ({
     itemInCart: false,
     licenseDB: [],
     cart: [],
-    cartPanel: false
+    cartPanel: false,
+
+    tutorialPanel: null
 });
 
 export const mutations = {
@@ -333,7 +335,7 @@ export const mutations = {
         state.density.min = min
         state.density.max = max
     },
-    SET_PRESETS_OG(state, { rhyMin, rhyMax, spdMin, spdMax, expMin, expMax, modMin, modMax, orgMin, orgMax }) {
+    SET_PRESETS_OG(state, { rhyMin, rhyMax, spdMin, spdMax, expMin, expMax, modMin, modMax, orgMin, orgMax, dnsMin, dnsMax }) {
         state.rhythm.min = rhyMin
         state.rhythm.max = rhyMax
         state.speed.min = spdMin
@@ -344,6 +346,8 @@ export const mutations = {
         state.mood.max = modMax
         state.organic.min = orgMin
         state.organic.max = orgMax
+        state.density.min = dnsMin
+        state.density.max = dnsMax
     },
     CLEAR_PB_FILTERS(state) {
         state.rhythm.min = 0
@@ -356,6 +360,8 @@ export const mutations = {
         state.mood.max = 10
         state.organic.min = 0
         state.organic.max = 10
+        state.density.min = 0
+        state.density.max = 10
     },
     SET_SONG_IDS(state, ids) {
         state.tempSongIDs = ids
@@ -376,6 +382,12 @@ export const mutations = {
         state.licenseData.type = ''
         state.licenseData.subType = ''
         state.licenseSong = []
+    },
+    OPEN_TUTORIAL(state) {
+        state.tutorialPanel = true
+    },
+    CLOSE_TUTORIAL(state) {
+        state.tutorialPanel = false
     },
     UPDATE_LICENSE_CATEGORY(state, type) {
         state.licenseData.category = type
@@ -723,8 +735,10 @@ export const getters = {
         let maxM = ( OG[0].PBMood > (10 - G) ) ? 10 : OG[0].PBMood + G
         let minO = ( OG[0].PBOrganic < G ) ? 0 : OG[0].PBOrganic - G
         let maxO = ( OG[0].PBOrganic > (10 - G) ) ? 10 : OG[0].PBOrganic + G
+        let minD = ( OG[0].PBDensity < G ) ? 0 : OG[0].PBDensity - G
+        let maxD = ( OG[0].PBDensity > (10 - G) ) ? 10 : OG[0].PBDensity + G
         return state.songs.filter((song) => {
-            return ( song.PBRhythm >= minR && song.PBRhythm <= maxR && song.PBSpeed >= minS && song.PBSpeed <= maxS && song.PBExperimental >= minE && song.PBExperimental <= maxE && song.PBMood >= minM && song.PBMood <= maxM && song.PBOrganic >= minO && song.PBOrganic <= maxO && song.ID !== OG[0].ID )
+            return ( song.PBRhythm >= minR && song.PBRhythm <= maxR && song.PBSpeed >= minS && song.PBSpeed <= maxS && song.PBExperimental >= minE && song.PBExperimental <= maxE && song.PBMood >= minM && song.PBMood <= maxM && song.PBOrganic >= minO && song.PBOrganic <= maxO && song.PBDensity >= minD && song.PBDensity <= maxD && song.ID !== OG[0].ID )
         })
     },
     SIM_SON_PANEL_DATA: (state) => (id) => {
@@ -742,8 +756,10 @@ export const getters = {
         let maxM = ( OG[0].PBMood > (10 - G) ) ? 10 : OG[0].PBMood + G
         let minO = ( OG[0].PBOrganic < G ) ? 0 : OG[0].PBOrganic - G
         let maxO = ( OG[0].PBOrganic > (10 - G) ) ? 10 : OG[0].PBOrganic + G
+        let minD = ( OG[0].PBDensity < G ) ? 0 : OG[0].PBDensity - G
+        let maxD = ( OG[0].PBDensity > (10 - G) ) ? 10 : OG[0].PBDensity + G
         return state.songs.filter((song) => {
-            return ( song.PBRhythm >= minR && song.PBRhythm <= maxR && song.PBSpeed >= minS && song.PBSpeed <= maxS && song.PBExperimental >= minE && song.PBExperimental <= maxE && song.PBMood >= minM && song.PBMood <= maxM && song.PBOrganic >= minO && song.PBOrganic <= maxO && song.ID !== OG[0].ID )
+            return ( song.PBRhythm >= minR && song.PBRhythm <= maxR && song.PBSpeed >= minS && song.PBSpeed <= maxS && song.PBExperimental >= minE && song.PBExperimental <= maxE && song.PBMood >= minM && song.PBMood <= maxM && song.PBOrganic >= minO && song.PBOrganic <= maxO && song.PBDensity >= minD && song.PBDensity <= maxD && song.ID !== OG[0].ID )
         })
     },
     QUEUE_DATA: (state) => {
@@ -866,8 +882,10 @@ export const getters = {
         let maxM = ( OG[0].PBMood > (10 - G) ) ? 10 : OG[0].PBMood + G
         let minO = ( OG[0].PBOrganic < G ) ? 0 : OG[0].PBOrganic - G
         let maxO = ( OG[0].PBOrganic > (10 - G) ) ? 10 : OG[0].PBOrganic + G
+        let minD = ( OG[0].PBDensity < G ) ? 0 : OG[0].PBDensity - G
+        let maxD = ( OG[0].PBDensity > (10 - G) ) ? 10 : OG[0].PBDensity + G
         let nextsongs = state.songs.filter((song) => {
-            return ( song.PBRhythm >= minR && song.PBRhythm <= maxR && song.PBSpeed >= minS && song.PBSpeed <= maxS && song.PBExperimental >= minE && song.PBExperimental <= maxE && song.PBMood >= minM && song.PBMood <= maxM && song.PBOrganic >= minO && song.PBOrganic <= maxO && song.ID !== OG.ID )
+            return ( song.PBRhythm >= minR && song.PBRhythm <= maxR && song.PBSpeed >= minS && song.PBSpeed <= maxS && song.PBExperimental >= minE && song.PBExperimental <= maxE && song.PBMood >= minM && song.PBMood <= maxM && song.PBOrganic >= minO && song.PBOrganic <= maxO && song.PBDensity >= minD && song.PBDensity <= maxD && song.ID !== OG.ID )
         })
         let filtered = nextsongs.filter(item => !state.sqPlaying.includes(item.ID))
         let moreFltd = filtered.filter(item => !state.sqEnded.includes(item.ID))
@@ -885,7 +903,7 @@ export const getters = {
     },
     PB_FILTERED_SONGS: (state) => {
         return state.songs.filter((song) => {
-            return (song.PBRhythm >= state.rhythm.min) && (song.PBRhythm <= state.rhythm.max) && (song.PBSpeed >= state.speed.min) && (song.PBSpeed <= state.speed.max) && (song.PBExperimental >= state.experimental.min) && (song.PBExperimental <= state.experimental.max) && (song.PBMood >= state.mood.min) && (song.PBMood <= state.mood.max) && (song.PBOrganic >= state.organic.min) && (song.PBOrganic <= state.organic.max) 
+            return (song.PBRhythm >= state.rhythm.min) && (song.PBRhythm <= state.rhythm.max) && (song.PBSpeed >= state.speed.min) && (song.PBSpeed <= state.speed.max) && (song.PBExperimental >= state.experimental.min) && (song.PBExperimental <= state.experimental.max) && (song.PBMood >= state.mood.min) && (song.PBMood <= state.mood.max) && (song.PBOrganic >= state.organic.min) && (song.PBOrganic <= state.organic.max) && (song.PBDensity >= state.density.min) && (song.PBDensity <= state.density.max) 
         })
     },
     FILTERED_SONGS_SEARCH: (state, getters) => {
@@ -982,6 +1000,7 @@ export const getters = {
             const genreList = []
             let keyList = state.filter.genre.concat(state.filter.tag)
             keyList = keyList.concat(state.filter.mood)
+            console.log(keyList)
             for (let i = 0; i < filteredList.length; i++) {
                 keyList.forEach(a => {
                 if (filteredList[i].Tags && filteredList[i].Tags.toLowerCase().includes(a.key.toLowerCase()) || (filteredList[i].Genre && filteredList[i].Genre.toLowerCase().includes(a.key.toLowerCase())) || (filteredList[i].SubGenreA && filteredList[i].SubGenreA.toLowerCase().includes(a.key.toLowerCase())) || (filteredList[i].SubGenreB && filteredList[i].SubGenreB.toLowerCase().includes(a.key.toLowerCase())) || (filteredList[i].PrimaryMood && filteredList[i].PrimaryMood.toLowerCase().includes(a.key.toLowerCase())) || (filteredList[i].SecondaryMoods && filteredList[i].SecondaryMoods.toLowerCase().includes(a.key.toLowerCase()))) {

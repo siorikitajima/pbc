@@ -9,6 +9,7 @@
         <p>EXP</p>
         <p>MOD</p>
         <p>ORG</p>
+        <p>DNS</p>
     </div>
     <div v-for="fltdsong in fltdsongs || []" :key="fltdsong.ID">
         <TableASong :song="fltdsong" :dist="dist" />
@@ -42,6 +43,7 @@ export default {
     display: block;
     text-align: center;
     width: 42px;
+    /* margin: 0 0 0 5px; */
 }
 .tableHeader p:nth-of-type(1) {
     width: 200px;
@@ -51,7 +53,7 @@ export default {
     width: 140px;
 }
 .tableHeader p:nth-of-type(3) {
-    width: 180px;
+    width: 130px;
     text-align: left;
 }
 .tableWrapper {

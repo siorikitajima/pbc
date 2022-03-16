@@ -20,6 +20,7 @@
 
 <FilterIcons :sliderPanel="sliderPanel" :presetPanel="presetPanel" :searchPanel="searchPanel" @leftPanel="leftPanel($event)" />
 
+<PanelTutorial v-if="tutorialPanel" />
 </div>
 </template>
 
@@ -54,6 +55,11 @@ export default {
         }
     },
     mounted() {
+        if (localStorage.getItem("tutorial") && !this.tutorialPanel) {
+            this.$store.commit('CLOSE_TUTORIAL')
+        } else {
+            this.$store.commit('OPEN_TUTORIAL')
+        }
         this.$store.commit('clearFilter')
         if(this.$route.query.rth) {
             let rth = this.$route.query.rth.split('-')
@@ -61,6 +67,7 @@ export default {
             let exp = this.$route.query.exp.split('-')
             let mod = this.$route.query.mod.split('-')
             let org = this.$route.query.org.split('-')
+            let dns = this.$route.query.dns.split('-')
             if(this.$route.query.keys) {
                 let keys = this.$route.query.keys
                 let keysTemp = keys.includes(',') ? keys.split(',') : [keys]
@@ -77,21 +84,25 @@ export default {
                         this.$store.commit('addFilterSong', obj) }
                 }
             }
-            this.$store.commit('SET_PRESETS_OG', {rhyMin:rth[0], rhyMax:rth[1], spdMin:spd[0], spdMax:spd[1], expMin:exp[0], expMax:exp[1], modMin:mod[0], modMax:mod[1], orgMin:org[0], orgMax:org[1] })
+            this.$store.commit('SET_PRESETS_OG', {rhyMin:rth[0], rhyMax:rth[1], spdMin:spd[0], spdMax:spd[1], expMin:exp[0], expMax:exp[1], modMin:mod[0], modMax:mod[1], orgMin:org[0], orgMax:org[1], dnsMin:dns[0], dnsMax:dns[1] })
         } else if (localStorage.getItem("filterValues")) {
             const va = JSON.parse(localStorage.getItem("filterValues"))
-            const da = { rhyMin: Number(va.rhythm.min), rhyMax: Number(va.rhythm.max), spdMin: Number(va.speed.min), spdMax: Number(va.speed.max), expMin: Number(va.experimental.min), expMax: Number(va.experimental.max), modMin: Number(va.mood.min), modMax: Number(va.mood.max), orgMin: Number(va.organic.min), orgMax: Number(va.organic.max) }
+            if(!va.density) { va.density = { min: 0, max: 10} }
+            const da = { rhyMin: Number(va.rhythm.min), rhyMax: Number(va.rhythm.max), spdMin: Number(va.speed.min), spdMax: Number(va.speed.max), expMin: Number(va.experimental.min), expMax: Number(va.experimental.max), modMin: Number(va.mood.min), modMax: Number(va.mood.max), orgMin: Number(va.organic.min), orgMax: Number(va.organic.max), dnsMin: Number(va.density.min), dnsMax: Number(va.density.max) }
             this.$store.commit('SET_PRESETS_OG', da)            
         }
 
         if (localStorage.getItem("searchKeys")) {
             const va = JSON.parse(localStorage.getItem("searchKeys"))
             this.$store.commit('setAllFilter', { album: va.album, artist: va.artist, project: va.project, song: va.song, instrument: va.instrument, genre: va.genre, tag: va.tag, mood: va.mood, search: va.search, order: va.order })
+        } else {
+            this.$store.commit('clearFilter')
+            localStorage.setItem("searchKeys", JSON.stringify(this.filter))
         }
         this.componentLoaded = true
     },
     computed: {
-        ...mapState(['rhythm', 'speed', 'experimental', 'mood', 'organic', 'filter']),
+        ...mapState(['rhythm', 'speed', 'experimental', 'mood', 'organic', 'density', 'filter', 'tutorialPanel']),
         ...mapGetters({
             // PBfilteredSongs: 'PB_FILTERED_SONGS',
             SearchedSongs: 'FILTERED_SONGS_SEARCH',
