@@ -267,7 +267,6 @@ export const mutations = {
         state.flashPanel = false
         state.flashText = ''
     },
-
     IS_PLAYING_ON: (state) => {
         state.isTimerPlaying = true
     },
@@ -766,16 +765,16 @@ export const getters = {
         if(state.sqQueue.length < 1) {
             return []
         } else {
-            let data = []
-            for(let q = 0; q < state.sqQueue.length; q++) {
-                for(let s = 0; s < state.songs.length; s++) {
-                  if( state.songs[s].ID == state.sqQueue[q] ) {
-                    data.push(state.songs[s])
-                  }
-              }
-            }
-            return data
-        }
+            const queueList = []
+            for (let i = 0; i < state.sqQueue.length; i++) {
+                state.songs.forEach(a => {
+                    if ((state.sqQueue[i].match(a.ID))) {
+                    if((queueList.findIndex(s => s.ID == state.sqQueue[i])) === -1) {
+                        queueList.push(a)
+                    }}
+                })}
+            return queueList 
+        } 
     },
     PLAYING_DATA: (state) => {
         let filtered
@@ -792,16 +791,16 @@ export const getters = {
         if(state.sqEnded.length < 1) {
             return []
         } else {
-            let data = []
-            for(let q = 0; q < state.sqEnded.length; q++) {
-                for(let s = 0; s < state.songs.length; s++) {
-                  if( state.songs[s].ID == state.sqEnded[q] ) {
-                    data.push(state.songs[s])
-                  }
-              }
-            }
-            return data
-        }
+            const endList = []
+            for (let i = 0; i < state.sqEnded.length; i++) {
+                state.songs.forEach(a => {
+                    if ((state.sqEnded[i].match(a.ID))) {
+                    if((endList.findIndex(s => s.ID == state.sqEnded[i])) === -1) {
+                        endList.push(a)
+                    }}
+                })}
+            return endList 
+        } 
     },
     PLAYLIST_DATA: (state) => {
         if(state.playlist.length < 1) {
@@ -907,7 +906,8 @@ export const getters = {
         })
     },
     FILTERED_SONGS_SEARCH: (state, getters) => {
-        let filteredList = getters.PB_FILTERED_SONGS
+        // let filteredList = getters.PB_FILTERED_SONGS
+        let filteredList = getters.PB_FILTERED_SONGS || [...state.songs]
 
         // Filter song
             if(state.filter.song.length !== 0) {

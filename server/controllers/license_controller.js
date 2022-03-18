@@ -126,6 +126,7 @@ const postOrderData = async (req, res) => {
     total: req.body.total,
     subtotal: req.body.subtotal,
     discount: req.body.discount,
+    promoCode: req.body.promoCode,
     status: req.body.status,
     mp3Url: mp3url,
     wavUrl: wavurl

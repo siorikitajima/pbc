@@ -109,7 +109,7 @@
                 <div class="progress__time">{{ currentTime }} / {{ duration }}</div>
             </div>
             <div class="progress_bar_flex">
-                <div class="duration progress__bar" ref="progressBarMobile" @click="clickProgressMobile">
+                <div class="duration progress__bar" ref="progressBarMobile" v-touch:tap="clickProgressMobile" v-touch:moving="clickProgressMobile">
                     <div class="progress__current" :style="{ width : barWidth }"></div>
                 </div>
             </div>
@@ -264,11 +264,9 @@ export default {
             this.audio.play();
         },
         clickProgressMobile(e) {
-            if(e.type == 'touchstart' || e.type == 'touchmove' || e.type == 'touchend' || e.type == 'touchcancel'){
-            var touch = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];
+            let touch = e.changedTouches[0].clientX
             this.audio.pause();
-            this.updateBar(touch.pageX);
-            }
+            this.updateBarMobile(touch);
         },
         prevTrack() {
             this.$store.commit('PLAY_PREV')

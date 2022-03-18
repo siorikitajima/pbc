@@ -1,7 +1,7 @@
 const aboutPBC = [
     {
       id: 1,
-      active: true,
+      active: false,
       img: 'header/Filter_Icon',
       title: 'Filters',
       details: `

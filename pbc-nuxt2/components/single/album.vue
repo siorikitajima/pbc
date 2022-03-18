@@ -100,6 +100,7 @@ export default {
         addAll() {
             if(this.album.Type == 'Album') {
                 this.$store.commit('ADD_ALL', this.songIDs)
+                this.$store.dispatch('addedQPanel', this.songIDs.length)
             } else {
                 this.actionType = 'ADD TO QUEUE'
                 this.rangeSlider = true

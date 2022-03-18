@@ -12,6 +12,7 @@ const orderSchema = new Schema(
     total: { type: Number },
     subtotal: { type: Number },
     discount: { type: String },
+    promoCode: { type: String },
     status: { type: String },
     mp3Url: { type: String },
     wavUrl: { type: String }

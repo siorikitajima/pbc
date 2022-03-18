@@ -33,7 +33,13 @@ export default {
 
             console.log('PRESET VALUES:::', 'rhy', rhy[0],rhy[1], 'spd', spd[0], spd[1], 'exp', exp[0], exp[1], 'mod', mod[0], mod[1], 'org', org[0], org[1], 'dns', dns[0], dns[1])
 
-            this.$store.commit('SET_PRESETS_OG', {rhyMin: rhy[0], rhyMax:rhy[1], spdMin:spd[0], spdMax:spd[1], expMin:exp[0], expMax:exp[1], modMin:mod[0], modMax:mod[1], orgMin:org[0], orgMax:org[1], dnsMin:dns[0], dnsMax:dns[1]})
+            this.$store.commit('SET_PRESETS_OG', {
+                rhyMin: Number(rhy[0]), rhyMax: Number(rhy[1]), 
+                spdMin: Number(spd[0]), spdMax: Number(spd[1]), 
+                expMin: Number(exp[0]), expMax: Number(exp[1]), 
+                modMin: Number(mod[0]), modMax: Number(mod[1]), 
+                orgMin: Number(org[0]), orgMax: Number(org[1]), 
+                dnsMin: Number(dns[0]), dnsMax: Number(dns[1])})
 
             const query = {
                 rhythm: { min: rhy[0], max: rhy[1] },

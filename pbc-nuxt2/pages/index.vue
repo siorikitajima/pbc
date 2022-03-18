@@ -173,7 +173,13 @@ export default {
             this.loadNum.offset = offset
             this.loadNum.loadTo = (leftOvers < (offset + 20)) ? this.songCount : offset + 20
         }
-    }
+    },
+    // watch: { 
+    //   	filter(newV, oldV) { 
+    //         this.SearchedSongs()
+    //         console.log(this.filter, this.SearchedSongs())
+    //     }
+    // }
 }
 
 </script>

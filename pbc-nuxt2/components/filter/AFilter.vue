@@ -59,30 +59,34 @@ export default {
         // }
           let tmp = Number(value) + 0.25
             if(this.type == 'rhythm') { 
-              if(value < 9.75) {
-                if (value >= this.rhythm.max) {
+              if(value < 10 && value > 0) {
+                if (this.rhythm.max <= value) {
                   this.$store.commit('SET_RHY_MAX', tmp)
                 }
                 this.$store.commit('SET_RHY_MIN', value) 
               } else if(value >= 9.75) {
                 this.$store.commit('SET_RHY_MAX', 10)
                 this.$store.commit('SET_RHY_MIN', 9.75)
+              } else if(value <= 0.25) {
+                this.$store.commit('SET_RHY_MIN', 0)
               }
               }
             else if(this.type == 'speed') { 
-              if(value < 9.75) {
-                if (value >= this.speed.max) {
+              if(value < 10 && value > 0) {
+                if (this.speed.max <= value) {
                   this.$store.commit('SET_SPD_MAX', tmp)
                 }
                 this.$store.commit('SET_SPD_MIN', value) 
               } else if(value >= 9.75) {
                 this.$store.commit('SET_SPD_MAX', 10)
                 this.$store.commit('SET_SPD_MIN', 9.75) 
+              } else if(value <= 0.25) {
+                this.$store.commit('SET_SPD_MIN', 0)
               }
               }
             else if(this.type == 'experimental') { 
-              if(value < 9.75) {
-                if (value >= this.experimental.max) {
+              if(value < 10 && value > 0) {
+                if (this.experimental.max <= value) {
                   this.$store.commit('SET_EXP_MAX', tmp)
                 }
                 this.$store.commit('SET_EXP_MIN', value) 
@@ -90,39 +94,47 @@ export default {
                else if(value >= 9.75) {
                 this.$store.commit('SET_EXP_MAX', 10)
                 this.$store.commit('SET_EXP_MIN', 9.75)
+              } else if(value <= 0.25) {
+                this.$store.commit('SET_EXP_MIN', 0)
               }
               }
             else if(this.type == 'mood') { 
-              if(value < 9.75) {
-                if (value >= this.mood.max) {
+              if(value < 10 && value > 0) {
+                if (this.mood.max <= value) {
                   this.$store.commit('SET_MOD_MAX', tmp)
                 }
                 this.$store.commit('SET_MOD_MIN', value) 
               } else if(value >= 9.75) {
                 this.$store.commit('SET_MOD_MAX', 10)
                 this.$store.commit('SET_MOD_MIN', 9.75)
+              } else if(value <= 0.25) {
+                this.$store.commit('SET_MOD_MIN', 0)
               }
               }
             else if(this.type == 'organic') { 
-              if(value < 9.75) {
-                if (value >= this.organic.max) {
+              if(value < 10 && value > 0) {
+                if (this.organic.max <= value) {
                   this.$store.commit('SET_ORG_MAX', tmp)
                 }
                 this.$store.commit('SET_ORG_MIN', value) 
               } else if(value >= 9.75) {
                 this.$store.commit('SET_ORG_MAX', 10)
                 this.$store.commit('SET_ORG_MIN', 9.75)
+              } else if(value <= 0.25) {
+                this.$store.commit('SET_ORG_MIN', 0)
               }
             }
             else if(this.type == 'density') { 
-              if(value < 9.75) {
-                if (value >= this.density.max) {
+              if(value < 10 && value > 0) {
+                if (this.density.max <= value) {
                   this.$store.commit('SET_DNS_MAX', tmp)
                 }
                 this.$store.commit('SET_DNS_MIN', value) 
               } else if(value >= 9.75) {
                 this.$store.commit('SET_DNS_MAX', 10)
                 this.$store.commit('SET_DNS_MIN', 9.75)
+              } else if(value <= 0.25) {
+                this.$store.commit('SET_DNS_MIN', 0)
               }
             }
             this.setLocalStorage()

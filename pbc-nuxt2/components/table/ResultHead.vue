@@ -17,7 +17,7 @@
           <span @click="clearValue('mood')" :class="{ active: modActive }">MOD <b>{{ modValue }}</b></span>
           <span @click="clearValue('organic')" :class="{ active: orgActive }">ORG <b>{{ orgValue }}</b></span>
           <span @click="clearValue('density')" :class="{ active: dnsActive }">DNS <b>{{ dnsValue }}</b></span>
-        <br class="linebreak" />
+        <!-- <br class="linebreak" /> -->
           <span v-for="searchKey in searchKeys" :key="searchKey.key" class="searchWords" @click="clearSearchValue( searchKey )" :data-col="searchKey.type">{{ searchKey.key }}</span>
           <span v-if="anythingActive" class="searchWords clearAll" @click="clearAll()" >CLEAR ALL</span>
           </p>
@@ -211,15 +211,15 @@ export default {
                     } else if(data.type == 'song') {
                     this.$store.commit('rmFilterSong', data.id)
                     } else if(data.type == 'instrument') {
-                    this.$store.commit('rmFilterInstrument', data.id)
+                    this.$store.commit('rmFilterInstrument', data.key)
                     } else if(data.type == 'genre') {
-                    this.$store.commit('rmFilterGenre', data.id)
+                    this.$store.commit('rmFilterGenre', data.key)
                     } else if(data.type == 'tag') {
-                    this.$store.commit('rmFilterTag', data.id)
+                    this.$store.commit('rmFilterTag', data.key)
                     } else if(data.type == 'mood') {
-                    this.$store.commit('rmFilterMood', data.id)
+                    this.$store.commit('rmFilterMood', data.key)
                     } else if(data.type == 'search') {
-                    this.$store.commit('rmFilterSearch', data.id)
+                    this.$store.commit('rmFilterSearch', data.key)
                     }
                 }
             }

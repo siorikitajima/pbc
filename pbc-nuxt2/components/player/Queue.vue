@@ -14,8 +14,7 @@
                 </div>
             </div>
       </div>
-      <div class="queueList">
-
+      <div class="queueList" v-if="sqEData && sqQData">
         <div v-if="sqEData.length > 0">
           <div v-for="esong in sqEData" :key="esong.ID" class="queueSong ended">
             <div class="coverSm" @click="playThisNow(esong.ID)">

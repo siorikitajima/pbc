@@ -7,7 +7,8 @@
 
         <h2 class="sectTitle">// FEATURED TRACKS //</h2>
         <div v-if="dataLoad">
-            <TableSongList :fltdsongs="SearchedSongs.slice(0, 5)" :dist="'project'" />
+            <TableSongList v-if="customFeatSongs" :fltdsongs="customFSList" :dist="'project'" />
+            <TableSongList v-else :fltdsongs="SearchedSongs.slice(0, 5)" :dist="'project'" />
         </div>
         <div v-else><TableLoading /></div>
 
@@ -18,7 +19,8 @@
         </div>
 
         <div v-if="dataLoad && SearchedSongs.length > 5">
-            <TableSongList :fltdsongs="SearchedSongs.slice(5, 10)" :dist="'project'" />
+            <TableSongList v-if="customFeatSongs" :fltdsongs="restOfSongs" :dist="'project'" />
+            <TableSongList v-else :fltdsongs="SearchedSongs.slice(5, 10)" :dist="'project'" />
         </div>
 
         <div class="bggray">
@@ -120,6 +122,33 @@ export default {
                 songIDs.push(id)
             }
             return songIDs
+        },
+        customFeatSongs() {
+            if(this.singproj.FeaturedSongs) { return true }
+            else { return false }
+        },
+        customFSList() {
+            let featSongsIDs = this.singproj.FeaturedSongs.split(',')
+            let featSongsData = []
+            for (let i = 0; i < featSongsIDs.length; i++) {
+                this.SearchedSongs.forEach(a => {
+                    if ((featSongsIDs[i].match(a.ID))) {
+                        featSongsData.push(a)
+                    }
+                })}
+            return featSongsData 
+        },
+        restOfSongs() {
+            let featSongsIDs = this.singproj.FeaturedSongs.split(',')
+            let restSongsData = this.SearchedSongs
+            for (let i = 0; i < featSongsIDs.length; i++) {
+                restSongsData.forEach(a => {
+                    if ((featSongsIDs[i].match(a.ID))) {
+                        let index = restSongsData.indexOf(a)
+                        restSongsData.splice(index, 1);
+                    }
+                })}
+            return restSongsData 
         }
     },
     mounted() {

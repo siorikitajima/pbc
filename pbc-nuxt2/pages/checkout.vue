@@ -281,6 +281,7 @@ export default {
                     description: this.descriptions,
                     total: this.total,
                     subtotal: this.subtotal,
+                    promoCode: this.promoCode,
                     discount: this.discount
                 }
             this.finalOrder = theorder
