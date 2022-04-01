@@ -43,7 +43,7 @@
         <a href="https://legal.patternbased.com/privacy-policy/" target="_blank">Privacy Policy</a>
         <a href="https://legal.patternbased.com/license-agreement/" target="_blank">License Agreement</a>
         © Copyright 2022 PatternBased Corp
-        <br/><br/>
+        <br/>
     </p>
 </div>
 </template>

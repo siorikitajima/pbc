@@ -1,5 +1,5 @@
 <template>
-  <div class='range-slider'>
+  <div class='range-slider' >
     <div class="sliderTitle">
         <div><b>{{ this.type.toUpperCase() }}</b></div>
         <div>{{minV}} - {{maxV}}</div>

@@ -1,5 +1,5 @@
 <template>
-<div class="filterBar">
+<div class="filterBar" >
   <div class="count">
     <p>{{ songCount }} <span>Tracks</span></p>
     <button class="large"
@@ -73,7 +73,7 @@ export default {
 }
 @media (max-width: 600px) {
     .filterBar {
-    width: calc(100% - 40px);
+    width: calc(100% - 41px);
     max-width: none;
     padding: 80px 20px 20px 20px;
     height: calc(100% - 100px);

@@ -51,7 +51,8 @@ export default {
             loadNum: {
                 offset: 0,
                 loadTo: 20
-            }
+            },
+            loadMoreDone: true
         }
     },
     mounted() {
@@ -163,8 +164,12 @@ export default {
             }
         },
         onScroll ({ target: { scrollTop, clientHeight, scrollHeight }}) {
-            if (scrollTop + clientHeight >= scrollHeight) {
+            if (scrollTop + clientHeight >= scrollHeight && this.loadMoreDone) {
+                this.loadMoreDone = false
                 this.loadMorePosts()
+                setTimeout(() => {
+                    this.loadMoreDone = true
+                }, 1000)
             }
         },
         loadMorePosts(){
@@ -217,8 +222,8 @@ export default {
 }
 @media (max-width: 600px) {
 .resultWrapper {
-    padding: 0 0 60px 0;
-    height: calc(100% - 120px);
+    padding: 0 0 100px 0;
+    height: calc(100% - 160px);
 }
 }
 </style>

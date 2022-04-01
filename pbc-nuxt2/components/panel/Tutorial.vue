@@ -12,7 +12,8 @@
                     <img class="icon" :src="require(`~/assets/images/${tutorialSlides[slideIndex].icon}.svg`)" alt="Tutorial">
                     <h3>{{tutorialSlides[slideIndex].details}}</h3>
                 </div>
-                <img :src="require(`~/assets/images/${tutorialSlides[slideIndex].img}`)" alt="Tutorial">
+                <img v-if="isMobile" :src="require(`~/assets/images/${tutorialSlides[slideIndex].imgMobile}`)" alt="Tutorial">
+                <img v-else :src="require(`~/assets/images/${tutorialSlides[slideIndex].img}`)" alt="Tutorial">
             </div>
         </div>
             <div class="tut-dots">
@@ -53,7 +54,18 @@ export default {
             }, 200)
         }
     },
+    computed: {
+        isMobile() {
+            if (window.innerWidth <= 600) {
+            return true
+            } 
+            return false
+        }
+    },
     mounted() {
+        if(window.innerWidth <= 600) {
+            this.$store.commit('HIDE_PLAYER')
+        }
         this.counter = setInterval(() => {
             this.$refs.tutorial.style.opacity = 0
             this.$refs.tutdot[this.slideIndex].style.background = '#666'
@@ -71,6 +83,9 @@ export default {
     },
     beforeDestroy() {
         clearInterval(this.counter)
+        if(window.innerWidth <= 600) {
+            this.$store.commit('SHOW_PLAYER')
+        }
     }
 }
 </script>
@@ -102,6 +117,7 @@ export default {
 .tutorial {
     width: 400px;
     height: 300px;
+    min-height: fit-content;
     transition-duration: 200ms;
 }
 .tutorial .icon {
@@ -153,6 +169,29 @@ export default {
 }
 
 @media(max-width: 800px) {
+    .tutorialWrapper {
+        width: fit-content;
+        height: fit-content;
+        /* top: 80px;
+        left: unset;
+        transform: unset; */
+        text-align: center;
+        max-width: unset;
+        display: flex;
+    }
+    .tutorial {
+        width: fit-content;
+        height: fit-content;
+    }
+    .tutorial h3 {
+        max-width: calc(100% - 40px);
+        text-align: center;
+        margin: 0 auto 20px auto;
+    }
+    .tutorial .icon {
+        margin: 0;
+        opacity: 0.6;
+    }
     .panelNav {
         top: 10px;
         position: absolute;

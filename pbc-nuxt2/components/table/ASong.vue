@@ -152,7 +152,7 @@
             <NuxtLink :to="{ path: '/requests', query: { song: song.ID }}">
             <li>
                 <img :src="require('~/assets/images/actions/inquiry_dark.svg')" alt="Inquiry">
-                <p>Custom Work</p>
+                <p>Inquiry</p>
             </li>
             </NuxtLink>
             <li @click="licenseThis(song.ID)">

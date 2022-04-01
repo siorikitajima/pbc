@@ -129,7 +129,6 @@ export const mutations = {
     },
     MENU_TOGGLE: (state) => {
         state.sideNavOpen = !state.sideNavOpen
-        state.playerBar = true
     },
     CLOSE_SIMSON: (state) => {
         state.similarPanel = false

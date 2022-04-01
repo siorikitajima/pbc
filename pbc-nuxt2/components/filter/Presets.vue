@@ -111,7 +111,7 @@ export default {
 }
 @media (max-width: 600px) {
     .presetBar {
-    width: calc(100% - 40px);
+    width: calc(100% - 41px);
     max-width: none;
     padding: 80px 20px 120px 20px;
     }

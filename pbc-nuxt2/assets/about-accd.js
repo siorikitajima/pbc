@@ -120,54 +120,63 @@ const aboutPBC = [
       icon: 'header/Filter_Icon_white',
       details: `Filter songs with the six sliders to find the music you are looking for`,
       img: 'tutorial/PBC-Tuto-Filter.gif',
+      imgMobile: 'tutorial/PBC-Tuto-Filter-Mobile.gif'
     },
     {
       id: 1,
       icon: 'header/Preset_Icon_white',
       details: `Select a preset to set the sliders automatically and display relevant songs`,
       img: 'tutorial/PBC-Tuto-Preset.gif',
+      imgMobile: 'tutorial/PBC-Tuto-Preset-Mobile.gif'
     },
     {
       id: 2,
       icon: 'header/Search_Icon_white',
       details: `Click the magnifying glass for keyword searches including instrument, artist, genre, tag and more`,
       img: 'tutorial/PBC-Tuto-Search.gif',
+      imgMobile: 'tutorial/PBC-Tuto-Search-Mobile.gif'
     },
     {
       id: 3,
       icon: 'tutorial/Clear_Icon_white',
       details: `Click the color-filled filter buttons above the song list to clear the filters`,
       img: 'tutorial/PBC-Tuto-Clear.gif',
+      imgMobile: 'tutorial/PBC-Tuto-Clear-Mobile.gif'
     },
     {
       id: 4,
       icon: 'tutorial/Catalog_Icon_white',
       details: `Explore the catalog by project/artist and album/collection using the upper right menu`,
       img: 'tutorial/PBC-Tuto-ArtistsAlbums.gif',
+      imgMobile: 'tutorial/PBC-Tuto-ArtistsAlbums-Mobile.gif'
     },
     {
       id: 5,
       icon: 'actions/SimilarSong_Icon_white',
       details: `Click the similar songs icon wherever you see it to open a list of similar songs`,
       img: 'tutorial/PBC-Tuto-SimilarSongs.gif',
+      imgMobile: 'tutorial/PBC-Tuto-SimilarSongs-Mobile.gif'
     },
     {
       id: 6,
       icon: 'actions/PlayList_Icon',
       details: `In the queue, click the share button to create and name a playlist from that queue`,
       img: 'tutorial/PBC-Tuto-Playlist.gif',
+      imgMobile: 'tutorial/PBC-Tuto-Playlist-Mobile.gif'
     },
     {
       id: 7,
       icon: 'actions/inquiry_white',
       details: `Click the inquiry button on any individual song or 'requests' from menu for licensing/composing inquiries`,
       img: 'tutorial/PBC-Tuto-Inquiry.gif',
+      imgMobile: 'tutorial/PBC-Tuto-Inquiry-Mobile.gif'
     },
     {
       id: 8,
       icon: 'tutorial/Tutorial_Icon_white',
       details: `Re-open this quick tutorial anytime by clicking 'tutorial' from the upper right menu`,
       img: 'tutorial/PBC-Tuto-Tutorial.gif',
+      imgMobile: 'tutorial/PBC-Tuto-Tutorial-Mobile.gif'
     }
   ]
   

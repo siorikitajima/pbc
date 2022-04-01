@@ -8,8 +8,8 @@
     
       <div v-if="cart.length > 0" class="num" :class="{ 'blue': sideNavOpen }" @click="$store.commit('TOGGLE_CART')">{{cart.length}}</div>
 
-      <img v-if="sideNavOpen" class="navIcons" :src="require('~/assets/images/header/Menu_Icon_white.svg')" alt="Menu" @click="$store.commit('MENU_TOGGLE')">
-      <img v-else class="navIcons" :src="require('~/assets/images/header/Menu_Icon.svg')" alt="Menu" @click="$store.commit('MENU_TOGGLE')">
+      <img v-if="sideNavOpen" class="navIcons" :src="require('~/assets/images/header/Menu_Icon_white.svg')" alt="Menu" @click="toggleMenu">
+      <img v-else class="navIcons" :src="require('~/assets/images/header/Menu_Icon.svg')" alt="Menu" @click="toggleMenu">
   </div>
 
     <transition name="slideFRRight">
@@ -62,11 +62,22 @@ export default {
         openTut() {
             this.$store.commit('MENU_CLOSE')
             this.$store.commit('OPEN_TUTORIAL')
+        },
+        toggleMenu() {
+            if(!this.sideNavOpen && window.innerWidth <= 600) {
+                this.$store.commit('HIDE_PLAYER')
+            } else {
+                this.$store.commit('SHOW_PLAYER')
+            }
+            this.$store.commit('MENU_TOGGLE')
         }
     },
     watch:{
     $route (to, from){
         this.$store.commit('MENU_CLOSE')
+        if(window.innerWidth <= 600) {
+            this.$store.commit('SHOW_PLAYER')
+        }
     },
     cart(newV, oldV) { 
             this.setLocalStorage()

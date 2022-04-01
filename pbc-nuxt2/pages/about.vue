@@ -25,7 +25,7 @@
     <div class="credit">
         <GlobalCopyright></GlobalCopyright>
 
-        <p class="smallFont">Created by <a href="https://patternbased.com" target="_blank">PatternBased</a></p>
+        <p class="smallFont"><br/>Created by <a href="https://patternbased.com" target="_blank">PatternBased</a></p>
         <p class="smallFont">Music Production + Data by <a href="https://josephminadeo.com/" target="_blank">Joseph Minadeo</a></p>
         <p class="smallFont">Design + Code by <a href="https://www.siorikitajima.com/" target="_blank">Siori Kitajima</a></p>
         <p class="smallFont">Beautiful photos by amazing photographers from <a href="https://unsplash.com/" target="_blank">Unsplash.com</a> 
