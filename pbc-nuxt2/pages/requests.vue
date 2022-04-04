@@ -137,6 +137,7 @@ export default {
         if(this.$route.query.order) {
             this.orderNum = this.$route.query.order
         }
+        this.$store.commit('HIDE_LOADING')
     },
     computed: {
         ...mapGetters({

@@ -31,6 +31,9 @@ export default {
     },
     computed: {
         ...mapState( ['albums'] )
+    },
+    mounted() {
+        this.$store.commit('HIDE_LOADING')
     }
 }
 </script>

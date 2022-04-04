@@ -72,7 +72,8 @@ export const state = () => ({
     cart: [],
     cartPanel: false,
 
-    tutorialPanel: null
+    tutorialPanel: null,
+    loading: true
 });
 
 export const mutations = {
@@ -386,6 +387,12 @@ export const mutations = {
     },
     CLOSE_TUTORIAL(state) {
         state.tutorialPanel = false
+    },
+    SHOW_LOADING(state) {
+        state.loading = true
+    },
+    HIDE_LOADING(state) {
+        state.loading = false
     },
     UPDATE_LICENSE_CATEGORY(state, type) {
         state.licenseData.category = type

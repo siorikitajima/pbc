@@ -1,15 +1,15 @@
 <template>
 <div>
-    <div class="artistBox" v-if="RelatedArtist" >
+    <div class="artistBox" v-if="RelatedArtist" @click="$store.commit('SHOW_LOADING')" >
         <NuxtLink :to="'/project/' + artist.slug">
-        <img v-if="artist.img" :src="storageURL + 'artists/' + artist.img" :alt="artist.name">
+        <img v-if="artist.img" :src="storageURL + 'artists/thumb/' + artist.img" :alt="artist.name">
         <div class="screen"></div>
         <h3>{{ artist.name }}</h3>
         </NuxtLink>
     </div>
-    <div class="artistBox" v-else >
+    <div class="artistBox" v-else @click="$store.commit('SHOW_LOADING')" >
         <NuxtLink :to="'/' + artistType + '/' + artist.ArtistSlug">
-        <img v-if="artist.Img" :src="storageURL + 'artists/' + artist.Img" :alt="artist.ArtistName">
+        <img v-if="artist.Img" :src="storageURL + 'artists/thumb/' + artist.Img" :alt="artist.ArtistName">
         <div class="screen"></div>
         <h3>{{ artist.ArtistName }}</h3>
         </NuxtLink>

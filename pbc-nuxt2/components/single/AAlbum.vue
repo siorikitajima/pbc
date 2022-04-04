@@ -1,7 +1,7 @@
 <template>
   <div class="albumBox" v-if="album">
         <NuxtLink :to="'/album/' + album.AlbumID + '-'  + album.SlugName">
-        <img v-if="album.AlbumID" :src="coverImg(album.AlbumID, null)" :alt="album.Title">
+        <img @click="$store.commit('SHOW_LOADING')" v-if="album.AlbumID" :src="coverImg(album.AlbumID, null)" :alt="album.Title">
         <div class="screen"></div>
         <h3>{{ album.Title }}</h3>
         </NuxtLink>

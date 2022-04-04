@@ -80,6 +80,7 @@ export default {
                 this.$refs.tutdot[this.slideIndex].style.background = '#ddd'
             }, 200)
         }, 5950)
+        this.$store.commit('HIDE_LOADING')
     },
     beforeDestroy() {
         clearInterval(this.counter)

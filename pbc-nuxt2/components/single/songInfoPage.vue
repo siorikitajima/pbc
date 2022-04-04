@@ -5,7 +5,7 @@
                 <p class="headerbg"><b>Project</b></p>
                 <div class="aWriter">
                     <NuxtLink :to="'/project/' + slug(song.ArtistName)">
-                    <div class="artistThumb">
+                    <div class="artistThumb" @click="$store.commit('SHOW_LOADING')">
                         <img :src="storageURL + 'artists/' + song.ArtistImage" :alt="song.ArtistName"/>
                     </div>
                     <p>{{ song.ArtistName }}</p>
@@ -16,7 +16,7 @@
                 <p class="headerbg"><b>Album</b></p>
                 <div class="aAlbum">
                     <NuxtLink :to="'/album/' + song.CatNum + '-' + slug(song.AlbumTitle)">
-                    <div class="albumThumb" v-if="song">
+                    <div class="albumThumb" v-if="song" @click="$store.commit('SHOW_LOADING')">
                         <img :src="coverImg(song.CatNum, song.ID)" :alt="song.AlbumTitle"/>
                     </div>
                     <p>{{ song.AlbumTitle }} ({{ song.Year }})</p>
@@ -30,7 +30,7 @@
         <div class="flex">
             <div class="aWriter" v-for="(writer, i) in song.Writers || []" :key="i">
                 <NuxtLink :to="'/artist/' + writer.slug">
-                <div class="artistThumb">
+                <div class="artistThumb" @click="$store.commit('SHOW_LOADING')">
                     <img :src="storageURL + 'artists/' + writer.img" :alt="writer.name"/>
                 </div>
                 <p>{{ writer.name }}</p>

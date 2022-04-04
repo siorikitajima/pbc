@@ -101,6 +101,7 @@ export default {
             localStorage.setItem("searchKeys", JSON.stringify(this.filter))
         }
         this.componentLoaded = true
+        this.$store.commit('HIDE_LOADING')
     },
     computed: {
         ...mapState(['rhythm', 'speed', 'experimental', 'mood', 'organic', 'density', 'filter', 'tutorialPanel']),

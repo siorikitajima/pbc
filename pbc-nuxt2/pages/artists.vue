@@ -42,6 +42,9 @@ export default {
         allArtists: function() {
             return this.$store.state.artists.filter((artist) => { return artist.Type == 'A' && artist.Show == 'Y'} )
         }
+    },
+    mounted() {
+        this.$store.commit('HIDE_LOADING')
     }
 }
 </script>

@@ -67,7 +67,7 @@
         </div>
         <div class="oneIcon">
             <NuxtLink :to="'/song/' + song.ID + '-' + slug(song.Title)">
-            <img :src="require('~/assets/images/actions/seeSong_Icon_dark.svg')" alt="Track Page" 
+            <img @click="$store.commit('SHOW_LOADING')" :src="require('~/assets/images/actions/seeSong_Icon_dark.svg')" alt="Track Page" 
             @mouseover="showInfo['act4'] = true" @mouseleave="showInfo['act4'] = false">
             </NuxtLink>
                 <transition name="bounce">
@@ -76,7 +76,7 @@
         </div>
         <div class="oneIcon">
             <NuxtLink :to="'/project/' + slug(song.ArtistName)" v-if="showProjectLink && dist !== 'project'" >
-            <img :src="require('~/assets/images/actions/seeArtist_Icon_dark.svg')" alt="Artist Page"
+            <img @click="$store.commit('SHOW_LOADING')" :src="require('~/assets/images/actions/seeArtist_Icon_dark.svg')" alt="Artist Page"
             @mouseover="showInfo['act5'] = true" @mouseleave="showInfo['act5'] = false">  
             </NuxtLink>
                 <transition name="bounce">
@@ -93,7 +93,7 @@
         </div>
         <div class="oneIcon">
             <NuxtLink :to="{ path: '/requests', query: { song: song.ID }}">
-            <img :src="require('~/assets/images/actions/inquiry_dark.svg')" alt="Inquiry"
+            <img @click="$store.commit('SHOW_LOADING')" :src="require('~/assets/images/actions/inquiry_dark.svg')" alt="Inquiry"
             @mouseover="showInfo['act7'] = true" @mouseleave="showInfo['act7'] = false">
             </NuxtLink>
                 <transition name="bounce">
@@ -134,13 +134,13 @@
                 <p>Similar Songs</p>
             </li>
             <NuxtLink :to="'/song/' + song.ID + '-' + slug(song.Title)" >
-            <li>
+            <li @click="$store.commit('SHOW_LOADING')">
                 <img :src="require('~/assets/images/actions/seeSong_Icon_dark.svg')" alt="Track Page">
                 <p>See Song Page</p>
             </li>
             </NuxtLink>
             <NuxtLink :to="'/project/' + slug(song.ArtistName)"  v-if="dist !== 'project'" >
-            <li @click="$store.commit('PLAY_THIS', song.ID)" v-if="dist !== 'project'" >
+            <li @click="$store.commit('SHOW_LOADING')" v-if="dist !== 'project'" >
                 <img :src="require('~/assets/images/actions/seeArtist_Icon_dark.svg')" alt="Artist Page">
                 <p>See Artist Page</p>
             </li>
@@ -150,7 +150,7 @@
                 <p>Share</p>
             </li>
             <NuxtLink :to="{ path: '/requests', query: { song: song.ID }}">
-            <li>
+            <li @click="$store.commit('SHOW_LOADING')">
                 <img :src="require('~/assets/images/actions/inquiry_dark.svg')" alt="Inquiry">
                 <p>Inquiry</p>
             </li>

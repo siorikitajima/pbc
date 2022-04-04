@@ -80,6 +80,9 @@ export default {
             this.loadNum.offset = offset
             this.loadNum.loadTo = (leftOvers < (offset + 20)) ? leng : offset + 20
         }
+    },
+    mounted() {
+        this.$store.commit('HIDE_LOADING')
     }
 }
 </script>

@@ -85,6 +85,9 @@ export default {
           this.songName = title
           this.searchPanel = false
       }
+    },
+    mounted() {
+        this.$store.commit('HIDE_LOADING')
     }
 }
 </script>

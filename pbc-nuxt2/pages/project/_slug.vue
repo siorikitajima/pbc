@@ -156,6 +156,7 @@ export default {
         let theName = this.singproj.ArtistName
         this.$store.commit('setFilterProject', {key: theName})
         this.dataLoad = true
+        this.$store.commit('HIDE_LOADING')
     },
     methods: {
         onScroll ({ target: { scrollTop, clientHeight, scrollHeight }}) {

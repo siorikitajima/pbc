@@ -7,7 +7,10 @@
         <div class="div400">
           <p>// PB {{ album.Type }} //</p>
           <h2>{{ album.Title }}</h2>
-          <p>by <NuxtLink :to="'/project/' + album.ArtistSlug" >{{ album.Project }}</NuxtLink></p>
+          <p>by <NuxtLink :to="'/project/' + album.ArtistSlug" >
+            <span @click="$store.commit('SHOW_LOADING')">{{ album.Project }}</span>
+              </NuxtLink>
+          </p>
           <div class="actions">
             <div class="oneIcon">
                 <img :src="require('~/assets/images/actions/playSong_dark.svg')" 
@@ -27,7 +30,7 @@
             </div>
             <div class="oneIcon">
                 <NuxtLink :to="'/project/' + album.ArtistSlug" >
-                <img :src="require('~/assets/images/actions/seeArtist_Icon_dark.svg')" 
+                <img @click="$store.commit('SHOW_LOADING')" :src="require('~/assets/images/actions/seeArtist_Icon_dark.svg')" 
                 alt="Artist Page"
                 @mouseover="showInfo['act3'] = true" @mouseleave="showInfo['act3'] = false">  
                 </NuxtLink>

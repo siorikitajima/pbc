@@ -7,7 +7,13 @@
         <div class="div520">
           <p>// PB Track //</p>
           <h2>{{ song.Title }}</h2>
-          <p>by <NuxtLink :to="'/project/' + slug(song.ArtistName)">{{ song.ArtistName }}</NuxtLink><span v-if="song.FeatArtist" v-html="featArtURL(song.FeatArtist)"></span></p>
+
+          <p>by 
+                <NuxtLink :to="'/project/' + slug(song.ArtistName)">
+                    <span @click="openLink('project')">{{ song.ArtistName }}</span>
+                </NuxtLink>
+                    <span v-if="song.FeatArtist" v-html="featArtURL(song.FeatArtist)"></span></p>
+          
           <div class="actions">
             <div class="oneIcon">
                 <img :src="require('../../assets/images/actions/playSong_dark.svg')" 
@@ -35,9 +41,9 @@
             </div>
             <div class="oneIcon">
                 <NuxtLink v-if="panel" :to="'/song/' + song.ID + '-' + slug(song.Title)">
-                <img :src="require('../../assets/images/actions/seeSong_Icon_dark.svg')" 
-                alt="Track Page" @click="$store.commit('CLOSE_SING_SONG')"
-                @mouseover="showInfo['act4'] = true" @mouseleave="showInfo['act4'] = false">
+                    <img :src="require('../../assets/images/actions/seeSong_Icon_dark.svg')" 
+                    alt="Track Page" @click="openLink('song')"
+                    @mouseover="showInfo['act4'] = true" @mouseleave="showInfo['act4'] = false">
                 </NuxtLink>
                 <transition name="bounce">
                     <div class="ttinfo" v-if="showInfo['act4']"><p>See Song Page</p></div>
@@ -46,7 +52,7 @@
             <div class="oneIcon">
                 <NuxtLink :to="'/project/' + slug(song.ArtistName)">
                 <img :src="require('../../assets/images/actions/seeArtist_Icon_dark.svg')" 
-                alt="Artist Page" @click="$store.commit('CLOSE_SING_SONG')"
+                alt="Artist Page" @click="openLink('project')"
                 @mouseover="showInfo['act5'] = true" @mouseleave="showInfo['act5'] = false">  
                 </NuxtLink>
                 <transition name="bounce">
@@ -64,7 +70,7 @@
             <div class="oneIcon">
                 <NuxtLink :to="{ path: '/requests', query: { song: song.ID }}">
                 <img :src="require('../../assets/images/actions/inquiry_dark.svg')" 
-                alt="Inquiry" @click="$store.commit('CLOSE_SING_SONG')"
+                alt="Inquiry" @click="openLink('song')"
                 @mouseover="showInfo['act7'] = true" @mouseleave="showInfo['act7'] = false">
                 </NuxtLink>
                 <transition name="bounce">
@@ -157,7 +163,7 @@ export default {
             slug: 'SLUG',
             coverImg: 'COVER_IMG_L',
             featArtURL: 'FEATART_LINK'
-        }),
+        })
     },
     methods: {
     shareURL() {
@@ -166,7 +172,26 @@ export default {
         },
     licenseThis(id) {
         this.$store.dispatch('OpenLicenseP', id)
+        },
+    openLink(type) {
+        let slugName
+        let urlName
+        let thisName = window.location.pathname.split('/')
+        let leng = thisName.length
+        console.log(thisName[leng -1])
+        if( type == 'project') {
+            slugName = this.slug(this.song.ArtistName)
+            urlName = thisName[leng -1]
+        } else if ( type == 'song') {
+            slugName = this.song.ID
+            let thisID = thisName[leng-1].split('-')
+            urlName = thisID[0]
         }
+        if (slugName !== urlName) {
+            this.$store.commit('SHOW_LOADING')
+        } 
+        this.$store.commit('CLOSE_SING_SONG') 
+    }
     }
 }
 </script>

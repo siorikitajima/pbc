@@ -11,7 +11,7 @@
             </p>
             <p v-else>
                 <span class="underlined" v-for="(instrument, i) in instList || []" :key="i" 
-                @click="addInst(instrument)">
+                @click="addInst(instrument); $store.commit('SHOW_LOADING')">
                 <NuxtLink :to="'/'">
                     <b style="font-weight: normal;">{{ instrument }}</b> 
                 </NuxtLink>
@@ -28,7 +28,7 @@
             </p>
             <p v-else>
                 <span class="underlined" v-for="(genmood, i) in genreMoodList || []" :key="i" 
-                @click="addGenMood(genmood)">
+                @click="addGenMood(genmood); $store.commit('SHOW_LOADING')">
                     <NuxtLink :to="'/'">
                     <b style="font-weight: normal;">{{ genmood.key }}</b> 
                     </NuxtLink>
@@ -39,17 +39,17 @@
       <div class="flex">
         <div class="div400 group">
             <p><b>Artists</b></p>
-            <p> <span class="underlined" v-for="(writer, i) in song.Writers || []" :key="i" @click="$store.commit('CLOSE_SING_SONG')">
+            <p> <span class="underlined" v-for="(writer, i) in song.Writers || []" :key="i">
                 <NuxtLink :to="'/artist/' + writer.slug">
-                <b style="font-weight: normal;">{{ writer.name }}</b> 
+                <b style="font-weight: normal;" @click="openLink('artist', writer.slug)">{{ writer.name }}</b> 
                 </NuxtLink>
             </span> </p>
         </div>
         <div class="div400 group">
             <p><b>Album/Collection</b></p>
-                <p @click="$store.commit('CLOSE_SING_SONG')">
+                <p>
                     <NuxtLink :to="'/album/'+ song.CatNum + '-' + slug(song.AlbumTitle)">
-                    <span class="underlined">{{ song.AlbumTitle }} ({{ song.Year }})</span>
+                    <span class="underlined" @click="openLink('album', song.CatNum)">{{ song.AlbumTitle }} ({{ song.Year }})</span>
                     </NuxtLink>
                 </p>
             
@@ -88,10 +88,10 @@ export default {
         },
         onSearch() {
             if (window.location.href == 'https://' + window.location.hostname + '/' || window.location.href == 'http://localhost:3000/') { 
-                console.log('On Search', window.location.href)
+                // console.log('On Search', window.location.href)
                 return true
             } else {
-                console.log('Not on Search', window.location.href)
+                // console.log('Not on Search', window.location.href)
                 return false
             }
         }
@@ -116,6 +116,22 @@ export default {
             }
             localStorage.setItem("searchKeys", JSON.stringify(this.filter))
             this.$store.commit('CLOSE_SING_SONG')
+        },
+        openLink(type, slug) {
+            let slugName = slug
+            let urlName
+            let thisName = window.location.pathname.split('/')
+            let leng = thisName.length
+            if( type == 'artist') {
+                urlName = thisName[leng -1]
+            } else if ( type == 'album') {
+                let thisID = thisName[leng-1].split('-')
+                urlName = thisID[0]
+            }
+            if (slugName !== urlName) {
+                this.$store.commit('SHOW_LOADING')
+            }
+            this.$store.commit('CLOSE_SING_SONG') 
         }
     }
 }

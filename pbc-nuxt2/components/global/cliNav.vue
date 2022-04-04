@@ -17,19 +17,19 @@
             <client-only>
             <ul>
                 <NuxtLink to="/">
-                    <li>Catalog Search</li>
+                    <li @click="$store.commit('SHOW_LOADING')">Catalog Search</li>
                 </NuxtLink>
                 <NuxtLink to="/artists">
-                    <li>Projects and Artists</li>
+                    <li @click="$store.commit('SHOW_LOADING')">Projects and Artists</li>
                 </NuxtLink>
                 <NuxtLink to="/albums">
-                    <li>Albums and Collections</li>
+                    <li @click="$store.commit('SHOW_LOADING')">Albums and Collections</li>
                 </NuxtLink>
                 <NuxtLink to="/about">
-                <li>About</li>
+                    <li @click="$store.commit('SHOW_LOADING')">About</li>
                 </NuxtLink>
                 <NuxtLink to="/requests">
-                    <li>Requests</li>
+                    <li @click="$store.commit('SHOW_LOADING')">Requests</li>
                 </NuxtLink>
                 <NuxtLink to="/" @click.native="openTut">
                     <li>Tutorial</li>
@@ -60,6 +60,7 @@ export default {
             localStorage.setItem("cart", JSON.stringify(this.cart))
         },
         openTut() {
+            this.$store.commit('SHOW_LOADING')
             this.$store.commit('MENU_CLOSE')
             this.$store.commit('OPEN_TUTORIAL')
         },
@@ -146,7 +147,7 @@ export default {
         margin: 70px -20px 50px -20px;
     }
 }
-@media (max-height: 750px) {
+@media (max-height: 800px) {
     .sideNav {
     overflow: auto;
     }

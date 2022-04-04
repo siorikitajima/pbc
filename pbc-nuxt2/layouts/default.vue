@@ -15,6 +15,7 @@
     <PanelSingleSong />
     <PanelLicense />
     <PanelFlash />
+    <PanelLoadingGlobal v-if="loading" />
   </div>
 </template>
 
@@ -30,14 +31,15 @@ import PanelSingleSong from "~/components/panel/SingleSong"
 import PanelFlash from "~/components/panel/Flash"
 import PanelLicense from "~/components/panel/License"
 import PanelCart from "~/components/cart/main"
+import PanelLoadingGlobal from "~/components/panel/LoadingGlobal"
 
 export default {
   components: {
     GlobalCliNav, GlobalCliLeftNav, PlayerBar, PlayerQueue, PlayerSimilar, PanelSingleSong, 
-    PanelFlash, PanelLicense, PanelCart
+    PanelFlash, PanelLicense, PanelCart, PanelLoadingGlobal
   },
   computed: {
-    ...mapState(['similarPanel', 'queuePanel', 'playerBar', 'licensePanel', 'cartPanel', 'cart']),
+    ...mapState(['similarPanel', 'queuePanel', 'playerBar', 'licensePanel', 'cartPanel', 'cart', 'loading']),
   },
   mounted() {
       this.$store.commit('SET_WINDOWWIDTH', window.innerWidth)

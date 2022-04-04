@@ -11,7 +11,13 @@
         <img :src="coverImg(sqPData.CatNum, sqPData.ID)" :alt="sqPData.AlbumTitle">
     </div>
     <div class="info">
-        <p>{{ sqPData.ID }} // <NuxtLink :to="'/song/' + sqPData.ID + '-' + slug(sqPData.Title)">{{ sqPData.Title }}</NuxtLink> <span> by <NuxtLink :to="'/project/' + slug(sqPData.ArtistName)">{{ sqPData.ArtistName }}</NuxtLink></span><span v-if="sqPData.FeatArtist" v-html="featArtURL(sqPData.FeatArtist)"></span></p>
+        <p>{{ sqPData.ID }} // 
+            <NuxtLink :to="'/song/' + sqPData.ID + '-' + slug(sqPData.Title)">
+                <b @click="openLink('song', sqPData.ID)">{{ sqPData.Title }}</b>
+            </NuxtLink> <span> by 
+            <NuxtLink :to="'/project/' + slug(sqPData.ArtistName)">
+                <b @click="openLink('project', slug(sqPData.ArtistName))">{{ sqPData.ArtistName }}</b>
+            </NuxtLink></span><span v-if="sqPData.FeatArtist" v-html="featArtURL(sqPData.FeatArtist)"></span></p>
         <div class="progress_bar_flex">
             <div class="duration progress__bar" ref="progressBar" @click="clickProgress">
                 <div class="progress__current" :style="{ width : barWidth }"></div>
@@ -31,8 +37,8 @@
         </div>
         <div class="oneIcon">
             <NuxtLink :to="'/song/' + sqPData.ID + '-' + slug(sqPData.Title)">
-            <img :src="require('~/assets/images/actions/seeSong_Icon_white.svg')" alt="Track"
-            @mouseover="showInfo['act2'] = true" @mouseleave="showInfo['act2'] = false">
+                <img @click="openLink('song', sqPData.ID)" :src="require('~/assets/images/actions/seeSong_Icon_white.svg')" alt="Track"
+                @mouseover="showInfo['act2'] = true" @mouseleave="showInfo['act2'] = false">
             </NuxtLink>
             <transition name="bounce">
                     <div class="ttinfo" v-if="showInfo['act2']"><p>See Song Page</p></div>
@@ -40,8 +46,8 @@
         </div>
         <div class="oneIcon">
             <NuxtLink :to="'/project/' + slug(sqPData.ArtistName)">
-            <img :src="require('~/assets/images/actions/seeArtist_Icon_white.svg')" alt="Artist"
-            @mouseover="showInfo['act3'] = true" @mouseleave="showInfo['act3'] = false">
+                <img @click="openLink('project', slug(sqPData.ArtistName))" :src="require('~/assets/images/actions/seeArtist_Icon_white.svg')" alt="Artist"
+                @mouseover="showInfo['act3'] = true" @mouseleave="showInfo['act3'] = false">
             </NuxtLink>
             <transition name="bounce">
                 <div class="ttinfo" v-if="showInfo['act3']"><p>See Artist Page</p></div>
@@ -57,8 +63,8 @@
         </div>
         <div class="oneIcon">
             <NuxtLink :to="{ path: '/requests', query: { song: sqPData.ID }}">
-            <img :src="require('~/assets/images/actions/inquiry_white.svg')" alt="Inquiry"
-            @mouseover="showInfo['act5'] = true" @mouseleave="showInfo['act5'] = false">
+                <img @click="openLink('inquiry', 'requests?song='+ sqPData.ID)" :src="require('~/assets/images/actions/inquiry_white.svg')" alt="Inquiry"
+                @mouseover="showInfo['act5'] = true" @mouseleave="showInfo['act5'] = false">
             </NuxtLink>
             <transition name="bounce">
                 <div class="ttinfo" v-if="showInfo['act5']"><p>Inquiry</p></div>
@@ -318,6 +324,26 @@ export default {
         },
         licenseThis(id) {
         this.$store.dispatch('OpenLicenseP', id)
+        },
+        openLink(type, slug) {
+            let slugName = slug
+            let urlName
+            let thisName
+            if( type == 'project') {
+                thisName = window.location.pathname.split('/')
+                let leng = thisName.length
+                urlName = thisName[leng -1]
+            } else if ( type == 'song') {
+                thisName = window.location.pathname.split('/')
+                let leng = thisName.length
+                let thisID = thisName[leng-1].split('-')
+                urlName = thisID[0]
+            } else if ( type == 'inquiry') {
+                urlName = window.location.pathname
+            } 
+            if (slugName !== urlName) {
+                this.$store.commit('SHOW_LOADING')
+            }
         }
     },
     mounted() {
@@ -421,6 +447,9 @@ export default {
 }
 .thePlayer .info p span {
     font-size: 0.9em;
+}
+.thePlayer .info p b {
+    font-weight: normal;
 }
 .thePlayer .info .progress_bar_flex {
     display: flex;

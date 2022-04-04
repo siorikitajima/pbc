@@ -82,6 +82,7 @@ export default {
         this.$store.commit('setFilterAlbum', {id: this.theId[0]})
         this.$store.commit('setOrder', 'Seq')
         this.dataLoad = true
+        this.$store.commit('HIDE_LOADING')
     },
     methods: {
         onScroll ({ target: { scrollTop, clientHeight, scrollHeight }}) {

@@ -130,6 +130,7 @@ export default {
         this.$store.commit('clearFilter')
         this.$store.commit('setFilterArtist', {id: this.theSlug})
         this.dataLoad = true
+        this.$store.commit('HIDE_LOADING')
     },
     methods: {
         onScroll ({ target: { scrollTop, clientHeight, scrollHeight }}) {
